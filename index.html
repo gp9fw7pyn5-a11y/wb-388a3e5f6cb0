@@ -17,7 +17,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .tab-btn .tb{font-size:20px;display:block;line-height:1;margin-bottom:2px}
 .tab-radio{display:none}
 .page{display:none}
-#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance{display:block}
+#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn{display:block}
 #r-market:checked~.tab-bar label[for="r-market"],#r-holdings:checked~.tab-bar label[for="r-holdings"],#r-short:checked~.tab-bar label[for="r-short"],#r-mid:checked~.tab-bar label[for="r-mid"],#r-long:checked~.tab-bar label[for="r-long"],#r-finance:checked~.tab-bar label[for="r-finance"]{color:#4a6fa5}
 .card{background:var(--card);border-radius:10px;padding:11px;margin-bottom:7px;border:1px solid var(--border)}
 .card h4{font-size:13px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
@@ -53,8 +53,10 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <input type="radio" name="tab" id="r-mid" class="tab-radio">
 <input type="radio" name="tab" id="r-long" class="tab-radio">
 <input type="radio" name="tab" id="r-finance" class="tab-radio">
+<input type="radio" name="tab" id="r-learn" class="tab-radio">
 <div class="tab-bar">
 <label for="r-market" class="tab-btn"><span class="tb">📊</span>大盘</label>
+<label for="r-learn">📚学习</label>
 <label for="r-holdings" class="tab-btn"><span class="tb">📋</span>持仓</label>
 <label for="r-short" class="tab-btn"><span class="tb">⚡</span>短线</label>
 <label for="r-mid" class="tab-btn"><span class="tb">📈</span>中线</label>
@@ -66,11 +68,16 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <div class="page" id="page-market">
 <!-- MARKETSUM -->
 <div class="card" style="border:2px solid #b45309;background:#fffbeb">
-<h4 style="color:#b45309">① 大盘复盘（结果一句话 · 2026-08-23 17:22:14）</h4>
+<h4 style="color:#b45309">① 大盘复盘（结果+细节 · 2026-08-23 17:31:53）</h4>
 <div class="note" style="font-size:10px;line-height:1.9">
 <b>指数</b>：上证指数 3905.2(0.03791255520375483%)｜深证成指 14094.17(0.8687605472926605%)｜创业板指 3545.58(1.430087624692821%)｜科创50 1653.56(0.035693327767589135%)<br>
 <b>涨跌全景</b>：涨股比 <b class="dn">47.82%</b>（上涨2402/下跌2621/平盘None）｜涨停70/跌停27｜炸板率25.0%｜连板梯队：3板1家、2板10家、1板43家<br>
-<b>结论</b>：情绪标签见②；仓位与操作以持仓页四要素指令为准。<br>
+<b>涨停分布（板块）</b>：【数据缺失】<br>
+<b>领涨板块</b>：【数据缺失】<br>
+<b>领跌板块</b>：【数据缺失】<br>
+<b>市场龙头</b>：【数据缺失】<br>
+<b>情绪演变</b>：见②判据<br>
+<b style="color:#999">数据时点：涨停池缺（东财口径）｜结论以持仓页四要素指令为准。</b>
 </div></div>
 <div class="card" style="border:2px solid #7c3aed;background:#f5f3ff">
 <h4 style="color:#7c3aed">② 情绪（唯一标签+判据）</h4>
@@ -79,11 +86,11 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <b>判据</b>：涨股比47.82%（铁律58：&lt;40%冰点／40-60%修复待确认／连续2日&gt;60%修复确认）｜炸板率25.0%（&gt;30%不打板）｜连板梯队3板1家、2板10家、1板43家<br>
 </div></div>
 <div class="card" style="border:2px solid #b91c1c;background:#fef2f2">
-<h4 style="color:#b91c1c">③ 因什么涨、因什么跌（资金+涨停交叉印证）</h4>
+<h4 style="color:#b91c1c">③ 因什么涨、因什么跌（板块涨停×资金流交叉印证）</h4>
 <div class="note" style="font-size:10px;line-height:1.9">
-<b>涨</b>：涨停集中板块：通信设备6家、化学制药4家、专用设备4家、化学制品4家<br>
-<b>跌</b>：【数据缺失】<br>
-<b style="color:#999">方法：涨停家数=资金用脚投票；板块资金流=大资金方向；两者一致才算真涨因。</b>
+<b>谁在涨</b>：【数据缺失】<br>
+<b>谁在跌</b>：【数据缺失】<br>
+<b style="color:#999">读法：涨停家数=短线资金投票；行业净流入=大资金方向；两者一致的板块才是真方向。</b>
 </div></div>
 <div class="card" style="border:2px solid #047857;background:#ecfdf5">
 <h4 style="color:#047857">④ 资金流入流出龙头（全市场5209只程序算）</h4>
@@ -181,7 +188,7 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 </div></div>
 <!-- /NEWS -->
 <!-- STUDY -->
-<div class="card" style="border:2px solid #065f46;background:#ecfdf5"><h4 style="color:#065f46">📚 每日5只A股深挖学习（独立页面 · 2026-08-23 17:23:13）</h4><div class="note" style="font-size:10px;line-height:1.8">今日学习：<b>白银有色、豪美新材、北方导航、绿地控股、祥龙电业</b><br>每只含：财报4期解读 / 订单·在途订单 / 主营构成 / 上下游产业链 / 最新消息<br><a href="daily_study.html" style="color:#065f46;font-weight:bold">📖 打开独立学习页面 →</a><br><b style="color:#999">学习材料，不构成买卖建议。</b></div></div>
+<div class="card" style="border:2px solid #065f46;background:#ecfdf5"><h4 style="color:#065f46">📚 每日5只A股深挖学习（点上方「学习」标签页看完整内容 · 2026-08-23 17:31:01）</h4><div class="note" style="font-size:10px;line-height:1.8">今日学习：<b>白银有色、豪美新材、北方导航、绿地控股、祥龙电业</b>｜每只含财报4期/订单/主营/上下游/消息。<br><b style="color:#999">学习材料，不构成买卖建议。</b></div></div>
 <!-- /STUDY -->
 <!-- HANRI -->
 <div class="card" style="border:2px solid #e67e22"><h4 style="color:#e67e22">🇰🇷🇯🇵 韩日早盘前瞻（08:15自动）</h4><div class="note" style="font-size:9px;line-height:1.8"><b>韩日盘前+美股隔夜（08:15自动）</b>：韩国KOSPI【数据缺失】｜日经225【数据缺失】｜纳指(隔夜)【数据缺失】｜费半(隔夜)【数据缺失】｜黄金(隔夜)【数据缺失】<br><b>映射A股</b>：外围强→A股或有高开反抽（减仓窗口非抄底窗口）；外围弱→低开防补跌，触发止损优先集合竞价。<b>本卡为盘前预判，收盘后由16:00/23:00自动复盘卡做盘后验证。</b><br><b style="color:#999">数据时点 2026-08-21 22:39:00（yfinance，限流重试3次，失败标缺失不编造）。不构成投资建议。</b></div></div>
@@ -570,6 +577,43 @@ id="page-holdings">
 </table>
 <div class="note">支付宝可买，每月定投，不看短期涨跌。这是"保命钱"，<b>不参与股票操作、不互相挪用</b>。</div>
 </div>
+<div class="page" id="page-learn">
+<!-- LEARN -->
+<div class="card" style="border:2px solid #065f46;background:#ecfdf5"><h4 style="color:#065f46">📚 每日5只A股公司深挖学习卡（自动 · 2026-08-23 17:31:01）</h4><div class="note" style="font-size:10px;line-height:1.9"><div class="card"><h2>1. 白银有色（sh601212）</h2><div class="sec">
+<b>主营：</b>有色金属采选冶炼及销售76%、有色金属贸易21%、其他(补充)2%、其他1%、有色金属服务1%、阴极铜40%<br>
+<b>财报（4期）：</b>250630:营收445.59亿亿 净利-2.17亿亿｜250930:营收726.43亿亿 净利-2.15亿亿｜251231:营收854.58亿亿 净利-7.55亿亿｜260331:营收195.82亿亿 净利1.50亿亿 <b style="color:#fbbf24">营收增速加速</b><br>
+<b>订单/在途订单：</b>近4日公告未筛到订单类【不代表无订单，以年报/季报为准】<br>
+<b>最新消息：</b>2026-04-28 00:00:24 大宗商品牛市下的业绩“背离”：白银有色2025年净亏损7.55亿元 逾14亿元套保浮亏吞噬利润<br>
+<b>上下游：</b>上下游：按主营构成推导暂未匹配到映射表，请结合公司年报「前五大供应商/客户」学习（标注：无数据不编造）<br>
+</div></div>
+<div class="card"><h2>2. 豪美新材（sz002988）</h2><div class="sec">
+<b>主营：</b>铝型材92%、系统门窗8%、其他0%、工业用铝型材38%、汽车轻量化铝型材29%、建筑用铝型材24%<br>
+<b>财报（4期）：</b>250630:营收35.85亿亿 净利9174.55万亿｜250930:营收55.82亿亿 净利1.43亿亿｜251231:营收77.78亿亿 净利1.18亿亿｜260331:营收18.89亿亿 净利3977.45万亿 <b style="color:#fbbf24">营收增速减速</b><br>
+<b>订单/在途订单：</b>近4日公告未筛到订单类【不代表无订单，以年报/季报为准】<br>
+<b>上下游：</b>上游：钢铝/芯片/皮革/玻璃 ｜ 下游：整车厂/售后市场<br>
+</div></div>
+<div class="card"><h2>3. 北方导航（sh600435）</h2><div class="sec">
+<b>主营：</b>制造业99%、其他(补充)1%、军民两用产品99%、其他(补充)1%、北京地区80%、河南地区8%<br>
+<b>财报（4期）：</b>250630:营收17.03亿亿 净利1.16亿亿｜250930:营收24.68亿亿 净利1.25亿亿｜251231:营收41.92亿亿 净利1.21亿亿｜260331:营收4.32亿亿 净利-1572.38万亿 <b style="color:#fbbf24">营收增速减速</b><br>
+<b>订单/在途订单：</b>近4日公告未筛到订单类【不代表无订单，以年报/季报为准】<br>
+<b>上下游：</b>上下游：按主营构成推导暂未匹配到映射表，请结合公司年报「前五大供应商/客户」学习（标注：无数据不编造）<br>
+</div></div>
+<div class="card"><h2>4. 绿地控股（sh600606）</h2><div class="sec">
+<b>主营：</b>建筑及相关产业50%、房地产及相关产业36%、其他收入15%、其他(补充)4%、减:内部抵销数-5%、华东地区39%<br>
+<b>财报（4期）：</b>250630:营收946.89亿亿 净利-35.06亿亿｜250930:营收1279.98亿亿 净利-66.90亿亿｜251231:营收1805.07亿亿 净利-262.13亿亿｜260331:营收278.11亿亿 净利2.04亿亿 <b style="color:#fbbf24">营收增速减速</b><br>
+<b>订单/在途订单：</b>近4日公告未筛到订单类【不代表无订单，以年报/季报为准】<br>
+<b>最新消息：</b>2026-04-29 22:44:27 绿地控股一季度扭亏为盈，董事长张玉良回应<br>
+<b>上下游：</b>上游：水泥/钢材/土地 ｜ 下游：购房者/商业运营/基建<br>
+</div></div>
+<div class="card"><h2>5. 祥龙电业（sh600769）</h2><div class="sec">
+<b>主营：</b>供水61%、建筑39%、供水61%、建筑施工39%、代收污水处理费手续费0%、境内100%<br>
+<b>财报（4期）：</b>250930:营收6176.50万亿 净利1721.02万亿｜251231:营收8156.40万亿 净利1902.53万亿｜260331:营收1807.06万亿 净利475.05万亿｜260630:营收4035.04万亿 净利927.31万亿 <b style="color:#fbbf24">营收增速加速</b><br>
+<b>订单/在途订单：</b>近4日公告未筛到订单类【不代表无订单，以年报/季报为准】<br>
+<b>上下游：</b>上游：水泥/钢材/土地 ｜ 下游：购房者/商业运营/基建<br>
+</div></div><br><b style="color:#999">学习材料（看懂公司靠什么赚钱/订单在哪/上下游是谁），不构成买卖建议；订单公告仅筛近4日，在途订单以年报季报为准。</b></div></div>
+<!-- /LEARN -->
+</div>
+
 <div class="card"><h4>💵 减出来的钱放哪（周一就会用到）</h4>
 <div class="act2">
 <b>黄金ETF 518880 占30%</b>：回调到5日线 <b>9.17以下</b>才买，跌破20日线(8.625)止损，仓位≤1成。<br>
