@@ -17,7 +17,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .tab-btn .tb{font-size:20px;display:block;line-height:1;margin-bottom:2px}
 .tab-radio{display:none}
 .page{display:none}
-#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn{display:block}
+#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn,#r-news:checked~#page-news{display:block}
 #r-market:checked~.tab-bar label[for="r-market"],#r-holdings:checked~.tab-bar label[for="r-holdings"],#r-short:checked~.tab-bar label[for="r-short"],#r-mid:checked~.tab-bar label[for="r-mid"],#r-long:checked~.tab-bar label[for="r-long"],#r-finance:checked~.tab-bar label[for="r-finance"]{color:#4a6fa5}
 .card{background:var(--card);border-radius:10px;padding:11px;margin-bottom:7px;border:1px solid var(--border)}
 .card h4{font-size:13px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
@@ -42,6 +42,12 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 .stock .row b{color:#333}
 .disclaimer{font-size:8px;color:#aaa;text-align:center;padding:10px 0;line-height:1.5}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="投资工作台">
 </head>
 <body>
 <div class="app">
@@ -54,6 +60,7 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <input type="radio" name="tab" id="r-long" class="tab-radio">
 <input type="radio" name="tab" id="r-finance" class="tab-radio">
 <input type="radio" name="tab" id="r-learn" class="tab-radio">
+<input type="radio" name="tab" id="r-news" class="tab-radio">
 <div class="tab-bar">
 <label for="r-market" class="tab-btn"><span class="tb">📊</span>大盘</label>
 
@@ -63,6 +70,7 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <label for="r-long" class="tab-btn"><span class="tb">🏔️</span>长线</label>
 <label for="r-finance" class="tab-btn"><span class="tb">💰</span>基金</label>
 <label for="r-learn" class="tab-btn"><span class="tb">📚</span>学习</label>
+<label for="r-news" class="tab-btn"><span class="tb">📰</span>新闻</label>
 </div>
 <!-- TOPBAR -->
 <div style="display:flex;flex-wrap:wrap;gap:7px;margin:8px 12px 4px"><span style="background:#7c3aed;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">情绪：修复【待确认】</span><span style="background:#b45309;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">涨股比：46.24%</span><span style="background:#047857;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">仓位目标：30</span><span style="background:#b91c1c;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">浮亏：-41.87%（8/21）</span><span style="background:#334155;color:#e2e8f0;border-radius:8px;padding:4px 10px;font-size:11px">止损线：士兰微破33.40 / 深科技破36.83 / 雅克破135 / ETF破0.72 / 巨石破40.56</span></div>
@@ -72,12 +80,12 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <div class="page" id="page-market">
 <!-- MARKETSUM -->
 <div class="card" style="border:2px solid #b45309;background:#fffbeb">
-<h4 style="color:#b45309">① 大盘复盘（结果+细节 · 2026-08-23 23:19:35）</h4>
+<h4 style="color:#b45309">① 大盘复盘（结果+细节 · 2026-08-24 18:55:32）</h4>
 <div class="note" style="font-size:10px;line-height:1.9">
 <b>指数</b>：上证指数 3905.2(0.03791255520375483%)｜深证成指 14094.17(0.8687605472926605%)｜创业板指 3545.58(1.430087624692821%)｜科创50 1653.56(0.035693327767589135%)<br>
 <b>涨跌全景</b>：涨股比 <b class="dn">46.24%</b>（上涨2402/下跌2621/平盘172）｜涨停70/跌停27｜炸板率25.0%｜连板梯队：3板1家、2板10家、1板43家<br>
 <b>涨停分布（板块）</b>：通信设备6家、化学制药4家、专用设备4家、化学制品4家、消费电子4家<br>
-<b>领涨板块</b>：贵金属 净额50.21亿（涨跌5.34%）；能源金属 净额14.37亿（涨跌4.51%）；工业金属 净额45.9亿（涨跌2.65%）；小金属 净额16.69亿（涨跌1.8%）；元件 净额60.6亿（涨跌1.55%）<br>
+<b>领涨板块</b>：贵金属 净额2.73亿（涨跌3.19%）；煤炭开采加工 净额0.85亿（涨跌2.72%）；保险 净额15.11亿（涨跌1.8%）；银行 净额45.23亿（涨跌1.38%）；种植业与林业 净额1.95亿（涨跌1.33%）<br>
 <b>领跌板块</b>：【数据缺失】<br>
 <b>市场龙头</b>：3板1家、2板10家、1板43家<br>
 <b>情绪演变</b>：见②判据<br>
@@ -93,7 +101,7 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <div class="card" style="border:2px solid #b91c1c;background:#fef2f2">
 <h4 style="color:#b91c1c">③ 因什么涨、因什么跌（板块涨停×资金流交叉印证）</h4>
 <div class="note" style="font-size:10px;line-height:1.9">
-<b>谁在涨</b>：涨停集中：通信设备6家、化学制药4家、专用设备4家、化学制品4家、消费电子4家；资金流入：贵金属 净额50.21亿（涨跌5.34%）；能源金属 净额14.37亿（涨跌4.51%）；工业金属 净额45.9亿（涨跌2.65%）；小金属 净额16.69亿（涨跌1.8%）；元件 净额60.6亿（涨跌1.55%）<br>
+<b>谁在涨</b>：涨停集中：通信设备6家、化学制药4家、专用设备4家、化学制品4家、消费电子4家；资金流入：贵金属 净额2.73亿（涨跌3.19%）；煤炭开采加工 净额0.85亿（涨跌2.72%）；保险 净额15.11亿（涨跌1.8%）；银行 净额45.23亿（涨跌1.38%）；种植业与林业 净额1.95亿（涨跌1.33%）<br>
 <b>谁在跌</b>：个股净流出集中：sh600664(-19.5亿)、sh688766(-9.2亿)、sh600519(-8.3亿)、sh603538(-8.0亿)、sz300394(-5.8亿)（板块级流出数据源受限，个股级见④）<br>
 <b style="color:#999">读法：涨停家数=短线资金投票；行业净流入=大资金方向；两者一致的板块才是真方向。</b>
 </div></div>
@@ -105,9 +113,10 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <b style="color:#999">口径：新浪主力净流入（当日最新行），TOP1 35.9亿，与东财/同花顺口径不同，仅方向参考（铁律52）。</b>
 </div></div>
 <div class="card" style="border:2px solid #0e7490;background:#ecfeff">
-<h4 style="color:#0e7490">⑤ 最新信息（财联社电报前3条 · 完整见下方消息卡）</h4>
+<h4 style="color:#0e7490">⑤ 最新信息（速览3条）</h4>
 <div class="note" style="font-size:10px;line-height:1.9">
-· 18:12:35 刚果（金）政府与反政府武装就谈判路线图达成一致<br>· 18:16:41 万凯新材：2026年半年度净利润5.62亿元 同比增长910.09%<br>· 18:23:06 超20家A股上市公司本周披露并购重组最新公告 中南文化拟收购江阴热电及苏龙热电股权并复牌
+· 18:34:41 受台风影响 海南进出岛旅客列车停运<br>· 18:34:42 北斗系统应用广度深度加快拓展 重点行业综合应用渗透率约90%<br>· 18:36:26 
+<br><b style="color:#0e7490">📰 完整新闻汇总（电报/快讯/持仓新闻/公告/分析师）→ 点上方「新闻」标签页</b>
 </div></div>
 <div class="card" style="border:2px solid #1e40af;background:#eff6ff"><h4 style="color:#1e40af">👁 观察池（15只 · 2026-08-21 16:14）</h4><div class="note" style="font-size:10px;line-height:1.8;display:flex;flex-wrap:wrap;gap:5px"><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">紫金矿业</b><br><span style="font-size:12px;font-weight:bold">34.74</span> <span class="up" style="font-size:10px">+2.7%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">山东黄金</b><br><span style="font-size:12px;font-weight:bold">37.05</span> <span class="up" style="font-size:10px">+5.0%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">药明康德</b><br><span style="font-size:12px;font-weight:bold">162.86</span> <span class="dn" style="font-size:10px">-3.0%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">凯莱英</b><br><span style="font-size:12px;font-weight:bold">168.10</span> <span class="dn" style="font-size:10px">-7.8%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">太辰光</b><br><span style="font-size:12px;font-weight:bold">214.46</span> <span class="up" style="font-size:10px">+0.5%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">通富微电</b><br><span style="font-size:12px;font-weight:bold">63.88</span> <span class="up" style="font-size:10px">+1.2%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">北方华创</b><br><span style="font-size:12px;font-weight:bold">714.43</span> <span class="up" style="font-size:10px">+0.3%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">中微公司</b><br><span style="font-size:12px;font-weight:bold">362.50</span> <span class="dn" style="font-size:10px">-0.8%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">迎驾贡酒</b><br><span style="font-size:12px;font-weight:bold">38.97</span> <span class="dn" style="font-size:10px">-2.5%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">生益科技</b><br><span style="font-size:12px;font-weight:bold">132.80</span> <span class="up" style="font-size:10px">+5.2%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">香农芯创</b><br><span style="font-size:12px;font-weight:bold">158.10</span> <span class="up" style="font-size:10px">+0.6%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">中际旭创</b><br><span style="font-size:12px;font-weight:bold">943.00</span> <span class="up" style="font-size:10px">+4.3%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">斯达半导</b><br><span style="font-size:12px;font-weight:bold">97.96</span> <span class="up" style="font-size:10px">+2.5%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">宝泰隆</b><br><span style="font-size:12px;font-weight:bold">2.88</span> <span class="dn" style="font-size:10px">-10.0%</span></span><span style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:5px 8px;min-width:86px;text-align:center"><b style="font-size:11px;color:#e2e8f0">有研新材</b><br><span style="font-size:12px;font-weight:bold">54.24</span> <span class="dn" style="font-size:10px">-4.3%</span></span></div></div>
 <!-- /MARKETSUM -->
@@ -232,37 +241,7 @@ details .inner{font-size:9px;line-height:1.75;color:#666;margin-top:7px;padding-
 <b style="color:#999">口径：通达信全量实时+东财涨停池；百分比程序算；个股级资金流仍缺源（行业级可用）。不构成投资建议。</b>
 </div></div>
 <!-- /FULLSCAN -->
-<!-- NEWS -->
-<div class="card" style="border:2px solid #92400e;background:#fffbeb"><h4 style="color:#92400e">📰 消息面+基本面+订单深度（自动 · 2026-08-24 08:30:02）</h4>
-<div class="note" style="font-size:9px;line-height:1.8">
-<b>一、最新财经电报（财联社）</b><br>· 07:39:06 投资日历：周一资本市场大事提醒<br>· 07:39:24 人民日报钟才文：我国经济长期向好的支撑条件和基本趋势没有改变，宏观政策工具箱充足，逆周期调节空间依然较大<br>· 07:40:40 今日申购指南及新股定位分析<br>· 07:44:46 梅卡曼德：拟在香港IPO中筹集至多23.5亿港元<br>· 07:46:10 国药控股：上半年归母净利润34.04亿元 同比下降1.80%<br>· 07:52:26 郑州拟出台公积金新政 可用于支付物业费、取暖费、车位费<br>· 08:01:12 【九点特供】总投资1361亿元！2026绿色算力大会签约13个项目；mRNA技术迎来关键进展，活性提升10倍，分析师看好<br>· 08:01:18 
-<br><b>二、外围快讯（东财）</b><br>· 2026-08-24 08:27:58 中信建投：肿瘤mRNA疫苗开创肿瘤治疗新范式 国内企业加速追赶<br>· 2026-08-24 08:26:04 日经指数下跌0.4%<br>· 2026-08-24 08:25:29 中信建投：预计隔膜行业将维持供需紧平衡状态<br>· 2026-08-24 08:24:29 软银计划在日本发行创纪录的近63亿美元零售债券<br>· 2026-08-24 08:22:29 中信证券：A股短期内的资金结构决定市场博弈的复杂性还在提升<br>· 2026-08-24 08:21:27 阿里新股配售定价为112.7港元 中东、欧洲、亚洲主要主权基金参与认购
-<br><b>三、持仓个股最新消息</b><br>
-<b>· 士兰微</b>：2026-08-21 11:12:00 600460，快速拉涨停！｜2026-08-21 10:47:00 今日285只个股突破五日均线<br>
-<b>· 深科技</b>：2026-08-17 17:51:00 电子行业8月17日资金流向日报｜2026-08-12 17:15:00 8月12日盘后固定价格交易额11.93亿元<br>
-<b>· 雅克科技</b>：2026-07-21 14:15:00 002409，“地天板”｜2026-08-21 16:29:00 电子行业资金流入榜：士兰微等39股净流入资金超亿元<br>
-<b>· 半导体设备ETF</b>：2026-08-21 15:30:03 科技主线获资金追捧，半导体设备ETF国泰（159516）近30日吸金超66亿元｜2026-08-21 14:13:07 AI驱动半导体设备结构性成长，半导体设备ETF国泰（159516）盘中流入超8亿份<br>
-<b>· 中国巨石</b>：2026-08-20 18:53:44 电子布爆单，600176大赚！上半年净利超29亿元，拟现金分红13亿元｜2026-08-21 09:43:50 中国巨石600176.SH)：2026年中报净利润为29.33亿元、同比较去年同期上涨73.87%<br>
-<br><b>四、基本面（最近4期营收/净利及同比，同花顺口径）</b><br>
-<b>· 士兰微</b>：250630: 营收63.36亿亿 净利2.65亿亿｜250930: 营收97.13亿亿 净利3.49亿亿｜251231: 营收130.52亿亿 净利3.99亿亿｜260331: 营收35.19亿亿 净利2.09亿亿<br>
-<b>· 深科技</b>：250630: 营收77.40亿亿 净利4.52亿亿｜250930: 营收112.78亿亿 净利7.56亿亿｜251231: 营收157.47亿亿 净利11.36亿亿｜260331: 营收37.24亿亿 净利2.42亿亿<br>
-<b>· 雅克科技</b>：250630: 营收42.93亿亿 净利5.23亿亿｜250930: 营收64.67亿亿 净利7.96亿亿｜251231: 营收86.11亿亿 净利10.00亿亿｜260331: 营收19.73亿亿 净利2.67亿亿<br>
-<b>· 半导体设备ETF</b>：【数据缺失】<br>
-<b>· 中国巨石</b>：250930: 营收139.04亿亿 净利25.68亿亿｜251231: 营收188.81亿亿 净利32.85亿亿｜260331: 营收52.82亿亿 净利12.67亿亿｜260630: 营收111.59亿亿 净利29.33亿亿<br>
-<b>· 中际旭创</b>：250930: 营收250.05亿亿 净利71.32亿亿｜251231: 营收382.40亿亿 净利107.97亿亿｜260331: 营收194.96亿亿 净利57.35亿亿｜260630: 营收417.78亿亿 净利136.51亿亿<br>
-<b>· 紫金矿业</b>：250930: 营收2542.00亿亿 净利378.64亿亿｜251231: 营收3490.79亿亿 净利517.77亿亿｜260331: 营收984.98亿亿 净利200.79亿亿｜260630: 营收1941.78亿亿 净利391.70亿亿<br>
-<b>· 山东黄金</b>：250630: 营收567.66亿亿 净利28.08亿亿｜250930: 营收837.83亿亿 净利39.56亿亿｜251231: 营收1042.87亿亿 净利47.39亿亿｜260331: 营收325.16亿亿 净利14.46亿亿<br>
-<b>· 北方华创</b>：250630: 营收161.42亿亿 净利32.08亿亿｜250930: 营收273.01亿亿 净利51.30亿亿｜251231: 营收393.53亿亿 净利55.22亿亿｜260331: 营收103.23亿亿 净利16.35亿亿<br>
-<b>· 药明康德</b>：250930: 营收328.57亿亿 净利120.76亿亿｜251231: 营收454.56亿亿 净利191.51亿亿｜260331: 营收124.36亿亿 净利46.52亿亿｜260630: 营收288.97亿亿 净利110.80亿亿<br>
-<br><b>五、行业资金流TOP10（主线认定标准②：板块净流入连续2日且单日≥10亿）</b><br>
-贵金属 净额50.21亿（涨跌5.34%）<br>能源金属 净额14.37亿（涨跌4.51%）<br>工业金属 净额45.9亿（涨跌2.65%）<br>小金属 净额16.69亿（涨跌1.8%）<br>元件 净额60.6亿（涨跌1.55%）<br>石油加工贸易 净额-0.65亿（涨跌1.52%）<br>通信设备 净额61.55亿（涨跌1.38%）<br>非金属材料 净额5.69亿（涨跌1.3%）<br>塑料制品 净额5.5亿（涨跌1.28%）<br>消费电子 净额30.7亿（涨跌1.28%）
-<br><b>六、持仓今日公告（巨潮）</b><br>
-今日无持仓相关公告
-<br><b>七、券商分析师TOP（研报观点代理指标）</b><br>
-颜枫(上海证券) 2026收益率149.18% 最新评级：芯碁微装<br>方晨(上海证券) 2026收益率118.51% 最新评级：鼎龙股份<br>邱净博(广发证券) 2026收益率116.28% 最新评级：长盈通<br>要文强(东北证券) 2026收益率111.63% 最新评级：斯迪克<br>翟一梦(中邮证券) 2026收益率111.13% 最新评级：广立微<br>张慧(申万宏源) 2026收益率103.66% 最新评级：中远海能<br>李国盛(申万宏源) 2026收益率95.55% 最新评级：锐捷网络<br>杜先康(国海证券) 2026收益率94.4% 最新评级：强一股份
-<br><b style="color:#999">研报原文接口不可用已剔除（用分析师评级排行替代）；个股主力资金流仍【数据缺失】（东财拒连/新浪接口列错）——行业级资金流已可用，个股级继续找源。不构成投资建议。</b>
-</div></div>
-<!-- /NEWS -->
+>
 <!-- STUDY -->
 <div class="card" style="border:2px solid #065f46;background:#ecfdf5"><h4 style="color:#065f46">📚 每日5只A股深挖学习（点上方「学习」标签页看完整内容 · 2026-08-24 12:14:19）</h4><div class="note" style="font-size:10px;line-height:1.8">今日学习：<b>太辰光、誉衡药业、旭光电子、诺德股份、首创环保</b>｜每只含财报4期/订单/主营/上下游/消息。<br><b style="color:#999">学习材料，不构成买卖建议。</b></div></div>
 <!-- /STUDY -->
@@ -453,6 +432,7 @@ id="page-holdings">
 
 <!-- ═══════════ 3 短线 ═══════════ -->
 <div class="page" id="page-short">
+
 
 
 <div class="card"><h4>⚡ 今日候选（回测最优条件筛出 · 价格到了才买）</h4>
@@ -653,6 +633,40 @@ id="page-holdings">
 <b>最新消息：</b>2026-08-20 23:10:19 上任不到3个月 首创环保总经理“因个人原因”请辞｜2026-04-21 23:32:53 直击业绩会｜首创环保圈定“十五五”战略关键词：AI+并购 生态环保行业将迈入运营为王新阶段<br>
 <b>上下游：</b>上下游：按主营构成推导暂未匹配到映射表，请结合公司年报「前五大供应商/客户」学习（标注：无数据不编造）<br>
 </div></div><br><b style="color:#999">学习材料（看懂公司靠什么赚钱/订单在哪/上下游是谁），不构成买卖建议；订单公告仅筛近4日，在途订单以年报季报为准。</b></div></div>
+<div class="page" id="page-news">
+<!-- NEWS -->
+<div class="card" style="border:2px solid #92400e;background:#fffbeb"><h4 style="color:#92400e">📰 消息面+基本面+订单深度（自动 · 2026-08-24 18:55:19）</h4>
+<div class="note" style="font-size:9px;line-height:1.8">
+<b>一、最新财经电报（财联社）</b><br>· 18:34:41 受台风影响 海南进出岛旅客列车停运<br>· 18:34:42 北斗系统应用广度深度加快拓展 重点行业综合应用渗透率约90%<br>· 18:36:26 <br>· 18:36:43 【机构龙虎榜解读】数字人民币+AI应用+数字政务，深度融入数字人民币生态建设，与华为等企业合作“数字人民币+智能合约”创<br>· 18:38:25 川发龙蟒：终止17.5万吨高压密磷酸铁锂项目合作<br>· 18:38:49 高盛：降华润啤酒目标价至30.1港元 白酒业务拖累降收入预测<br>· 18:39:04 星徽股份：被移出失信被执行人名单<br>· 18:39:25 中国卫通：2026年半年度净利润同比下降37.36%
+<br><b>二、外围快讯（东财）</b><br>· 2026-08-24 18:52:39 日本核污染水排放三年累计超17万吨<br>· 2026-08-24 18:52:06 世卫组织：刚果（金）埃博拉疫情进入“决定性时刻”<br>· 2026-08-24 18:51:08 海南矿业：上半年归母净利润5.14亿元 同比增长83.39%<br>· 2026-08-24 18:46:39 华纳药厂：子公司西甲硅油原料药获上市批准<br>· 2026-08-24 18:46:17 伊朗副外长：美财长对伊表态前后矛盾<br>· 2026-08-24 18:44:57 拼多多赵佳臻：以真金白银的长期投入重仓雄安 深度赋能传统产业智能化升级
+<br><b>三、持仓个股最新消息</b><br>
+<b>· 士兰微</b>：2026-08-21 11:12:00 600460，快速拉涨停！｜2026-08-24 17:53:24 士兰微：2026年半年度净利润5.16亿元 同比增长94.84%<br>
+<b>· 深科技</b>：2026-08-17 17:51:00 电子行业8月17日资金流向日报｜2026-08-12 17:15:00 8月12日盘后固定价格交易额11.93亿元<br>
+<b>· 雅克科技</b>：2026-07-21 14:15:00 002409，“地天板”｜2026-08-24 16:32:00 电子行业今日跌3.14%，主力资金净流出323.13亿元<br>
+<b>· 半导体设备ETF</b>：2026-08-24 14:36:22 资金“越跌越买”，半导体设备ETF国泰（159516）近20日吸金超45亿元｜2026-08-21 15:30:03 科技主线获资金追捧，半导体设备ETF国泰（159516）近30日吸金超66亿元<br>
+<b>· 中国巨石</b>：2026-08-20 18:53:44 电子布爆单，600176大赚！上半年净利超29亿元，拟现金分红13亿元｜2026-08-21 09:43:50 中国巨石600176.SH)：2026年中报净利润为29.33亿元、同比较去年同期上涨73.87%<br>
+<br><b>四、基本面（最近4期营收/净利及同比，同花顺口径）</b><br>
+<b>· 士兰微</b>：250930: 营收97.13亿亿 净利3.49亿亿｜251231: 营收130.52亿亿 净利3.99亿亿｜260331: 营收35.19亿亿 净利2.09亿亿｜260630: 营收72.62亿亿 净利5.16亿亿<br>
+<b>· 深科技</b>：250630: 营收77.40亿亿 净利4.52亿亿｜250930: 营收112.78亿亿 净利7.56亿亿｜251231: 营收157.47亿亿 净利11.36亿亿｜260331: 营收37.24亿亿 净利2.42亿亿<br>
+<b>· 雅克科技</b>：250630: 营收42.93亿亿 净利5.23亿亿｜250930: 营收64.67亿亿 净利7.96亿亿｜251231: 营收86.11亿亿 净利10.00亿亿｜260331: 营收19.73亿亿 净利2.67亿亿<br>
+<b>· 半导体设备ETF</b>：【数据缺失】<br>
+<b>· 中国巨石</b>：250930: 营收139.04亿亿 净利25.68亿亿｜251231: 营收188.81亿亿 净利32.85亿亿｜260331: 营收52.82亿亿 净利12.67亿亿｜260630: 营收111.59亿亿 净利29.33亿亿<br>
+<b>· 中际旭创</b>：250930: 营收250.05亿亿 净利71.32亿亿｜251231: 营收382.40亿亿 净利107.97亿亿｜260331: 营收194.96亿亿 净利57.35亿亿｜260630: 营收417.78亿亿 净利136.51亿亿<br>
+<b>· 紫金矿业</b>：250930: 营收2542.00亿亿 净利378.64亿亿｜251231: 营收3490.79亿亿 净利517.77亿亿｜260331: 营收984.98亿亿 净利200.79亿亿｜260630: 营收1941.78亿亿 净利391.70亿亿<br>
+<b>· 山东黄金</b>：250630: 营收567.66亿亿 净利28.08亿亿｜250930: 营收837.83亿亿 净利39.56亿亿｜251231: 营收1042.87亿亿 净利47.39亿亿｜260331: 营收325.16亿亿 净利14.46亿亿<br>
+<b>· 北方华创</b>：250630: 营收161.42亿亿 净利32.08亿亿｜250930: 营收273.01亿亿 净利51.30亿亿｜251231: 营收393.53亿亿 净利55.22亿亿｜260331: 营收103.23亿亿 净利16.35亿亿<br>
+<b>· 药明康德</b>：250930: 营收328.57亿亿 净利120.76亿亿｜251231: 营收454.56亿亿 净利191.51亿亿｜260331: 营收124.36亿亿 净利46.52亿亿｜260630: 营收288.97亿亿 净利110.80亿亿<br>
+<br><b>五、行业资金流TOP10（主线认定标准②：板块净流入连续2日且单日≥10亿）</b><br>
+贵金属 净额2.73亿（涨跌3.19%）<br>煤炭开采加工 净额0.85亿（涨跌2.72%）<br>保险 净额15.11亿（涨跌1.8%）<br>银行 净额45.23亿（涨跌1.38%）<br>种植业与林业 净额1.95亿（涨跌1.33%）<br>公路铁路运输 净额3.03亿（涨跌0.91%）<br>工业金属 净额-16.79亿（涨跌0.76%）<br>电池 净额-13.77亿（涨跌0.65%）<br>港口航运 净额-4.54亿（涨跌0.5%）<br>白酒 净额12.44亿（涨跌0.49%）
+<br><b>六、持仓今日公告（巨潮）</b><br>
+今日无持仓相关公告
+<br><b>七、券商分析师TOP（研报观点代理指标）</b><br>
+颜枫(上海证券) 2026收益率149.18% 最新评级：芯碁微装<br>方晨(上海证券) 2026收益率118.51% 最新评级：鼎龙股份<br>邱净博(广发证券) 2026收益率116.28% 最新评级：长盈通<br>要文强(东北证券) 2026收益率111.63% 最新评级：斯迪克<br>翟一梦(中邮证券) 2026收益率111.13% 最新评级：广立微<br>张慧(申万宏源) 2026收益率103.66% 最新评级：中远海能<br>李国盛(申万宏源) 2026收益率95.55% 最新评级：锐捷网络<br>杜先康(国海证券) 2026收益率94.4% 最新评级：强一股份
+<br><b style="color:#999">研报原文接口不可用已剔除（用分析师评级排行替代）；个股主力资金流仍【数据缺失】（东财拒连/新浪接口列错）——行业级资金流已可用，个股级继续找源。不构成投资建议。</b>
+</div></div>
+<!-- /NEWS -->
+</div>
+
 
 <div class="card" style="border:2px solid #f59e0b;background:#fffbeb">
 <h4 style="color:#f59e0b">📱 开通手机推送（1分钟，以后每天自动收到5只学习推送）</h4>
@@ -702,5 +716,6 @@ id="page-holdings">
 <div class="disclaimer">⚠ 免责声明：本页所有内容不构成投资建议，市场有风险，投资需谨慎。<br>所有价格以券商实盘为准，请在券商软件交叉验证后再操作。<br>数据时点：2026-08-21 16:14 收盘定稿 ｜ 生成：量化工作台管家</div>
 
 </div>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){})}</script>
 </body>
 </html>
