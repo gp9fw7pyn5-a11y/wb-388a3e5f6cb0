@@ -17,8 +17,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .tab-btn .tb{font-size:20px;display:block;line-height:1;margin-bottom:2px}
 .tab-radio{display:none}
 .page{display:none}
-#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn{display:block}
-#r-market:checked~.tab-bar label[for="r-market"],#r-holdings:checked~.tab-bar label[for="r-holdings"],#r-short:checked~.tab-bar label[for="r-short"],#r-mid:checked~.tab-bar label[for="r-mid"],#r-long:checked~.tab-bar label[for="r-long"],#r-finance:checked~.tab-bar label[for="r-finance"],#r-learn:checked~.tab-bar label[for="r-learn"]{color:#4a6fa5}
+#r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn,#r-system:checked~#page-system{display:block}
+#r-market:checked~.tab-bar label[for="r-market"],#r-holdings:checked~.tab-bar label[for="r-holdings"],#r-short:checked~.tab-bar label[for="r-short"],#r-mid:checked~.tab-bar label[for="r-mid"],#r-long:checked~.tab-bar label[for="r-long"],#r-finance:checked~.tab-bar label[for="r-finance"],#r-learn:checked~.tab-bar label[for="r-learn"],#r-system:checked~.tab-bar label[for="r-system"]{color:#4a6fa5}
 .card{background:var(--card);border-radius:10px;padding:11px;margin-bottom:7px;border:1px solid var(--border)}
 .card h4{font-size:15px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 .up{color:var(--red);font-weight:700}.dn{color:var(--green);font-weight:700}
@@ -62,6 +62,7 @@ details .inner{font-size:11px;line-height:1.75;color:#666;margin-top:7px;padding
 <input type="radio" name="tab" id="r-long" class="tab-radio">
 <input type="radio" name="tab" id="r-finance" class="tab-radio">
 <input type="radio" name="tab" id="r-learn" class="tab-radio">
+<input type="radio" name="tab" id="r-system" class="tab-radio">
 <div class="tab-bar">
 <label for="r-market" class="tab-btn"><span class="tb">📊</span>大盘</label>
 <label for="r-holdings" class="tab-btn"><span class="tb">📋</span>持仓</label>
@@ -70,11 +71,89 @@ details .inner{font-size:11px;line-height:1.75;color:#666;margin-top:7px;padding
 <label for="r-long" class="tab-btn"><span class="tb">🏔️</span>长线</label>
 <label for="r-finance" class="tab-btn"><span class="tb">💰</span>基金</label>
 <label for="r-learn" class="tab-btn"><span class="tb">📚</span>学习</label>
+<label for="r-system" class="tab-btn"><span class="tb">🧭</span>系统</label>
 </div>
 ->
 <!-- TOPBAR -->
 <div style="display:flex;flex-wrap:wrap;gap:7px;margin:8px 12px 4px"><span style="background:#7c3aed;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">情绪：修复【待确认】</span><span style="background:#b45309;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">涨股比：76.2%</span><span style="background:#047857;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">仓位目标：30</span><span style="background:#b91c1c;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:bold">浮亏：-34.1%（8/24收盘程序算）</span><span style="background:#334155;color:#e2e8f0;border-radius:8px;padding:4px 10px;font-size:11px">止损线：士兰微破33.40 / 深科技破36.83 / 雅克破135 / ETF破0.72 / 巨石破40.56</span></div>
 <!-- /TOPBAR -->
+
+<!-- ═══════════ 8 系统 ═══════════ -->
+<div class="page" id="page-system">
+<div class="card" style="border:2px solid #4a6fa5;background:#f0f4fa">
+<h4 style="color:#4a6fa5">🧭 果冻量化 · 系统框架</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+<b>核心一句话：AI 负责执行，策略决定上限，风控决定你能不能活下来。</b><br>
+这是"果冻量化"这个 A 股量化工作台的整体说明——它怎么思考、怎么决策、怎么每天自动运转，不靠情绪、不靠拍脑袋。
+</div>
+</div>
+
+<div class="card">
+<h4>📐 一、系统策略框架</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+<b>三条路线（对应你持仓的周期）</b>：<br>
+· <b>短线</b>（1-5 个交易日）——博反弹，单票最多 3% 仓位<br>
+· <b>中线</b>（1-3 个月）——跟主线，单票最多 8%<br>
+· <b>长线</b>（1 年以上）——只留好公司，单票最多 10%<br><br>
+<b>决策因子（决定买什么、买多少）</b>：<br>
+· <b>情绪</b>（涨股比）→ 决定该几成仓：冰点≤2成 / 修复3-4成 / 温和5-6成 / 狂热7-8成 / 退潮≤3成<br>
+· <b>资金流</b>（主力5日净流入）→ 有没有大资金在买<br>
+· <b>技术面</b>（均线多头排列＋回踩买点）→ 在哪买、止损、目标<br><br>
+<b>执行节奏（全部自动，不用你盯盘）</b>：<br>
+每天 8:30 早盘统一 → 13:30 盘中验证 → 18:05 收盘复盘＋执行单 → 23:40 全市场选股＋推外网
+</div>
+</div>
+
+<div class="card">
+<h4>⏰ 二、每天自动干什么（4 个时间点）</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+· <b>08:30 早盘统一</b>：复盘隔夜＋盘前消息＋每日5只学习＋数据审查＋AI训练＋推送早盘简报＋推外网<br>
+· <b>13:30 盘中验证</b>：重新验证昨晚选出的候选能不能买（价格到买点没有、大盘有没有变坏）<br>
+· <b>18:05 收盘复盘</b>：看今天盘面＋你的持仓状态＋生成明天的执行单<br>
+· <b>23:40 夜间选股</b>：全市场 5200 多只里扫出明天的候选＋全面复盘＋自动进化
+</div>
+</div>
+
+<div class="card">
+<h4>🛠️ 三、这套系统是怎么搭出来的（5 步）</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+· <b>01 选工具</b>：Python 脚本＋腾讯/通达信行情＋本地资金流库<br>
+· <b>02 多智能体</b>：七个 AI 各司其职（作战参谋/情报/研究/工程/技术/总核查/汇总）<br>
+· <b>03 让 AI 写策略</b>：回测验证，只保留赚钱期望为正的<br>
+· <b>04 风控闸门</b>：21 条机器闸门＋80 条铁律，不达标不发布<br>
+· <b>05 接入实盘</b>：先模拟盘试运行，确认后再真金白银
+</div>
+</div>
+
+<div class="card">
+<h4>✅ 四、上线前检查清单（21 条机器闸门）</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+每次改完页面自动跑 21 条检查，任一不过禁止发布：<br>
+· 标签配平、无裸&lt;字母、术语中文化、8 个页签完整<br>
+· 无模糊表述/双标签、观察池有跟踪、盘前有盘后验证<br>
+· 资金流结论带量化、审计成果不丢、6 份副本同 hash<br>
+· 仓位模糊词带量化、策略池标启用、五要素齐全、主线有认定标准
+</div>
+</div>
+
+<div class="card">
+<h4>⚠️ 五、注意事项</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+· <b>安全</b>：接入的密钥、链接别外传（页面含持仓隐私）<br>
+· <b>认知</b>：AI 给的是数据＋纪律，不代替你思考，最终判断要你自己承担<br>
+· <b>实践</b>：先模拟盘/小资金验证，别一上来就重仓
+</div>
+</div>
+
+<div class="card" style="border:2px solid #b45309;background:#fffbeb">
+<h4 style="color:#b45309">📌 总结</h4>
+<div class="note" style="font-size:13px;line-height:1.9">
+<b>先有策略，再让 AI 执行；先有风控，再追求收益。</b><br>
+果冻量化不做"稳赚"，它做的是<b>纪律</b>——用机器替你把策略、风控、执行都钉死。
+</div>
+</div>
+</div>
+
 
 <!-- ═══════════ 1 大盘 ═══════════ -->
 <div class="page" id="page-market">
