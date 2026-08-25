@@ -1,7 +1,7 @@
 {
-  "name": "投资工作台",
-  "short_name": "工作台",
-  "description": "个人量化纪律工作台：复盘/情绪/持仓/每日学习",
+  "name": "果冻量化",
+  "short_name": "果冻量化",
+  "description": "果冻量化：个人A股量化工作台：复盘/情绪/持仓/每日学习",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

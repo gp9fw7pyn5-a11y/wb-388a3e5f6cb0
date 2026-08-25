@@ -8,7 +8,7 @@
 <style>
 :root{--bg:#f5f3ef;--card:#fff;--txt:#1a1a1a;--sub:#888;--red:#d43030;--green:#22a45d;--accent:#4a6fa5;--border:#e8e5df;--warn:#e67e22;--tag-bg:#f0ede5}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);-webkit-text-size-adjust:100%;font-size:13px;padding-bottom:72px}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);-webkit-text-size-adjust:100%;font-size:15px;padding-bottom:72px}
 .app{max-width:800px;margin:0 auto;padding:8px}
 .hdr{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;border-radius:10px;padding:12px;margin-bottom:6px;text-align:center}
 .hdr .t{font-size:17px;font-weight:700}.hdr .s{font-size:12px;opacity:.95;margin-top:3px}
@@ -20,7 +20,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 #r-market:checked~#page-market,#r-holdings:checked~#page-holdings,#r-short:checked~#page-short,#r-mid:checked~#page-mid,#r-long:checked~#page-long,#r-finance:checked~#page-finance,#r-learn:checked~#page-learn{display:block}
 #r-market:checked~.tab-bar label[for="r-market"],#r-holdings:checked~.tab-bar label[for="r-holdings"],#r-short:checked~.tab-bar label[for="r-short"],#r-mid:checked~.tab-bar label[for="r-mid"],#r-long:checked~.tab-bar label[for="r-long"],#r-finance:checked~.tab-bar label[for="r-finance"],#r-learn:checked~.tab-bar label[for="r-learn"]{color:#4a6fa5}
 .card{background:var(--card);border-radius:10px;padding:11px;margin-bottom:7px;border:1px solid var(--border)}
-.card h4{font-size:13px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.card h4{font-size:15px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 .up{color:var(--red);font-weight:700}.dn{color:var(--green);font-weight:700}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--tag-bg);padding:4px 5px;text-align:left;font-weight:700;font-size:11px}
@@ -32,7 +32,7 @@ td{padding:5px;border-bottom:1px solid var(--border);vertical-align:middle}
 .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:12px;font-weight:700;margin:1px}
 .bg-sell{background:#fee2e2;color:#b91c1c}.bg-buy{background:#d1fae5;color:#065f46}
 .bg-hold{background:#fef3c7;color:#92400e}.bg-wait{background:#e8f0fc;color:var(--accent)}
-.note{font-size:12px;color:var(--sub);line-height:1.6}
+.note{font-size:13px;color:#555;line-height:1.8}
 details{background:#fafafa;border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:7px}
 summary{font-size:12px;font-weight:700;color:#555;cursor:pointer}
 details .inner{font-size:11px;line-height:1.75;color:#666;margin-top:7px;padding-top:7px;border-top:1px dashed #ddd}
@@ -40,7 +40,9 @@ details .inner{font-size:11px;line-height:1.75;color:#666;margin-top:7px;padding
 .stock h5{font-size:13px;margin-bottom:5px}
 .stock .row{font-size:12px;line-height:1.7;margin:2px 0}
 .stock .row b{color:#333}
-.disclaimer{font-size:10px;color:#aaa;text-align:center;padding:10px 0;line-height:1.5}
+.disclaimer{font-size:11px;color:#aaa;text-align:center;padding:10px 0;line-height:1.5}
+.card .note{font-size:13px !important;line-height:1.85 !important}
+.card h4{font-size:15px !important}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -52,7 +54,7 @@ details .inner{font-size:11px;line-height:1.75;color:#666;margin-top:7px;padding
 <body>
 <div class="app">
 
-<div class="hdr"><div class="t">【历史·自动标记】8/21 收盘复盘 · 收益最大化 × 风险控制</div><div class="s">数据时点 8/21 16:14 收盘定稿 · 情绪＝修复【待确认】 · 仓位目标3成 · 账户浮亏 <b>-41.87%</b> · 半导体集中度 <b>90.2%</b></div></div>
+<div class="hdr"><div class="t">果冻量化 · 个人A股量化工作台</div><div class="s">数据以各卡片标注时点为准 · 不构成投资建议</div></div>
 <input type="radio" name="tab" id="r-market" class="tab-radio" checked>
 <input type="radio" name="tab" id="r-holdings" class="tab-radio">
 <input type="radio" name="tab" id="r-short" class="tab-radio">

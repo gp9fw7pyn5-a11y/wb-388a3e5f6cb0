@@ -1,4 +1,4 @@
-// 投资工作台 Service Worker —— 离线可用（添加到主屏幕后，没网也能打开）
+// 果冻量化 Service Worker —— 离线可用（添加到主屏幕后，没网也能打开）
 const CACHE = "workbench-v1";
 const ASSETS = ["./", "./index.html", "./daily_study.html", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", (e) => {
