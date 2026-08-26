@@ -133,10 +133,10 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 <style id="responsive">
 @media (max-width:900px){
   html,body{overflow:visible;height:auto}
-  .app-shell{display:block;height:auto;overflow:visible}
+  .app-shell{display:block;height:auto;overflow:visible;position:static}
   .app-body{display:block;height:auto;overflow:visible}
   .app-topbar{position:fixed;top:0;left:0;right:0;z-index:100}
-  .app-main{height:auto;min-height:100vh;min-height:100dvh;padding-top:var(--topbar-h);padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 12px);overflow:visible}
+  .app-main{position:relative;top:auto;bottom:auto;left:auto;right:auto;height:auto;min-height:100vh;min-height:100dvh;padding-top:var(--topbar-h);padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 12px);overflow:visible}
   .app-sidebar,.app-inspector{display:none}
   .mobile-tab-bar{position:fixed;bottom:0;left:0;right:0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
   .app-statusbar{display:none}
