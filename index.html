@@ -50,8 +50,8 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 <style id="apple-shell">
 :root{--topbar-h:52px;--sidebar-w:220px;--inspector-w:300px;--statusbar-h:32px;--bottom-nav-h:64px;--gap:14px}
 html,body{height:100%}
-.app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-.app-topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#000;border-bottom:1px solid var(--border);z-index:100}
+:.app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+:.app-topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#000;border-bottom:1px solid var(--border);z-index:100}
 .topbar-left,.topbar-center,.topbar-right{display:flex;align-items:center;gap:16px}
 .traffic-lights{display:flex;gap:8px;margin-right:12px}
 .traffic-light{width:12px;height:12px;border-radius:50%}
@@ -85,16 +85,6 @@ html,body{height:100%}
 .mobile-tab-bar .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--muted);cursor:pointer;padding-top:4px}
 .mobile-tab-bar .tab-btn .tb{font-size:20px;line-height:1}
 .mobile-tab-bar .tab-btn.active{color:var(--accent)}
-</style>
-<style id="compat-patch">
-/* Fallback for browsers that have trouble with the full Apple layout */
-.app-topbar,.app-sidebar,.app-statusbar,.mobile-tab-bar{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;background:#000 !important}
-.app-main{background:#000 !important;color:#f5f5f7 !important}
-.app-main .page.active{display:block !important;visibility:visible !important;opacity:1 !important}
-.app-main .page{display:none !important}
-html,body{background:#000 !important;color:#f5f5f7 !important}
-.card{background:#1c1c1e !important;border-color:#3a3a3c !important;color:#f5f5f7 !important}
-.card h3,.card h4,.card h5,.card p,.card span,.card div{color:#f5f5f7 !important}
 </style>
 <style id="apple-content">
 .app-main .page{display:none;animation:fadeIn .2s ease;width:100%;min-width:0}
