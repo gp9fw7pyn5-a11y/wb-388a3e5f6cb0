@@ -49,8 +49,8 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 </style>
 <style id="apple-shell">
 :root{--topbar-h:52px;--sidebar-w:220px;--inspector-w:300px;--statusbar-h:32px;--bottom-nav-h:64px;--gap:14px}
-.app-shell{position:fixed;inset:0;display:grid;grid-template-rows:var(--topbar-h) 1fr var(--statusbar-h);overflow:hidden}
-.app-topbar{grid-row:1;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:rgba(0,0,0,0.55);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);z-index:100}
+.app-shell{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;overflow:hidden}
+.app-topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#000;border-bottom:1px solid var(--border);z-index:100}
 .topbar-left,.topbar-center,.topbar-right{display:flex;align-items:center;gap:16px}
 .traffic-lights{display:flex;gap:8px;margin-right:12px}
 .traffic-light{width:12px;height:12px;border-radius:50%}
@@ -62,8 +62,8 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 .icon-btn{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:none;background:transparent;color:var(--foreground);cursor:pointer}
 .icon-btn:hover{background:var(--secondary)}
 .user-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent)}
-.app-body{grid-row:2;display:grid;grid-template-columns:var(--sidebar-w) 1fr var(--inspector-w);overflow:hidden;transition:grid-template-columns .25s ease}
-.app-sidebar{background:rgba(28,28,30,0.72);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 12px;overflow-y:auto}
+.app-body{flex:1;display:flex;overflow:hidden;min-height:0}
+.app-sidebar{width:var(--sidebar-w);background:#1c1c1e;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 12px;overflow-y:auto}
 .sidebar-nav{display:flex;flex-direction:column;gap:18px}
 .nav-group{display:flex;flex-direction:column;gap:4px}
 .nav-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:0 10px}
@@ -71,19 +71,29 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 .nav-item:hover{background:rgba(255,255,255,0.08)}
 .nav-item.active{background:rgba(0,122,255,0.15);color:var(--accent)}
 .app-main{background:var(--background);overflow-y:auto;padding:var(--gap);padding-bottom:calc(var(--gap) + var(--bottom-nav-h));min-width:0;width:100%}
-.app-inspector{background:var(--card);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .25s ease,margin .25s ease;min-width:0}
+.app-inspector{width:var(--inspector-w);background:#1c1c1e;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .25s ease,margin .25s ease;min-width:0}
 .app-inspector.collapsed{width:0;min-width:0;margin-left:-1px;overflow:hidden}
 .inspector-header{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);white-space:nowrap}
 .inspector-title{font-size:13px;font-weight:600;margin:0}
 .inspector-body{flex:1;padding:16px;overflow-y:auto;color:var(--muted);font-size:13px;white-space:nowrap}
-.app-statusbar{grid-row:3;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(0,0,0,0.65);backdrop-filter:blur(20px);border-top:1px solid var(--border);font-size:12px;color:var(--muted);z-index:100}
+.app-statusbar{height:var(--statusbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#000;border-top:1px solid var(--border);font-size:12px;color:var(--muted);z-index:100}
 .status-left,.status-center,.status-right{display:flex;align-items:center;gap:16px}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:6px}
 .tab-radio{display:none}
-.mobile-tab-bar{display:none;position:fixed;left:0;right:0;bottom:0;height:var(--bottom-nav-h);background:rgba(0,0,0,0.75);backdrop-filter:blur(20px);border-top:1px solid var(--border);z-index:101}
+.mobile-tab-bar{display:none;position:fixed;left:0;right:0;bottom:0;height:var(--bottom-nav-h);background:#000;border-top:1px solid var(--border);z-index:101}
 .mobile-tab-bar .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--muted);cursor:pointer;padding-top:4px}
 .mobile-tab-bar .tab-btn .tb{font-size:20px;line-height:1}
 .mobile-tab-bar .tab-btn.active{color:var(--accent)}
+</style>
+<style id="compat-patch">
+/* Fallback for browsers that have trouble with the full Apple layout */
+.app-topbar,.app-sidebar,.app-statusbar,.mobile-tab-bar{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;background:#000 !important}
+.app-main{background:#000 !important;color:#f5f5f7 !important}
+.app-main .page.active{display:block !important;visibility:visible !important;opacity:1 !important}
+.app-main .page{display:none !important}
+html,body{background:#000 !important;color:#f5f5f7 !important}
+.card{background:#1c1c1e !important;border-color:#3a3a3c !important;color:#f5f5f7 !important}
+.card h3,.card h4,.card h5,.card p,.card span,.card div{color:#f5f5f7 !important}
 </style>
 <style id="apple-content">
 .app-main .page{display:none;animation:fadeIn .2s ease;width:100%;min-width:0}
@@ -120,7 +130,6 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 </style>
 <style id="responsive">
 @media (max-width:1100px){
-  .app-body{grid-template-columns:0 1fr 0}
   .app-sidebar,.app-inspector{display:none}
   .app-main{padding:12px;padding-bottom:calc(var(--bottom-nav-h) + 12px)}
   .mobile-tab-bar{display:flex}
