@@ -85,6 +85,17 @@ html,body{height:100%}
 .mobile-tab-bar .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--muted);cursor:pointer;padding-top:4px}
 .mobile-tab-bar .tab-btn .tb{font-size:20px;line-height:1}
 .mobile-tab-bar .tab-btn.active{color:var(--accent)}
+.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.6);z-index:200;flex-direction:column;justify-content:flex-end}
+.more-sheet.open{display:flex}
+.more-sheet-panel{background:#1c1c1e;border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:16px;animation:slideUp .25s ease}
+.more-sheet-title{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:12px;padding:0 8px}
+.more-sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.more-sheet-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;border:none;background:transparent;color:var(--foreground);font-size:12px;cursor:pointer}
+.more-sheet-item:active{background:var(--secondary)}
+.msi-icon{font-size:24px;line-height:1}
+.msi-label{font-size:11px}
+.more-sheet-cancel{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:var(--secondary);color:var(--foreground);font-size:15px;font-weight:500}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 </style>
 <style id="apple-content">
 .app-main .page{display:none;animation:fadeIn .2s ease;width:100%;min-width:0}
@@ -837,9 +848,23 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 <label class="tab-btn" data-target="page-holdings"><span class="tb">📋</span>持仓管理</label>
 <label class="tab-btn" data-target="page-short"><span class="tb">⚡</span>短线</label>
 <label class="tab-btn" data-target="page-mid"><span class="tb">📈</span>中线</label>
-<label class="tab-btn" data-target="page-long"><span class="tb">🏔️</span>长线</label>
+<label class="tab-btn" id="more-tab-btn"><span class="tb">⋯</span>更多</label>
 
 </nav>
+
+<div class="more-sheet" id="more-sheet">
+  <div class="more-sheet-panel">
+    <div class="more-sheet-title">更多页面</div>
+    <div class="more-sheet-grid">
+      <button class="more-sheet-item" data-target="page-long"><span class="msi-icon">🏔️</span><span class="msi-label">长线</span></button>
+<button class="more-sheet-item" data-target="page-finance"><span class="msi-icon">💰</span><span class="msi-label">基金理财</span></button>
+<button class="more-sheet-item" data-target="page-learn"><span class="msi-icon">📚</span><span class="msi-label">学习中心</span></button>
+<button class="more-sheet-item" data-target="page-system"><span class="msi-icon">🧭</span><span class="msi-label">系统设置</span></button>
+
+    </div>
+    <button class="more-sheet-cancel" id="more-sheet-cancel">取消</button>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -856,7 +881,23 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
   }
 
   navItems.forEach(n=>n.addEventListener('click',()=>switchPage(n.dataset.target)));
-  mobItems.forEach(n=>n.addEventListener('click',()=>switchPage(n.dataset.target)));
+  mobItems.forEach(n=>{
+    if(n.id==='more-tab-btn'){
+      n.addEventListener('click',()=>document.getElementById('more-sheet')?.classList.add('open'));
+    }else{
+      n.addEventListener('click',()=>switchPage(n.dataset.target));
+    }
+  });
+
+  const moreSheet = document.getElementById('more-sheet');
+  document.querySelectorAll('.more-sheet-item').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      switchPage(btn.dataset.target);
+      moreSheet?.classList.remove('open');
+    });
+  });
+  document.getElementById('more-sheet-cancel')?.addEventListener('click',()=>moreSheet?.classList.remove('open'));
+  moreSheet?.addEventListener('click',(e)=>{ if(e.target===moreSheet) moreSheet.classList.remove('open'); });
 
   document.getElementById('theme-toggle')?.addEventListener('click',()=>{
     document.documentElement.classList.toggle('dark');
