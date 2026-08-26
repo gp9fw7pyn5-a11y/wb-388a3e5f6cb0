@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -49,7 +49,8 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 </style>
 <style id="apple-shell">
 :root{--topbar-h:52px;--sidebar-w:220px;--inspector-w:300px;--statusbar-h:32px;--bottom-nav-h:64px;--gap:14px}
-.app-shell{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;overflow:hidden}
+html,body{height:100%}
+.app-shell{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 .app-topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#000;border-bottom:1px solid var(--border);z-index:100}
 .topbar-left,.topbar-center,.topbar-right{display:flex;align-items:center;gap:16px}
 .traffic-lights{display:flex;gap:8px;margin-right:12px}
@@ -80,7 +81,7 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;font-family:
 .status-left,.status-center,.status-right{display:flex;align-items:center;gap:16px}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:6px}
 .tab-radio{display:none}
-.mobile-tab-bar{display:none;position:fixed;left:0;right:0;bottom:0;height:var(--bottom-nav-h);background:#000;border-top:1px solid var(--border);z-index:101}
+.mobile-tab-bar{display:none;position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom);height:var(--bottom-nav-h);background:#000;border-top:1px solid var(--border);z-index:101}
 .mobile-tab-bar .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--muted);cursor:pointer;padding-top:4px}
 .mobile-tab-bar .tab-btn .tb{font-size:20px;line-height:1}
 .mobile-tab-bar .tab-btn.active{color:var(--accent)}
@@ -131,7 +132,7 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 <style id="responsive">
 @media (max-width:1100px){
   .app-sidebar,.app-inspector{display:none}
-  .app-main{padding:12px;padding-bottom:calc(var(--bottom-nav-h) + 12px)}
+  .app-main{padding:12px;padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 12px)}
   .mobile-tab-bar{display:flex}
   .page-title{font-size:14px}
   .global-search{width:160px}
