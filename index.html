@@ -273,8 +273,9 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 <div class="card" style="border:2px solid #047857;background:#ecfdf5"><h4 style="color:#047857">💵 资金面信号池 · 明细TOP5</h4><div class="note" style="font-size:10px;line-height:1.9"><b>吸筹TOP5</b>：002354+29.2亿、600150+28.1亿、000560+27.9亿、300413+26.2亿、600869+21.3亿<br><b>黄金窗口</b>（吸筹+涨幅&lt;3%）TOP5：002354+29.2亿、000560+27.9亿、300413+26.2亿、603228+21.2亿、603067+18.2亿<br></div></div>
 <!-- /MARKETEXTRA -->
 <!-- DISTILL -->
-<div class="card" style="border:2px solid #7c3aed;background:#faf5ff"><h4 style="color:#7c3aed">🧬 每周自动蒸馏（2026-08-30 12:05:01 · 无人值守自动进化）</h4>
+<div class="card" style="border:2px solid #7c3aed;background:#faf5ff"><h4 style="color:#7c3aed">🧬 每周自动蒸馏（2026-09-06 12:05:00 · 无人值守自动进化）</h4>
 <div class="note" style="font-size:9px;line-height:1.8">
+<b>模拟盘累计（三指标同屏·铁律74）</b>：1笔｜胜率<b class="up">0.0%</b>｜盈亏比None｜单笔期望<b class="up">-4.78%</b><br>
 <b>休眠判定</b>：无触发<br>
 <b style="color:#999">蒸馏结论已追加永久记忆 auto_distill.md；每版自动比上版多守一条，指标只增不减。不构成投资建议。</b>
 </div></div>
@@ -282,6 +283,11 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 </details>
 </div>
 <div class="page" id="page-holdings">
+<!-- ACCSUM -->
+
+<div class="card" style="border:2px solid #b91c1c"><h4 style="color:#b91c1c">📋 账户总览（实时现算 · 刷新 2026-09-06 12:27）</h4><table><tr><th>标的</th><th>股数</th><th>成本</th><th>收盘</th><th>浮盈亏</th><th>止损</th><th>市值</th><th>盈亏额</th></tr><tr><td>深科技</td><td>200</td><td>114.395</td><td>34.52</td><td class="dn">-69.82%</td><td>36.83<br><span style="font-size:9px;color:#b91c1c">距止损-6.3%</span></td><td>6,904</td><td class="dn">-15,975</td></tr><tr><td>雅克科技</td><td>200</td><td>176.28</td><td>126.62</td><td class="dn">-28.17%</td><td>135<br><span style="font-size:9px;color:#b91c1c">距止损-6.2%</span></td><td>25,324</td><td class="dn">-9,932</td></tr><tr><td>士兰微</td><td>500</td><td>40.27</td><td>30.34</td><td class="dn">-24.66%</td><td>33.4<br><span style="font-size:9px;color:#b91c1c">距止损-9.2%</span></td><td>15,170</td><td class="dn">-4,965</td></tr><tr><td>半导体设备ETF（国泰）</td><td>8500</td><td>0.831</td><td>0.657</td><td class="dn">-20.94%</td><td>0.72<br><span style="font-size:9px;color:#b91c1c">距止损-8.7%</span></td><td>5,584</td><td class="dn">-1,479</td></tr><tr><td>中国巨石（100股观察仓）</td><td>100</td><td>87.013</td><td>40.18</td><td class="dn">-53.82%</td><td>40.56<br><span style="font-size:9px;color:#b91c1c">距止损-0.9%</span></td><td>4,018</td><td class="dn">-4,683</td></tr></table><div class="note" style="font-size:10px">成本=券商摊薄成本（trading_config，部分卖出后已重算）；收盘价=腾讯实时接口；百分比全部程序算。价格以券商实盘为准，不构成投资建议。</div></div>
+<!-- /ACCSUM -->
+
 <!-- MISSING -->
 
 <div class="card" style="border:2px solid #b45309;background:#fffbeb"><h4 style="color:#b45309">⚠ 数据缺失清单（自动上报 · 2026-09-06 08:34:48）</h4><div class="note" style="font-size:9px;line-height:1.8">· 页面存在 14 处【数据缺失】标注（详见页面，多为源受限，见原因分类）<br><br><b>原因分类：</b><br>· 东财行业资金流接口：8/23起IP限流（间歇恢复），恢复后行业流出榜自动补<br>· 个股收盘价：补价每晚21:00自动慢补400只，预计2周补完全市场<br>· 休市日（周末/节假日）：无新行情属正常，非缺失</div></div>
@@ -300,10 +306,7 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 
 <div class="card" style="border:2px solid #dc2626;background:#fff7f7"><h4 style="color:#dc2626">📋 今日交易执行单（数据2026-09-04收盘 · 2026-09-04 18:05:46生成）</h4><div class="note" style="font-size:11px;line-height:2.0"><b>情绪：冰点（≤2成）｜总仓位目标：≤2成（冰点映射）</b><br><b>【今天能开新仓吗】</b><b class="dn">❌ 今天不开新仓</b>（还差：情绪连续超60日数0/2、上证未站上MA5、无主线（板块涨停≥10家））——候选只挂单登记、不追价，条件满足才动手<br><b style="color:#b91c1c">一、必卖（开盘执行，不还价）：</b><br>深科技（000021）：现价34.52 已破止损36.83 → <b class="dn">开盘集合竞价卖出 200股/份，不还价</b><br>雅克科技（002409）：现价126.62 已破止损135 → <b class="dn">开盘集合竞价卖出 200股/份，不还价</b><br>士兰微（600460）：现价30.34 已破止损33.4 → <b class="dn">开盘集合竞价卖出 500股/份，不还价</b><br>半导体设备ETF（国泰）（159516）：现价0.657 已破止损0.72 → <b class="dn">开盘集合竞价卖出 8500股/份，不还价</b><br>中国巨石（600176）：现价40.18 已破止损40.56 → <b class="dn">开盘集合竞价卖出 100股/份，不还价</b><br><br><b style="color:#d97706">二、警戒（盘中盯线）：</b><br>无<br><b>三、持有（破线才动）：</b><br>无<br><b style="color:#047857">四、可买（限价挂单，不追高）：</b><br>【信号日2026-09-03·待13:30盘中验证·回到买点区才挂单】<br>爱科赛博（688719）：<b>限价挂 49.58~50.58 买入</b>（止损49.04/目标60.7/盈亏比6.57）——全市场选股：5日主力吸筹靠前+多头排列+盈亏比6.57；回到买点才买，涨离不追，破止损作废<br>帝科股份（300842）：<b>限价挂 63.99~65.28 买入</b>（止损61.34/目标78.33/盈亏比3.31）——全市场选股：5日主力吸筹靠前+多头排列+盈亏比3.31；回到买点才买，涨离不追，破止损作废<br>兴瑞科技（002937）：<b>限价挂 29.95~30.56 买入</b>（止损29.62/目标36.67/盈亏比6.51）——全市场选股：5日主力吸筹靠前+多头排列+盈亏比6.51；回到买点才买，涨离不追，破止损作废<br>达瑞电子（300976）：<b>限价挂 56.93~58.08 买入</b>（止损55.92/目标69.7/盈亏比5.37）——全市场选股：5日主力吸筹靠前+多头排列+盈亏比5.37；回到买点才买，涨离不追，破止损作废<br>奕东电子（301123）：<b>限价挂 74.97~76.48 买入</b>（止损73.06/目标91.78/盈亏比4.47）——全市场选股：5日主力吸筹靠前+多头排列+盈亏比4.47；回到买点才买，涨离不追，破止损作废<br>以上候选<b>合计≤总仓位1成</b>；情绪未到修复确认则只挂单不执行；半导体额度=0。<br><br><b>五、卖法</b>：止损=盘中破位立即卖；止盈=触达目标卖；盈利≥止损幅度1.5倍→止损上移到成本线（保本）；短线收盘破MA10/中线破MA20离场；止损只上移不下移。<br><b>六、模拟盘操作</b>（虚拟10万·试运行≤1成·T+1开盘成交）：<br>　📝 挂单：<b>爱科赛博</b> 100股｜挂49.58~50.58｜止损49.04｜目标60.7｜盈亏比6.57<br>　　　为什么买：｜盈亏比6.57｜修复待确认按试运行≤1成(虚拟)<br>　📝 挂单：<b>兴瑞科技</b> 100股｜挂29.95~30.56｜止损29.62｜目标36.67｜盈亏比6.51<br>　　　为什么买：｜盈亏比6.51｜修复待确认按试运行≤1成(虚拟)<br>　📈 持仓：招商轮船 200股<br>　✅ 已结1笔：【沃森生物 -4.78%·止损(盘中破位)】<br><b style="color:#999">执行规则：止损=盘中破位立即执行；挂单=限价不追；本单每天收盘后自动刷新，以最新为准。不构成投资建议。</b></div></div>
 <!-- /EXECUTE -->
-<!-- ACCSUM -->
 
-<div class="card" style="border:2px solid #b91c1c"><h4 style="color:#b91c1c">📋 账户总览（实时现算 · 刷新 2026-09-04 18:05）</h4><table><tr><th>标的</th><th>股数</th><th>成本</th><th>收盘</th><th>浮盈亏</th><th>止损</th><th>市值</th><th>盈亏额</th></tr><tr><td>深科技</td><td>200</td><td>114.395</td><td>34.520</td><td class="dn">-69.82%</td><td>36.83<br><span style="font-size:9px;color:#b91c1c">距止损-6.3%</span></td><td>6,904</td><td class="dn">-15,975</td></tr><tr><td>雅克科技</td><td>200</td><td>176.280</td><td>126.620</td><td class="dn">-28.17%</td><td>135<br><span style="font-size:9px;color:#b91c1c">距止损-6.2%</span></td><td>25,324</td><td class="dn">-9,932</td></tr><tr><td>士兰微</td><td>500</td><td>40.270</td><td>30.340</td><td class="dn">-24.66%</td><td>33.4<br><span style="font-size:9px;color:#b91c1c">距止损-9.2%</span></td><td>15,170</td><td class="dn">-4,965</td></tr><tr><td>半导体设备ETF（国泰）</td><td>8500</td><td>0.831</td><td>0.657</td><td class="dn">-20.94%</td><td>0.72<br><span style="font-size:9px;color:#b91c1c">距止损-8.7%</span></td><td>5,584</td><td class="dn">-1,479</td></tr><tr><td>中国巨石（100股观察仓）</td><td>100</td><td>87.013</td><td>40.180</td><td class="dn">-53.82%</td><td>40.56<br><span style="font-size:9px;color:#b91c1c">距止损-0.9%</span></td><td>4,018</td><td class="dn">-4,683</td></tr><tr><td><b>合计</b></td><td></td><td><b>94,035</b></td><td></td><td><b class="dn">-39.38%</b></td><td></td><td><b>57,000</b></td><td><b class="dn">-37,034</b></td></tr></table><div class="note" style="font-size:10px">成本=券商摊薄成本（trading_config，部分卖出后已重算）；收盘价=腾讯实时接口；百分比全部程序算。价格以券商实盘为准，不构成投资建议。</div></div>
-<!-- /ACCSUM -->
 
 
 
@@ -560,6 +563,10 @@ details .inner{font-size:12px;line-height:1.7;color:var(--muted);margin-top:8px;
 </details>
 </details>
 <div class="page" id="page-short">
+<!-- BOUNCE -->
+
+<div class="card" style="border:3px solid #16a085;background:#f0fffa"><h4 style="color:#16a085">🥚 超跌反弹篮子 · 引擎②（每天18:30自动 · 2026-09-04）</h4><div class="note" style="font-size:10px;line-height:1.9"><b>规则</b>：主板·剔ST·流动性核验｜信号=单日跌≥5%+低位+阴跌≥3天+跌前已弱｜触发日尾盘买入 → 止盈+4% → 期限7天 → <b>不设紧止损</b>（篮子分散扛尾部，紧止损实测毁灭期望）｜篮子≤2成（冰点期减半）<br><b>在途篮子 · 8笔</b>：<br>· <b>宏和科技</b>（sh603256）信号日2026-09-04｜买入参考 <b>120.69</b>｜止盈参考 <b class="up">125.52</b><br>· <b>和远气体</b>（sz002971）信号日2026-09-04｜买入参考 <b>38.65</b>｜止盈参考 <b class="up">40.20</b><br>· <b>大有能源</b>（sh600403）信号日2026-09-04｜买入参考 <b>6.53</b>｜止盈参考 <b class="up">6.79</b><br>· <b>三孚股份</b>（sh603938）信号日2026-09-04｜买入参考 <b>39.49</b>｜止盈参考 <b class="up">41.07</b><br>· <b>融捷股份</b>（sz002192）信号日2026-09-04｜买入参考 <b>65.43</b>｜止盈参考 <b class="up">68.05</b><br>· <b>金安国纪</b>（sz002636）信号日2026-09-04｜买入参考 <b>64.61</b>｜止盈参考 <b class="up">67.19</b><br>· <b>大族激光</b>（sz002008）信号日2026-09-04｜买入参考 <b>87.67</b>｜止盈参考 <b class="up">91.18</b><br>· <b>三祥新材</b>（sh603663）信号日2026-09-04｜买入参考 <b>38.20</b>｜止盈参考 <b class="up">39.73</b><br><b>台账（自动结算）</b>：已结算 0 笔｜胜率 0%｜单笔均值 0.0%（首篮 9/15 前后结算，此后每周滚动累计）<br><b>回测依据</b>：全A 17.6万次大跌事件（2021-2026，含费用）：投降事件后持7天平均 +1.4%，胜率 52%；紧止损（-3%）实测使期望转负，故本引擎不设紧止损。<br><b style="color:#999">数据时点：2026-09-04 收盘｜主板仅限（用户权限）｜百分比程序算。不构成投资建议。价格以券商实盘为准。</b></div></div>
+<!-- /BOUNCE -->
 <!-- SHORTWAR -->
 
 <div class="card" style="border:2px solid #b91c1c;background:#fff7f7"><h4 style="color:#b91c1c">⚔️ 短线作战 · 今日复盘与明日预案（2026-09-04 22:19:45）</h4><div class="note" style="font-size:11px;line-height:1.9">
