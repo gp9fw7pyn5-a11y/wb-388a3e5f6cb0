@@ -1,0 +1,345 @@
+{
+  "data": [
+    {
+      "id": "page-dashboard",
+      "title": "综合仪表盘",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 552,
+        "y": -180,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 3772,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-8b7eef39",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "desktop/dashboard.html",
+        "interactions": [
+          {
+            "domId": "nav-dashboard",
+            "targetPageId": "page-dashboard"
+          },
+          {
+            "domId": "nav-swing",
+            "targetPageId": "page-swing"
+          },
+          {
+            "domId": "nav-longterm",
+            "targetPageId": "page-longterm"
+          },
+          {
+            "domId": "nav-etf",
+            "targetPageId": "page-etf"
+          },
+          {
+            "domId": "nav-sim",
+            "targetPageId": "page-sim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-swing",
+      "title": "波段选股",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 108,
+        "y": 180,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-f8b4cca9",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "desktop/swing.html",
+        "interactions": [
+          {
+            "domId": "nav-dashboard",
+            "targetPageId": "page-dashboard"
+          },
+          {
+            "domId": "nav-swing",
+            "targetPageId": "page-swing"
+          },
+          {
+            "domId": "nav-longterm",
+            "targetPageId": "page-longterm"
+          },
+          {
+            "domId": "nav-etf",
+            "targetPageId": "page-etf"
+          },
+          {
+            "domId": "nav-sim",
+            "targetPageId": "page-sim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-longterm",
+      "title": "长线选股",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 120,
+        "y": 468,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-85878f55",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "desktop/longterm.html",
+        "interactions": [
+          {
+            "domId": "nav-dashboard",
+            "targetPageId": "page-dashboard"
+          },
+          {
+            "domId": "nav-swing",
+            "targetPageId": "page-swing"
+          },
+          {
+            "domId": "nav-longterm",
+            "targetPageId": "page-longterm"
+          },
+          {
+            "domId": "nav-etf",
+            "targetPageId": "page-etf"
+          },
+          {
+            "domId": "nav-sim",
+            "targetPageId": "page-sim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-etf",
+      "title": "ETF策略",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 120,
+        "y": 744,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-55a4d23d",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "desktop/etf.html",
+        "interactions": [
+          {
+            "domId": "nav-dashboard",
+            "targetPageId": "page-dashboard"
+          },
+          {
+            "domId": "nav-swing",
+            "targetPageId": "page-swing"
+          },
+          {
+            "domId": "nav-longterm",
+            "targetPageId": "page-longterm"
+          },
+          {
+            "domId": "nav-etf",
+            "targetPageId": "page-etf"
+          },
+          {
+            "domId": "nav-sim",
+            "targetPageId": "page-sim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-sim",
+      "title": "模拟盘",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 132,
+        "y": 1032,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-fccb0965",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "desktop/sim.html",
+        "interactions": [
+          {
+            "domId": "nav-dashboard",
+            "targetPageId": "page-dashboard"
+          },
+          {
+            "domId": "nav-swing",
+            "targetPageId": "page-swing"
+          },
+          {
+            "domId": "nav-longterm",
+            "targetPageId": "page-longterm"
+          },
+          {
+            "domId": "nav-etf",
+            "targetPageId": "page-etf"
+          },
+          {
+            "domId": "nav-sim",
+            "targetPageId": "page-sim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-mobile-dashboard",
+      "title": "手机版-综合仪表盘",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 1600,
+        "y": -180,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-29e7453b",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "mobile/dashboard.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-mobile-swing",
+      "title": "手机版-波段选股",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 1600,
+        "y": 180,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-fbc082ca",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "mobile/swing.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-mobile-longterm",
+      "title": "手机版-长线选股",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 1600,
+        "y": 468,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 907,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-7c5ad5f3",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "mobile/longterm.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-mobile-etf",
+      "title": "手机版-ETF策略",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 1600,
+        "y": 744,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1125,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-842d6682",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "mobile/etf.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-mobile-sim",
+      "title": "手机版-模拟盘",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1725754080000,
+      "canvasData": {
+        "x": 1600,
+        "y": 1032,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1207,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-0bf94682",
+          "measuredAt": 1788881073983
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "mobile/sim.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": false,
+    "deviceType": "desktop",
+    "projectName": "量化选股终端 UI",
+    "visualEditorEnabled": false
+  }
+}

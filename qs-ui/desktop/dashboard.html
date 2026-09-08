@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合仪表盘</title>
+    <style id="theme-vars">
+/* Quant Stock UI — Design Tokens */
+:root {
+  /* Primary hue: cool cyan-teal */
+  --qs-brand-50: #f0fdfa;
+  --qs-brand-100: #ccfbf1;
+  --qs-brand-200: #99f6e4;
+  --qs-brand-300: #5eead4;
+  --qs-brand-400: #2dd4bf;
+  --qs-brand-500: #14b8a6;
+  --qs-brand-600: #0d9488;
+  --qs-brand-700: #0f766e;
+  --qs-brand-800: #115e59;
+  --qs-brand-900: #134e4a;
+
+  /* Neutral */
+  --qs-neutral-0: #ffffff;
+  --qs-neutral-50: #f7f7f8;
+  --qs-neutral-100: #eeeef0;
+  --qs-neutral-200: #d9d9de;
+  --qs-neutral-300: #b7b7c0;
+  --qs-neutral-400: #9090a0;
+  --qs-neutral-500: #6e6e80;
+  --qs-neutral-600: #57576b;
+  --qs-neutral-700: #47475a;
+  --qs-neutral-800: #3c3c4d;
+  --qs-neutral-900: #343442;
+  --qs-neutral-950: #1e1e28;
+
+  /* State: finance up=red, down=green (Chinese convention) */
+  --qs-state-rise: #ef5350;
+  --qs-state-fall: #26c584;
+  --qs-state-success: #22c55e;
+  --qs-state-warning: #f59e0b;
+  --qs-state-error: #ef4444;
+  --qs-state-info: #3b82f6;
+
+  /* Light defaults */
+  --qs-background: var(--qs-neutral-50);
+  --qs-foreground: var(--qs-neutral-950);
+  --qs-card: var(--qs-neutral-0);
+  --qs-card-foreground: var(--qs-neutral-950);
+  --qs-popover: var(--qs-neutral-0);
+  --qs-popover-foreground: var(--qs-neutral-950);
+  --qs-muted: var(--qs-neutral-100);
+  --qs-muted-foreground: var(--qs-neutral-500);
+  --qs-border: var(--qs-neutral-200);
+  --qs-input: var(--qs-neutral-200);
+  --qs-ring: var(--qs-brand-400);
+  --qs-primary: var(--qs-brand-600);
+  --qs-primary-foreground: var(--qs-neutral-0);
+
+  --qs-surface: var(--qs-neutral-0);
+  --qs-surface-2: var(--qs-neutral-50);
+  --qs-ink: var(--qs-neutral-950);
+  --qs-ink-2: var(--qs-neutral-600);
+  --qs-ink-3: var(--qs-neutral-400);
+  --qs-line: var(--qs-neutral-200);
+
+  --qs-font-primary: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --qs-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --qs-radius-xs: 2px;
+  --qs-radius-sm: 4px;
+  --qs-radius-md: 8px;
+  --qs-radius-lg: 12px;
+  --qs-radius-xl: 16px;
+  --qs-radius-pill: 999px;
+
+  --qs-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.02);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.18);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.30);
+}
+
+.dark {
+  --qs-background: #0b0b0f;
+  --qs-foreground: #f2f2f5;
+  --qs-card: #141419;
+  --qs-card-foreground: #f2f2f5;
+  --qs-popover: #1a1a22;
+  --qs-popover-foreground: #f2f2f5;
+  --qs-muted: #1c1c24;
+  --qs-muted-foreground: #808094;
+  --qs-border: #2a2a36;
+  --qs-input: #2a2a36;
+  --qs-ring: #2dd4bf;
+  --qs-primary: #2dd4bf;
+  --qs-primary-foreground: #020617;
+
+  --qs-surface: #141419;
+  --qs-surface-2: #1c1c24;
+  --qs-ink: #f2f2f5;
+  --qs-ink-2: #a0a0b0;
+  --qs-ink-3: #6c6c80;
+  --qs-line: #2a2a36;
+
+  --qs-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.14);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.40);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* Typography helpers */
+.qs-display { font-size: clamp(40px, 6vw, 88px); line-height: 1.02; font-weight: 600; letter-spacing: -0.03em; }
+.qs-h1 { font-size: clamp(28px, 3.5vw, 48px); line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; }
+.qs-h2 { font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -0.015em; }
+.qs-h3 { font-size: 18px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.qs-body-l { font-size: 17px; line-height: 1.55; font-weight: 400; }
+.qs-body { font-size: 14px; line-height: 1.6; font-weight: 400; }
+.qs-caption { font-size: 12px; line-height: 1.5; font-weight: 400; letter-spacing: 0.005em; }
+.qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--qs-background);
+    --color-foreground: var(--qs-foreground);
+    --color-card: var(--qs-card);
+    --color-card-foreground: var(--qs-card-foreground);
+    --color-popover: var(--qs-popover);
+    --color-popover-foreground: var(--qs-popover-foreground);
+    --color-primary: var(--qs-primary);
+    --color-primary-foreground: var(--qs-primary-foreground);
+    --color-muted: var(--qs-muted);
+    --color-muted-foreground: var(--qs-muted-foreground);
+    --color-border: var(--qs-border);
+    --color-input: var(--qs-input);
+    --color-ring: var(--qs-ring);
+    --radius-sm: var(--qs-radius-sm);
+    --radius-md: var(--qs-radius-md);
+    --radius-lg: var(--qs-radius-lg);
+    --radius-xl: var(--qs-radius-xl);
+  }
+  @layer base {
+    body { background: var(--qs-background); color: var(--qs-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--qs-background); }
+      .text-background { color: var(--qs-background); }
+      .border-background { border-color: var(--qs-background); }
+      .ring-background { --tw-ring-color: var(--qs-background); }
+      .bg-foreground { background-color: var(--qs-foreground); }
+      .text-foreground { color: var(--qs-foreground); }
+      .border-foreground { border-color: var(--qs-foreground); }
+      .ring-foreground { --tw-ring-color: var(--qs-foreground); }
+      .bg-card { background-color: var(--qs-card); }
+      .text-card { color: var(--qs-card); }
+      .border-card { border-color: var(--qs-card); }
+      .ring-card { --tw-ring-color: var(--qs-card); }
+      .bg-card-foreground { background-color: var(--qs-card-foreground); }
+      .text-card-foreground { color: var(--qs-card-foreground); }
+      .border-card-foreground { border-color: var(--qs-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--qs-card-foreground); }
+      .bg-popover { background-color: var(--qs-popover); }
+      .text-popover { color: var(--qs-popover); }
+      .border-popover { border-color: var(--qs-popover); }
+      .ring-popover { --tw-ring-color: var(--qs-popover); }
+      .bg-popover-foreground { background-color: var(--qs-popover-foreground); }
+      .text-popover-foreground { color: var(--qs-popover-foreground); }
+      .border-popover-foreground { border-color: var(--qs-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--qs-popover-foreground); }
+      .bg-primary { background-color: var(--qs-primary); }
+      .text-primary { color: var(--qs-primary); }
+      .border-primary { border-color: var(--qs-primary); }
+      .ring-primary { --tw-ring-color: var(--qs-primary); }
+      .bg-primary-foreground { background-color: var(--qs-primary-foreground); }
+      .text-primary-foreground { color: var(--qs-primary-foreground); }
+      .border-primary-foreground { border-color: var(--qs-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--qs-primary-foreground); }
+      .bg-muted { background-color: var(--qs-muted); }
+      .text-muted { color: var(--qs-muted); }
+      .border-muted { border-color: var(--qs-muted); }
+      .ring-muted { --tw-ring-color: var(--qs-muted); }
+      .bg-muted-foreground { background-color: var(--qs-muted-foreground); }
+      .text-muted-foreground { color: var(--qs-muted-foreground); }
+      .border-muted-foreground { border-color: var(--qs-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--qs-muted-foreground); }
+      .bg-border { background-color: var(--qs-border); }
+      .text-border { color: var(--qs-border); }
+      .border-border { border-color: var(--qs-border); }
+      .ring-border { --tw-ring-color: var(--qs-border); }
+      .bg-input { background-color: var(--qs-input); }
+      .text-input { color: var(--qs-input); }
+      .border-input { border-color: var(--qs-input); }
+      .ring-input { --tw-ring-color: var(--qs-input); }
+      .bg-ring { background-color: var(--qs-ring); }
+      .text-ring { color: var(--qs-ring); }
+      .border-ring { border-color: var(--qs-ring); }
+      .ring-ring { --tw-ring-color: var(--qs-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+  <!-- 顶部全局导航 -->
+  <header class="qs-topnav fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 border-b border-[var(--qs-border)]" style="background:var(--qs-surface);" data-region="top-navigation">
+    <div class="flex items-center gap-3 mr-8 shrink-0">
+      <div class="w-8 h-8 rounded-md flex items-center justify-center font-bold text-sm qs-mono" style="background:var(--qs-primary);color:var(--qs-primary-foreground);">Q</div>
+      <span class="font-semibold text-base" style="color:var(--qs-ink);">量选终端</span>
+    </div>
+    <nav class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+      <a href="dashboard.html" data-dom-id="nav-dashboard" data-nav-key="dashboard" class="qs-nav-link active">综合仪表盘</a>
+      <a href="swing.html" data-dom-id="nav-swing" data-nav-key="swing" class="qs-nav-link">波段选股</a>
+      <a href="longterm.html" data-dom-id="nav-longterm" data-nav-key="longterm" class="qs-nav-link">长线选股</a>
+      <a href="etf.html" data-dom-id="nav-etf" data-nav-key="etf" class="qs-nav-link">ETF策略</a>
+      <a href="sim.html" data-dom-id="nav-sim" data-nav-key="sim" class="qs-nav-link">模拟盘</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-3 shrink-0 pl-4">
+      <div class="relative hidden sm:block">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style="color:var(--qs-ink-3);"></i>
+        <input type="text" placeholder="搜索代码/名称/板块" class="h-9 w-48 rounded-md pl-9 pr-3 text-sm focus:outline-none" style="background:var(--qs-muted);border:1px solid var(--qs-border);color:var(--qs-ink);">
+      </div>
+      <button data-dom-id="top-notify" class="w-9 h-9 rounded-md flex items-center justify-center transition-colors" style="color:var(--qs-ink-2);background:transparent;border:1px solid var(--qs-border);">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+      </button>
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style="background:var(--qs-primary);color:var(--qs-primary-foreground);">DQ</div>
+    </div>
+  </header>
+
+  <main data-viewport-mode="app-shell" class="qs-shell">
+    <!-- 主内容区 -->
+    <div class="qs-main flex-1 flex flex-col min-h-0">
+      <div class="qs-scroll flex-1 min-h-0 overflow-y-auto p-6" data-scroll-region="primary">
+        <!-- 1. 指数卡片 -->
+        <section id="kpi-strip" data-region="index-chart" class="qs-section mb-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">上证指数</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">3,128.45</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+19.32 (+0.62%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-shanghai"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 3,847 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">深证成指</span>
+                <i data-lucide="trending-down" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">9,847.32</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-fall);">-20.71 (-0.21%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-shenzhen"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 4,521 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">创业板指</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">1,956.72</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+6.81 (+0.35%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-chinext"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 1,892 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">科创50</span>
+                <i data-lucide="rocket" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">876.54</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+9.36 (+1.08%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-star"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 642 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">沪深300</span>
+                <i data-lucide="bar-chart-2" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">3,658.12</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+15.40 (+0.42%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-hs300"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 2,104 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">上证50</span>
+                <i data-lucide="bar-chart" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">2,456.78</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-fall);">-4.82 (-0.20%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-sz50"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 987 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">中证500</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">5,432.19</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+28.64 (+0.53%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-zz500"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 1,456 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">中证1000</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">5,987.45</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+41.92 (+0.70%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-zz1000"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 1,823 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">北证50</span>
+                <i data-lucide="trending-down" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">1,045.32</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-fall);">-12.45 (-1.18%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-bse50"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 214 亿</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">恒生指数</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">17,485.60</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+126.80 (+0.73%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-hsi"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">成交额 1,124 亿港元</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">纳斯达克100</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">19,842.15</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+98.40 (+0.50%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-ndx"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">美股盘后</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">标普500</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">5,487.20</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+18.30 (+0.33%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-spx"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">美股盘后</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">日经225</span>
+                <i data-lucide="trending-down" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">38,650.00</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-fall);">-180.50 (-0.46%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-nikkei"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">日股收盘</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">德国DAX</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">18,520.40</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+92.10 (+0.50%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-dax"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">欧股收盘</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">黄金</span>
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">2,485.60</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-rise);">+12.40 (+0.50%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-gold"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">美元/盎司</div>
+            </div>
+
+            <div class="qs-card p-4 flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <span class="qs-body font-semibold" style="color:var(--qs-ink);">原油</span>
+                <i data-lucide="trending-down" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+              </div>
+              <div class="qs-mono text-xl font-semibold mb-0.5" style="color:var(--qs-ink);">78.35</div>
+              <div class="qs-caption mb-2" style="color:var(--qs-state-fall);">-0.42 (-0.53%)</div>
+              <div class="h-8 mb-2">
+                <canvas class="index-sparkline" id="spark-oil"></canvas>
+              </div>
+              <div class="qs-caption mt-auto" style="color:var(--qs-ink-3);">美元/桶</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. 大盘指数走势 -->
+        <section data-region="index-trend-chart" class="qs-section qs-card p-5 mb-5">
+          <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div class="flex items-baseline gap-3">
+                <h2 class="qs-h3" style="color:var(--qs-ink);">上证指数</h2>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">近 60 日</span>
+              </div>
+              <div class="mt-2 flex flex-wrap items-baseline gap-4">
+                <span class="qs-mono qs-h2" style="color:var(--qs-ink);">3,128.45</span>
+                <span class="qs-mono qs-body-l" style="color:var(--qs-state-rise);">+19.32 (+0.62%)</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">成交额 3,847 亿</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 qs-caption" style="color:var(--qs-ink-3);">
+              <span class="flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-full" style="background:var(--qs-primary);"></span>收盘价</span>
+              <span class="flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-sm" style="background:var(--qs-ink-3);"></span>成交量</span>
+            </div>
+          </div>
+          <div class="relative w-full" style="height:384px;">
+            <canvas id="indexChart"></canvas>
+          </div>
+        </section>
+
+        <!-- 3. 市场宽度 -->
+        <section data-region="breadth-cards" class="qs-section mb-5">
+          <h2 class="qs-h3 mb-4" style="color:var(--qs-ink);">市场宽度</h2>
+          <div class="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">上涨家数</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-state-rise);">3,284</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:65%;background:var(--qs-state-rise);"></div>
+              </div>
+            </div>
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">下跌家数</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-state-fall);">1,756</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:35%;background:var(--qs-state-fall);"></div>
+              </div>
+            </div>
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">涨停</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-state-rise);">82</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:24%;background:var(--qs-state-rise);"></div>
+              </div>
+            </div>
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">跌停</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-state-fall);">14</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:6%;background:var(--qs-state-fall);"></div>
+              </div>
+            </div>
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">北向资金</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-primary);">+42.8 亿</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:58%;background:var(--qs-primary);"></div>
+              </div>
+            </div>
+            <div class="qs-card p-3">
+              <div class="qs-caption mb-1" style="color:var(--qs-ink-3);">成交额</div>
+              <div class="qs-mono qs-h3 mb-2" style="color:var(--qs-ink);">8,932 亿</div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                <div class="h-full rounded-full" style="width:72%;background:var(--qs-ink-3);"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. 行业涨幅排行 + 情绪指标 -->
+        <div class="grid gap-4 lg:grid-cols-2 mb-5">
+          <section data-region="sector-ranking" class="qs-section qs-card p-5">
+            <h2 class="qs-h3 mb-4" style="color:var(--qs-ink);">行业涨幅排行</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <h3 class="qs-body mb-2 font-semibold" style="color:var(--qs-state-rise);">领涨行业</h3>
+                <ul class="flex flex-col">
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">半导体</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:90%;background:var(--qs-state-rise);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-rise);">+4.32%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">证券</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:66%;background:var(--qs-state-rise);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-rise);">+3.18%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">通信设备</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:61%;background:var(--qs-state-rise);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-rise);">+2.95%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">消费电子</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:56%;background:var(--qs-state-rise);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-rise);">+2.67%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">白酒</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:43%;background:var(--qs-state-rise);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-rise);">+2.05%</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="qs-body mb-2 font-semibold" style="color:var(--qs-state-fall);">领跌行业</h3>
+                <ul class="flex flex-col">
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">煤炭</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:44%;background:var(--qs-state-fall);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-fall);">-2.11%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">银行</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:30%;background:var(--qs-state-fall);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-fall);">-1.45%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">电力</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:25%;background:var(--qs-state-fall);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-fall);">-1.22%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">石油</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:20%;background:var(--qs-state-fall);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-fall);">-0.98%</span>
+                    </div>
+                  </li>
+                  <li class="flex items-center justify-between gap-2 py-2" style="border-bottom:1px solid var(--qs-line);">
+                    <span class="truncate qs-body" style="color:var(--qs-ink);">航运</span>
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                        <div class="h-full rounded-full" style="width:16%;background:var(--qs-state-fall);"></div>
+                      </div>
+                      <span class="qs-mono qs-caption w-12 text-right" style="color:var(--qs-state-fall);">-0.76%</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section data-region="sentiment" class="qs-section qs-card p-5">
+            <h2 class="qs-h3 mb-4" style="color:var(--qs-ink);">情绪指标</h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+                <div class="qs-caption" style="color:var(--qs-ink-3);">恐慌 / 贪婪</div>
+                <div class="qs-mono qs-h2 mt-1" style="color:var(--qs-primary);">62</div>
+                <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                  <div class="h-full rounded-full" style="width:62%;background:var(--qs-primary);"></div>
+                </div>
+                <div class="qs-caption mt-1" style="color:var(--qs-ink-3);">贪婪</div>
+              </div>
+              <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+                <div class="qs-caption" style="color:var(--qs-ink-3);">融资余额</div>
+                <div class="qs-mono qs-h2 mt-1" style="color:var(--qs-ink);">15,247 亿</div>
+                <div class="mt-2 flex items-center gap-1">
+                  <i data-lucide="arrow-up-right" class="h-3.5 w-3.5" style="color:var(--qs-state-rise);"></i>
+                  <span class="qs-caption" style="color:var(--qs-state-rise);">+0.30%</span>
+                </div>
+              </div>
+              <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+                <div class="qs-caption" style="color:var(--qs-ink-3);">波动率</div>
+                <div class="qs-mono qs-h2 mt-1" style="color:var(--qs-ink);">14.80</div>
+                <div class="mt-2 flex items-center gap-1">
+                  <i data-lucide="arrow-down-right" class="h-3.5 w-3.5" style="color:var(--qs-state-fall);"></i>
+                  <span class="qs-caption" style="color:var(--qs-state-fall);">-3.20%</span>
+                </div>
+              </div>
+              <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+                <div class="qs-caption" style="color:var(--qs-ink-3);">涨跌中位数</div>
+                <div class="qs-mono qs-h2 mt-1" style="color:var(--qs-state-rise);">+0.85%</div>
+                <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                  <div class="h-full rounded-full" style="width:55%;background:var(--qs-state-rise);"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 5. 新闻面 -->
+        <section data-region="news-sentiment" class="qs-section qs-card p-5 mb-5">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-md flex items-center justify-center shrink-0" style="background:var(--qs-surface-2);">
+              <i data-lucide="newspaper" class="w-4 h-4" style="color:var(--qs-primary);"></i>
+            </div>
+            <div>
+              <h2 class="qs-h3" style="color:var(--qs-ink);">新闻面</h2>
+              <p class="qs-caption" style="color:var(--qs-ink-3);">全球新闻聚合 / 国内政策 · 八大投行 · 国内顶级投行 · 国家级会议</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="trending-up" class="w-4 h-4" style="color:var(--qs-state-rise);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">利好</span>
+              </div>
+              <div class="qs-mono qs-h3" style="color:var(--qs-state-rise);">31</div>
+              <div class="qs-caption" style="color:var(--qs-state-rise);">+18% vs 昨日</div>
+            </div>
+            <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="trending-down" class="w-4 h-4" style="color:var(--qs-state-fall);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">利空</span>
+              </div>
+              <div class="qs-mono qs-h3" style="color:var(--qs-state-fall);">11</div>
+              <div class="qs-caption" style="color:var(--qs-state-fall);">-8% vs 昨日</div>
+            </div>
+            <div class="p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="minus" class="w-4 h-4" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">中性</span>
+              </div>
+              <div class="qs-mono qs-h3" style="color:var(--qs-ink);">42</div>
+              <div class="qs-caption" style="color:var(--qs-ink-3);">+3% vs 昨日</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-primary);color:var(--qs-primary-foreground);">全部</span>
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-muted);color:var(--qs-ink-2);">国内政策</span>
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-muted);color:var(--qs-ink-2);">国内新闻</span>
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-muted);color:var(--qs-ink-2);">八大投行</span>
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-muted);color:var(--qs-ink-2);">国内顶级投行</span>
+            <span class="qs-caption px-2.5 py-1 rounded-full" style="background:var(--qs-muted);color:var(--qs-ink-2);">国家级会议</span>
+          </div>
+
+          <ul class="flex flex-col gap-2">
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">09:42</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">工信部印发《新材料产业发展指南》，重点扶持半导体材料与高端装备</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(45,212,191,0.12);color:var(--qs-primary);">国内政策</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">半导体</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中芯国际</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">688981</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:85%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+18.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">北方华创</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">002371</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:80%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+16.2%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">沪硅产业</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">688126</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:60%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+12.8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">09:28</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">宁德时代发布三季度业绩预告，储能业务同比增长超80%</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">证券时报</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(45,212,191,0.12);color:var(--qs-primary);">国内新闻</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">新能源</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">宁德时代</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">300750</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:82%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+15.2%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">亿纬锂能</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">300014</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:58%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+11.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">阳光电源</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">300274</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:55%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+9.8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">09:15</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">Goldman Sachs 上调中国科技股评级至“超配”，看好 AI 与云计算龙头</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">Goldman Sachs</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(245,158,11,0.14);color:var(--qs-state-warning);">八大投行</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">科技股</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">腾讯控股</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">00700</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:75%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+12.0%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">阿里巴巴</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">09988</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:58%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+10.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中芯国际</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">688981</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:85%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+18.5%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">08:56</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">中信证券：中央政治局会议明确“稳增长”基调，建议超配消费与高端制造</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">中信证券</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(59,130,246,0.16);color:var(--qs-state-info);">国内顶级投行</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">国家级会议</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">贵州茅台</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">600519</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:55%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+8.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中国平安</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">601318</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:50%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+7.2%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">美的集团</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">000333</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:55%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+9.0%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">08:40</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">中央金融工作会议：活跃资本市场，推动股票发行注册制走深走实</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">新华社</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(59,130,246,0.16);color:var(--qs-state-info);">国家级会议</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">证券</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中信证券</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">600030</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:60%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+12.0%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">东方财富</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">300059</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:78%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+14.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中国平安</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">601318</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:50%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+7.2%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">08:22</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">Morgan Stanley：美联储降息路径明朗，新兴市场外资回流预期升温</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">Morgan Stanley</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(245,158,11,0.14);color:var(--qs-state-warning);">八大投行</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">宏观</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">中金岭南</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">000060</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:48%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+6.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">山东黄金</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">600547</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:55%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+8.0%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">08:05</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">国务院常务会议审议通过《推动大规模设备更新和消费品以旧换新行动方案》</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">利好</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">中国政府网</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(45,212,191,0.12);color:var(--qs-primary);">国内政策</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">制造业</span>
+                </div>
+                <div class="mt-2 pt-2" style="border-top:1px solid var(--qs-line);">
+                  <div class="qs-caption mb-1.5" style="color:var(--qs-ink-3);">利好标的：</div>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">三一重工</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">600031</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(239,83,80,0.14);color:var(--qs-state-rise);">强</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:72%;background:var(--qs-state-rise);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+11.0%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">徐工机械</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">000425</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:58%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+9.5%</span>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0 p-2" style="background:var(--qs-card);border:1px solid var(--qs-border);border-radius:var(--qs-radius-md);">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="qs-body font-semibold truncate" style="color:var(--qs-ink);">海尔智家</div>
+                          <div class="qs-caption qs-mono" style="color:var(--qs-ink-3);">600690</div>
+                        </div>
+                        <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(245,158,11,0.16);color:var(--qs-state-warning);">中</span>
+                      </div>
+                      <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <div class="h-1.5 w-16 overflow-hidden rounded-full" style="background:var(--qs-muted);">
+                          <div class="h-full rounded-full" style="width:52%;background:var(--qs-state-warning);"></div>
+                        </div>
+                        <span class="qs-mono qs-body font-semibold shrink-0" style="color:var(--qs-state-rise);">+7.8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">07:48</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">JPMorgan 下调部分欧洲银行评级，警告商业地产风险外溢</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(38,197,132,0.14);color:var(--qs-state-fall);">利空</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">JPMorgan</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(245,158,11,0.14);color:var(--qs-state-warning);">八大投行</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">银行</span>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">07:30</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">国家统计局：8月制造业PMI为49.6%，景气水平继续改善</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(160,160,176,0.16);color:var(--qs-ink-2);">中性</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">新华社</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(45,212,191,0.12);color:var(--qs-primary);">国内新闻</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">宏观</span>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 p-3" style="background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+              <div class="flex flex-col items-center shrink-0 pt-0.5">
+                <i data-lucide="clock" class="w-3 h-3 mb-0.5" style="color:var(--qs-ink-3);"></i>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">07:15</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="qs-body truncate" style="color:var(--qs-ink);">中金公司：预计三季度 GDP 同比增速 4.8%，基建与制造业投资支撑明显</p>
+                  <span class="qs-caption px-2 py-0.5 rounded-full shrink-0" style="background:rgba(160,160,176,0.16);color:var(--qs-ink-2);">中性</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="qs-caption" style="color:var(--qs-ink-3);">中金公司</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:rgba(59,130,246,0.16);color:var(--qs-state-info);">国内顶级投行</span>
+                  <span class="qs-caption px-1.5 py-0.5 rounded" style="background:var(--qs-muted);color:var(--qs-ink-2);">宏观</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <style id="critical-layout">
+    .qs-topnav { height:56px; }
+    .qs-topnav .qs-nav-link {
+      display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: var(--qs-radius-md);
+      font-size: 14px; font-weight: 500; color: rgba(242,242,245,0.72); text-decoration: none; white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .qs-topnav .qs-nav-link:hover { background: rgba(255,255,255,0.06); color: var(--qs-ink); }
+    .qs-topnav .qs-nav-link.active { background: rgba(45,212,191,0.12); color: var(--qs-primary); }
+    .qs-shell { display:flex; width:100%; min-height:100vh; overflow:hidden; padding-top:56px; }
+    .qs-main { flex:1; min-width:0; display:flex; flex-direction:column; min-height:600px; }
+    .qs-scroll { flex:1; min-height:0; overflow-y:auto; }
+    .qs-section { margin-bottom: 0; }
+    .qs-card { background: var(--qs-card); border: 1px solid var(--qs-border); border-radius: var(--qs-radius-lg); }
+    .index-sparkline { width: 100% !important; height: 100% !important; }
+    @media (max-width: 767px) {
+      .index-sparkline { max-height: 40px; }
+    }
+  </style>
+
+  <script>
+    // 指数卡片迷你 Sparkline
+    (function() {
+      function spark(id, color, data) {
+        const ctx = document.getElementById(id).getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 40);
+        grad.addColorStop(0, color + '40');
+        grad.addColorStop(1, color + '00');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.map(function(_, i) { return i; }),
+            datasets: [{
+              data: data,
+              borderColor: color,
+              backgroundColor: grad,
+              borderWidth: 1.5,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } }
+          }
+        });
+      }
+      const root = getComputedStyle(document.documentElement);
+      const rise = root.getPropertyValue('--qs-state-rise').trim();
+      const fall = root.getPropertyValue('--qs-state-fall').trim();
+      const sparks = [
+        { id: 'spark-shanghai', color: rise, data: [3100, 3095, 3110, 3108, 3115, 3120, 3125, 3122, 3128, 3130, 3126, 3128, 3131, 3129, 3128.45] },
+        { id: 'spark-shenzhen', color: fall, data: [9870, 9880, 9865, 9875, 9860, 9855, 9848, 9855, 9845, 9850, 9840, 9852, 9845, 9848, 9847.32] },
+        { id: 'spark-chinext', color: rise, data: [1940, 1945, 1950, 1948, 1952, 1955, 1953, 1958, 1960, 1958, 1962, 1960, 1958, 1955, 1956.72] },
+        { id: 'spark-star', color: rise, data: [860, 865, 862, 868, 866, 870, 868, 872, 870, 874, 872, 875, 873, 877, 876.54] },
+        { id: 'spark-hs300', color: rise, data: [3630, 3635, 3632, 3640, 3638, 3645, 3642, 3648, 3650, 3645, 3652, 3650, 3655, 3652, 3658.12] },
+        { id: 'spark-sz50', color: fall, data: [2462, 2460, 2465, 2463, 2458, 2460, 2455, 2458, 2454, 2456, 2452, 2455, 2450, 2458, 2456.78] },
+        { id: 'spark-zz500', color: rise, data: [5400, 5405, 5398, 5410, 5405, 5415, 5410, 5420, 5415, 5425, 5420, 5430, 5425, 5435, 5432.19] },
+        { id: 'spark-zz1000', color: rise, data: [5945, 5950, 5942, 5960, 5955, 5965, 5960, 5972, 5965, 5975, 5970, 5980, 5972, 5985, 5987.45] },
+        { id: 'spark-bse50', color: fall, data: [1060, 1055, 1058, 1052, 1055, 1050, 1053, 1048, 1050, 1046, 1048, 1045, 1048, 1046, 1045.32] },
+        { id: 'spark-hsi', color: rise, data: [17350, 17380, 17360, 17400, 17390, 17420, 17410, 17450, 17440, 17460, 17450, 17480, 17470, 17490, 17485.60] },
+        { id: 'spark-ndx', color: rise, data: [19740, 19760, 19750, 19780, 19770, 19800, 19790, 19820, 19810, 19840, 19830, 19860, 19850, 19870, 19842.15] },
+        { id: 'spark-spx', color: rise, data: [5465, 5470, 5468, 5475, 5472, 5478, 5475, 5482, 5480, 5485, 5482, 5488, 5485, 5490, 5487.20] },
+        { id: 'spark-nikkei', color: fall, data: [38840, 38820, 38780, 38800, 38750, 38720, 38680, 38700, 38660, 38690, 38650, 38680, 38640, 38670, 38650.00] },
+        { id: 'spark-dax', color: rise, data: [18420, 18435, 18450, 18440, 18460, 18480, 18470, 18495, 18500, 18510, 18505, 18520, 18515, 18525, 18520.40] },
+        { id: 'spark-gold', color: rise, data: [2470, 2472, 2475, 2474, 2478, 2480, 2479, 2482, 2481, 2484, 2483, 2486, 2485, 2487, 2485.60] },
+        { id: 'spark-oil', color: fall, data: [78.80, 78.75, 78.70, 78.72, 78.65, 78.60, 78.55, 78.50, 78.45, 78.42, 78.40, 78.38, 78.36, 78.37, 78.35] }
+      ];
+      sparks.forEach(s => spark(s.id, s.color, s.data));
+    })();
+
+    // 上证指数走势图
+    (function() {
+      function hexToRgba(hex, alpha) {
+        const m = hex.replace('#', '');
+        const bigint = parseInt(m.length === 3 ? m.split('').map(c => c + c).join('') : m, 16);
+        const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+      }
+      const root = getComputedStyle(document.documentElement);
+      const primary = root.getPropertyValue('--qs-primary').trim();
+      const line = root.getPropertyValue('--qs-line').trim();
+      const ink3 = root.getPropertyValue('--qs-ink-3').trim();
+      const bg = root.getPropertyValue('--qs-card').trim();
+      const days = 60;
+      const labels = [], prices = [], volumes = [];
+      const today = new Date();
+      let price = 3050;
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today); d.setDate(d.getDate() - i);
+        labels.push((d.getMonth() + 1) + '/' + d.getDate());
+        price += (Math.random() - 0.48) * 18;
+        prices.push(Number(price.toFixed(2)));
+        volumes.push(Math.floor(Math.random() * 1500 + 2500));
+      }
+      prices[prices.length - 1] = 3128.45;
+      const ctx = document.getElementById('indexChart').getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 384);
+      grad.addColorStop(0, hexToRgba(primary, 0.28));
+      grad.addColorStop(1, hexToRgba(primary, 0.0));
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: '收盘价', data: prices, type: 'line', borderColor: primary, backgroundColor: grad, borderWidth: 2, fill: true, tension: 0.3, pointRadius: 0, pointHoverRadius: 4, yAxisID: 'y' },
+            { label: '成交量', data: volumes, type: 'bar', backgroundColor: ink3, borderRadius: 2, barPercentage: 0.5, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: bg, titleColor: ink3, bodyColor: ink3, borderColor: line, borderWidth: 1, callbacks: { label: function(c) { return c.dataset.label + ': ' + c.raw + (c.datasetIndex === 1 ? ' 亿' : ''); } } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: ink3, maxTicksLimit: 8 } },
+            y: { position: 'left', grid: { color: hexToRgba(line, 0.35) }, ticks: { color: ink3 } },
+            y1: { position: 'right', grid: { display: false }, ticks: { display: false }, min: 0 }
+          }
+        }
+      });
+    })();
+  </script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

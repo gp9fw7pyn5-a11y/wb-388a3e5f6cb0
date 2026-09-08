@@ -1,0 +1,109 @@
+/* Quant Stock UI — Design Tokens */
+:root {
+  /* Primary hue: cool cyan-teal */
+  --qs-brand-50: #f0fdfa;
+  --qs-brand-100: #ccfbf1;
+  --qs-brand-200: #99f6e4;
+  --qs-brand-300: #5eead4;
+  --qs-brand-400: #2dd4bf;
+  --qs-brand-500: #14b8a6;
+  --qs-brand-600: #0d9488;
+  --qs-brand-700: #0f766e;
+  --qs-brand-800: #115e59;
+  --qs-brand-900: #134e4a;
+
+  /* Neutral */
+  --qs-neutral-0: #ffffff;
+  --qs-neutral-50: #f7f7f8;
+  --qs-neutral-100: #eeeef0;
+  --qs-neutral-200: #d9d9de;
+  --qs-neutral-300: #b7b7c0;
+  --qs-neutral-400: #9090a0;
+  --qs-neutral-500: #6e6e80;
+  --qs-neutral-600: #57576b;
+  --qs-neutral-700: #47475a;
+  --qs-neutral-800: #3c3c4d;
+  --qs-neutral-900: #343442;
+  --qs-neutral-950: #1e1e28;
+
+  /* State: finance up=red, down=green (Chinese convention) */
+  --qs-state-rise: #ef5350;
+  --qs-state-fall: #26c584;
+  --qs-state-success: #22c55e;
+  --qs-state-warning: #f59e0b;
+  --qs-state-error: #ef4444;
+  --qs-state-info: #3b82f6;
+
+  /* Light defaults */
+  --qs-background: var(--qs-neutral-50);
+  --qs-foreground: var(--qs-neutral-950);
+  --qs-card: var(--qs-neutral-0);
+  --qs-card-foreground: var(--qs-neutral-950);
+  --qs-popover: var(--qs-neutral-0);
+  --qs-popover-foreground: var(--qs-neutral-950);
+  --qs-muted: var(--qs-neutral-100);
+  --qs-muted-foreground: var(--qs-neutral-500);
+  --qs-border: var(--qs-neutral-200);
+  --qs-input: var(--qs-neutral-200);
+  --qs-ring: var(--qs-brand-400);
+  --qs-primary: var(--qs-brand-600);
+  --qs-primary-foreground: var(--qs-neutral-0);
+
+  --qs-surface: var(--qs-neutral-0);
+  --qs-surface-2: var(--qs-neutral-50);
+  --qs-ink: var(--qs-neutral-950);
+  --qs-ink-2: var(--qs-neutral-600);
+  --qs-ink-3: var(--qs-neutral-400);
+  --qs-line: var(--qs-neutral-200);
+
+  --qs-font-primary: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --qs-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --qs-radius-xs: 2px;
+  --qs-radius-sm: 4px;
+  --qs-radius-md: 8px;
+  --qs-radius-lg: 12px;
+  --qs-radius-xl: 16px;
+  --qs-radius-pill: 999px;
+
+  --qs-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.02);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.18);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.30);
+}
+
+.dark {
+  --qs-background: #0b0b0f;
+  --qs-foreground: #f2f2f5;
+  --qs-card: #141419;
+  --qs-card-foreground: #f2f2f5;
+  --qs-popover: #1a1a22;
+  --qs-popover-foreground: #f2f2f5;
+  --qs-muted: #1c1c24;
+  --qs-muted-foreground: #808094;
+  --qs-border: #2a2a36;
+  --qs-input: #2a2a36;
+  --qs-ring: #2dd4bf;
+  --qs-primary: #2dd4bf;
+  --qs-primary-foreground: #020617;
+
+  --qs-surface: #141419;
+  --qs-surface-2: #1c1c24;
+  --qs-ink: #f2f2f5;
+  --qs-ink-2: #a0a0b0;
+  --qs-ink-3: #6c6c80;
+  --qs-line: #2a2a36;
+
+  --qs-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.14);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.40);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* Typography helpers */
+.qs-display { font-size: clamp(40px, 6vw, 88px); line-height: 1.02; font-weight: 600; letter-spacing: -0.03em; }
+.qs-h1 { font-size: clamp(28px, 3.5vw, 48px); line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; }
+.qs-h2 { font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -0.015em; }
+.qs-h3 { font-size: 18px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.qs-body-l { font-size: 17px; line-height: 1.55; font-weight: 400; }
+.qs-body { font-size: 14px; line-height: 1.6; font-weight: 400; }
+.qs-caption { font-size: 12px; line-height: 1.5; font-weight: 400; letter-spacing: 0.005em; }
+.qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>ETF策略</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@1.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --qs-primary: #2dd4bf;
+      --qs-primary-foreground: #020617;
+      --qs-state-rise: #ef5350;
+      --qs-state-fall: #26c584;
+      --qs-state-warning: #f59e0b;
+      --qs-state-info: #3b82f6;
+      --qs-background: #0b0b0f;
+      --qs-surface: #141419;
+      --qs-surface-2: #1c1c24;
+      --qs-ink: #f2f2f5;
+      --qs-ink-2: #a0a0b0;
+      --qs-ink-3: #6c6c80;
+      --qs-line: #2a2a36;
+      --qs-font-primary: "Inter","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+      --qs-font-mono: "JetBrains Mono","SFMono-Regular",Consolas,monospace;
+      --qs-radius-md: 8px;
+      --qs-radius-lg: 12px;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: var(--qs-font-primary); background: var(--qs-background); color: var(--qs-ink); margin:0; -webkit-font-smoothing: antialiased; }
+    .qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+    .qs-caption { font-size: 11px; line-height: 1.4; }
+    .qs-body { font-size: 13px; line-height: 1.5; }
+    .qs-h3 { font-size: 16px; font-weight: 600; }
+    .qs-h2 { font-size: 18px; font-weight: 600; }
+    .qs-h1 { font-size: 22px; font-weight: 600; }
+    .card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px; }
+    .qs-rise { color: var(--qs-state-rise); }
+    .qs-fall { color: var(--qs-state-fall); }
+
+    /* App layout */
+    #app { width: 375px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--qs-background); }
+    .topbar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 375px; height: 48px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 50; }
+    .content { padding-top: 48px; padding-bottom: 56px; min-height: 100vh; }
+    .scroll-area { padding: 12px; }
+
+    /* ETF list cards */
+    .etf-card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 14px; margin-bottom: 8px; cursor: pointer; transition: border-color .15s; }
+    .etf-card:active { border-color: var(--qs-primary); }
+    .category-tag { display: inline-flex; align-items: center; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 999px; background: rgba(45,212,191,0.12); color: var(--qs-primary); }
+
+    /* Detail sections */
+    .section-title { font-size: 14px; font-weight: 600; color: var(--qs-ink); margin: 0 0 8px 0; display: flex; align-items: center; justify-content: space-between; }
+    .section-meta { font-size: 11px; font-weight: 400; color: var(--qs-ink-3); }
+    .metric-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .metric-box { flex: 1; min-width: 0; background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 10px; }
+    .metric-label { font-size: 10px; color: var(--qs-ink-3); margin-bottom: 4px; }
+    .metric-value { font-size: 15px; font-weight: 600; color: var(--qs-ink); }
+
+    /* Holdings table */
+    .holdings-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .holdings-table thead { background: var(--qs-surface-2); }
+    .holdings-table th { padding: 8px 6px; text-align: left; font-weight: 500; color: var(--qs-ink-2); border-bottom: 1px solid var(--qs-line); white-space: nowrap; }
+    .holdings-table td { padding: 8px 6px; border-bottom: 1px solid var(--qs-line); color: var(--qs-ink); vertical-align: middle; }
+    .holdings-table tbody tr:last-child td { border-bottom: none; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); }
+
+    /* Component stocks list */
+    .stock-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--qs-line); }
+    .stock-item:last-child { border-bottom: none; }
+
+    /* Premium/discount indicator */
+    .pd-bar { position: relative; height: 6px; background: var(--qs-surface-2); border-radius: 3px; margin: 8px 0; }
+    .pd-center { position: absolute; left: 50%; top: -2px; width: 1px; height: 10px; background: var(--qs-ink-3); }
+    .pd-fill { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+
+    /* K-line timeframes */
+    .tf-group { display: inline-flex; background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); overflow: hidden; }
+    .tf-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--qs-ink-2); background: transparent; border: none; border-left: 1px solid var(--qs-line); cursor: pointer; }
+    .tf-btn:first-child { border-left: none; }
+    .tf-btn.active { background: var(--qs-primary); color: var(--qs-primary-foreground); }
+
+    /* Chart wrapper */
+    .chart-wrap { height: 240px; width: 100%; border-radius: var(--qs-radius-md); overflow: hidden; background: var(--qs-surface); border: 1px solid var(--qs-line); position: relative; }
+    .chart-wrap-sm { height: 180px; width: 100%; border-radius: var(--qs-radius-md); overflow: hidden; background: var(--qs-surface); border: 1px solid var(--qs-line); position: relative; }
+
+    /* Back button */
+    .back-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--qs-ink); cursor: pointer; }
+
+    /* No scrollbar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--qs-line); margin: 12px 0; }
+
+    /* Fund flow bar */
+    .flow-bar { display: flex; height: 24px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Top bar (48px) -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:4px;">
+        <button class="back-btn" id="backBtn" style="display:none;" onclick="showList()">
+          <i data-lucide="chevron-left" style="width:22px;height:22px;"></i>
+        </button>
+        <span id="topTitle" style="font-size:16px;font-weight:600;color:var(--qs-ink);">ETF策略</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <button class="back-btn" onclick="void(0)">
+          <i data-lucide="search" style="width:20px;height:20px;color:var(--qs-ink-2);"></i>
+        </button>
+        <button class="back-btn" onclick="void(0)" style="position:relative;">
+          <i data-lucide="bell" style="width:20px;height:20px;color:var(--qs-ink-2);"></i>
+          <span style="position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--qs-state-rise);"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <div class="content">
+      <!-- List view -->
+      <div id="listView" class="scroll-area">
+        <div style="margin-bottom:12px;">
+          <div class="qs-h2" style="color:var(--qs-ink);">ETF策略</div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);margin-top:2px;">行业轮动 / 主题筛选 / 相对强弱</div>
+        </div>
+        <div id="etfList"></div>
+      </div>
+
+      <!-- Detail view -->
+      <div id="detailView" class="scroll-area" style="display:none;">
+        <!-- Detail header -->
+        <div class="card" style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span class="qs-h2" id="dName" style="color:var(--qs-ink);">沪深300ETF</span>
+                <span class="category-tag" id="dTag">宽基</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                <span class="qs-mono qs-caption" id="dCode" style="color:var(--qs-ink-3);">510300</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">|</span>
+                <span class="qs-caption" id="dIndex" style="color:var(--qs-ink-3);">沪深300指数</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div class="qs-mono qs-h2" id="dNav" style="color:var(--qs-ink);">3.842</div>
+              <div class="qs-mono qs-body" id="dChange" style="font-weight:600;margin-top:2px;">+0.82%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- K-line chart -->
+        <div class="card">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px;">
+            <div>
+              <div style="display:flex;align-items:baseline;gap:8px;">
+                <span class="qs-h1 qs-mono" id="klinePrice" style="color:var(--qs-ink);">3.842</span>
+                <span class="qs-h3 qs-mono" id="klineChange" style="color:var(--qs-state-rise);">+0.82%</span>
+              </div>
+              <div class="qs-caption" style="color:var(--qs-ink-3);margin-top:2px;">
+                净值 <span class="qs-mono" id="klineNav">3.840</span>
+                <span style="margin:0 6px;">|</span>
+                折溢价 <span class="qs-mono" id="klinePremium">-0.05%</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px;">
+            <div><div class="qs-caption" style="color:var(--qs-ink-3);">最高</div><div class="qs-mono qs-body" id="klineHigh" style="color:var(--qs-ink);">3.858</div></div>
+            <div><div class="qs-caption" style="color:var(--qs-ink-3);">最低</div><div class="qs-mono qs-body" id="klineLow" style="color:var(--qs-ink);">3.812</div></div>
+            <div><div class="qs-caption" style="color:var(--qs-ink-3);">开盘</div><div class="qs-mono qs-body" id="klineOpen" style="color:var(--qs-ink);">3.820</div></div>
+            <div><div class="qs-caption" style="color:var(--qs-ink-3);">昨收</div><div class="qs-mono qs-body" id="klinePreClose" style="color:var(--qs-ink);">3.811</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div class="tf-group">
+              <button class="tf-btn active" data-tf="intraday" onclick="switchTf(this)">分时</button>
+              <button class="tf-btn" data-tf="day" onclick="switchTf(this)">日K</button>
+              <button class="tf-btn" data-tf="week" onclick="switchTf(this)">周K</button>
+              <button class="tf-btn" data-tf="month" onclick="switchTf(this)">月K</button>
+            </div>
+            <span class="qs-caption" style="color:var(--qs-ink-3);">示例行情</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="klineChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Metrics: AUM, expense, tracking, premium -->
+        <div class="card">
+          <div class="section-title">基金概况 <span class="section-meta">基本指标</span></div>
+          <div class="metric-row">
+            <div class="metric-box">
+              <div class="metric-label">资产规模</div>
+              <div class="metric-value qs-mono" id="mAum">1298.5亿</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">管理费率</div>
+              <div class="metric-value qs-mono" id="mExpense">0.50%</div>
+            </div>
+          </div>
+          <div style="height:8px;"></div>
+          <div class="metric-row">
+            <div class="metric-box">
+              <div class="metric-label">跟踪误差</div>
+              <div class="metric-value qs-mono" id="mTracking">0.08%</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">折溢价率</div>
+              <div class="metric-value qs-mono" id="mPremium">-0.05%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top holdings table -->
+        <div class="card">
+          <div class="section-title">前十大重仓股 <span class="section-meta">按权重排序</span></div>
+          <div class="table-wrap">
+            <table class="holdings-table" id="holdingsTable">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th style="text-align:right;">权重</th>
+                  <th style="text-align:right;">最新价</th>
+                  <th style="text-align:right;">涨跌幅</th>
+                </tr>
+              </thead>
+              <tbody id="holdingsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Component stocks list -->
+        <div class="card">
+          <div class="section-title">成分股明细 <span class="section-meta">全部持仓</span></div>
+          <div id="componentsList"></div>
+        </div>
+
+        <!-- NAV tracking -->
+        <div class="card">
+          <div class="section-title">净值跟踪 <span class="section-meta">NAV vs 指数 近60日</span></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--qs-primary);"></span>
+              <span class="qs-caption" style="color:var(--qs-ink-2);">ETF净值</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--qs-state-info);"></span>
+              <span class="qs-caption" style="color:var(--qs-ink-2);">跟踪指数</span>
+            </div>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="navChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Premium/discount indicator -->
+        <div class="card">
+          <div class="section-title">折溢价指示 <span class="section-meta" id="pdMeta">合理区间</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span class="qs-caption" style="color:var(--qs-ink-3);">折价</span>
+            <span class="qs-mono qs-body" id="pdValue" style="font-weight:600;">-0.05%</span>
+            <span class="qs-caption" style="color:var(--qs-ink-3);">溢价</span>
+          </div>
+          <div class="pd-bar">
+            <div class="pd-center"></div>
+            <div class="pd-fill" id="pdFill" style="left:50%;width:2.5%;background:var(--qs-state-fall);"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">-1.0%</span>
+            <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">0</span>
+            <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">+1.0%</span>
+          </div>
+          <div style="margin-top:8px;padding:8px;background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+            <p class="qs-caption" style="color:var(--qs-ink-2);line-height:1.5;" id="pdDesc">当前折溢价率处于合理区间，IOPV 与市场价基本一致，套利空间有限。</p>
+          </div>
+        </div>
+
+        <!-- Fund flow -->
+        <div class="card">
+          <div class="section-title">资金流向 <span class="section-meta">今日</span></div>
+          <div class="metric-row" style="margin-bottom:8px;">
+            <div class="metric-box">
+              <div class="metric-label">主力净流入</div>
+              <div class="metric-value qs-mono qs-rise" id="flowMain">+5.82亿</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">散户净流入</div>
+              <div class="metric-value qs-mono qs-fall" id="flowRetail">-1.24亿</div>
+            </div>
+          </div>
+          <div class="metric-row" style="margin-bottom:8px;">
+            <div class="metric-box">
+              <div class="metric-label">大单净比</div>
+              <div class="metric-value qs-mono qs-rise" id="flowBig">+8.5%</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">换手率</div>
+              <div class="metric-value qs-mono" id="flowTurnover">3.2%</div>
+            </div>
+          </div>
+          <div class="flow-bar">
+            <div id="flowBarIn" style="background:var(--qs-state-rise);height:100%;"></div>
+            <div id="flowBarOut" style="background:var(--qs-state-fall);height:100%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span class="qs-caption qs-mono" style="color:var(--qs-state-rise);" id="flowInLabel">流入 5.82亿</span>
+            <span class="qs-caption qs-mono" style="color:var(--qs-state-fall);" id="flowOutLabel">流出 1.24亿</span>
+          </div>
+          <div style="margin-top:8px;padding:8px;background:var(--qs-surface-2);border-radius:var(--qs-radius-md);">
+            <p class="qs-caption" style="color:var(--qs-ink-2);line-height:1.5;" id="flowDesc">主力资金今日呈净流入态势，大单买入占比提升，整体资金面偏正面。</p>
+          </div>
+        </div>
+
+        <!-- Correlation analysis -->
+        <div class="card">
+          <div class="section-title">相关性分析 <span class="section-meta">与主要指数近90日</span></div>
+          <div class="chart-wrap-sm">
+            <canvas id="corrChart"></canvas>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="width:8px;height:8px;border-radius:2px;background:var(--qs-primary);"></span>
+              <span class="qs-caption" style="color:var(--qs-ink-2);">高相关 ≥0.7</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="width:8px;height:8px;border-radius:2px;background:var(--qs-state-info);"></span>
+              <span class="qs-caption" style="color:var(--qs-ink-2);">中相关 0.5-0.7</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="width:8px;height:8px;border-radius:2px;background:var(--qs-ink-3);"></span>
+              <span class="qs-caption" style="color:var(--qs-ink-2);">低相关 &lt;0.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Bottom tab bar (56px) -->
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:375px;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+      <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span style="font-size:10px;">仪表盘</span></a>
+      <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span style="font-size:10px;">波段</span></a>
+      <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span style="font-size:10px;">长线</span></a>
+      <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="package" style="width:20px;height:20px;"></i><span style="font-size:10px;">ETF</span></a>
+      <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a>
+    </nav>
+  </div>
+
+  <script>
+    // ===== ETF Data =====
+    var etfData = [
+      {
+        name: "沪深300ETF", code: "510300", tag: "宽基",
+        nav: 3.842, change: 0.82, premium: -0.05,
+        index: "沪深300指数", aum: "1298.5亿", expense: 0.50, tracking: 0.08, turnover: "3.2%",
+        high: 3.858, low: 3.812, open: 3.820, preClose: 3.811,
+        mainFlow: "+5.82亿", retailFlow: "-1.24亿", bigOrder: "+8.5%", flowDesc: "主力资金今日呈净流入态势，大单买入占比提升，北向资金小幅增持，整体资金面偏正面。",
+        holdings: [
+          { name: "贵州茅台", code: "600519", weight: 5.82, price: 1685.50, change: 1.24, industry: "食品饮料" },
+          { name: "宁德时代", code: "300750", weight: 2.95, price: 182.30, change: 2.18, industry: "电力设备" },
+          { name: "中国平安", code: "601318", weight: 2.68, price: 48.52, change: 0.35, industry: "非银金融" },
+          { name: "招商银行", code: "600036", weight: 2.41, price: 35.68, change: -0.42, industry: "银行" },
+          { name: "五粮液", code: "000858", weight: 2.15, price: 156.20, change: 0.88, industry: "食品饮料" },
+          { name: "美的集团", code: "000333", weight: 1.98, price: 68.45, change: 1.12, industry: "家用电器" },
+          { name: "隆基绿能", code: "601012", weight: 1.72, price: 22.18, change: -1.35, industry: "电力设备" },
+          { name: "兴业银行", code: "601166", weight: 1.65, price: 16.85, change: 0.28, industry: "银行" },
+          { name: "迈瑞医疗", code: "300760", weight: 1.52, price: 285.40, change: 0.95, industry: "医药生物" },
+          { name: "比亚迪", code: "002594", weight: 1.48, price: 248.60, change: 3.25, industry: "汽车" }
+        ]
+      },
+      {
+        name: "中证500ETF", code: "510500", tag: "宽基",
+        nav: 5.628, change: 1.15, premium: 0.08,
+        index: "中证500指数", aum: "652.3亿", expense: 0.50, tracking: 0.10, turnover: "4.8%",
+        high: 5.682, low: 5.556, open: 5.570, preClose: 5.564,
+        mainFlow: "+3.45亿", retailFlow: "-0.68亿", bigOrder: "+6.2%", flowDesc: "中小盘风格今日表现活跃，主力资金净流入，量能配合良好，短期动能偏强。",
+        holdings: [
+          { name: "特变电工", code: "600089", weight: 0.85, price: 14.52, change: 2.18, industry: "电力设备" },
+          { name: "恒立液压", code: "601100", weight: 0.72, price: 52.30, change: 1.45, industry: "机械设备" },
+          { name: "迎驾贡酒", code: "603198", weight: 0.68, price: 68.50, change: 0.92, industry: "食品饮料" },
+          { name: "华鲁恒升", code: "600426", weight: 0.62, price: 28.45, change: 3.28, industry: "基础化工" },
+          { name: "中航西飞", code: "000768", weight: 0.58, price: 22.85, change: 1.12, industry: "国防军工" },
+          { name: "西部矿业", code: "601168", weight: 0.55, price: 15.62, change: -0.85, industry: "有色金属" },
+          { name: "药明康德", code: "603259", weight: 0.52, price: 58.40, change: 2.65, industry: "医药生物" },
+          { name: "启明星辰", code: "002439", weight: 0.48, price: 25.18, change: 1.88, industry: "计算机" },
+          { name: "华东医药", code: "000963", weight: 0.45, price: 32.50, change: 0.42, industry: "医药生物" },
+          { name: "坚朗五金", code: "002791", weight: 0.42, price: 45.80, change: -1.28, industry: "建筑材料" }
+        ]
+      },
+      {
+        name: "创业板ETF", code: "159915", tag: "宽基",
+        nav: 1.856, change: 1.68, premium: 0.12,
+        index: "创业板指数", aum: "285.6亿", expense: 0.50, tracking: 0.12, turnover: "5.6%",
+        high: 1.872, low: 1.828, open: 1.832, preClose: 1.825,
+        mainFlow: "+4.12亿", retailFlow: "-0.85亿", bigOrder: "+7.8%", flowDesc: "成长风格走强，新能源与医药权重股集体上涨，资金流入明显，短期趋势向好。",
+        holdings: [
+          { name: "宁德时代", code: "300750", weight: 15.82, price: 182.30, change: 2.18, industry: "电力设备" },
+          { name: "迈瑞医疗", code: "300760", weight: 5.25, price: 285.40, change: 0.95, industry: "医药生物" },
+          { name: "阳光电源", code: "300274", weight: 4.18, price: 85.60, change: 3.85, industry: "电力设备" },
+          { name: "汇川技术", code: "300124", weight: 3.95, price: 58.20, change: 1.62, industry: "机械设备" },
+          { name: "温氏股份", code: "300498", weight: 3.12, price: 18.52, change: -0.82, industry: "农林牧渔" },
+          { name: "爱尔眼科", code: "300015", weight: 2.85, price: 12.45, change: 1.28, industry: "医药生物" },
+          { name: "亿纬锂能", code: "300014", weight: 2.42, price: 38.60, change: -0.82, industry: "电力设备" },
+          { name: "沃森生物", code: "300142", weight: 1.98, price: 22.15, change: 0.65, industry: "医药生物" },
+          { name: "捷佳伟创", code: "300724", weight: 1.65, price: 45.80, change: 2.45, industry: "电力设备" },
+          { name: "先导智能", code: "300450", weight: 1.52, price: 28.50, change: 1.85, industry: "机械设备" }
+        ]
+      },
+      {
+        name: "科创50ETF", code: "588000", tag: "宽基",
+        nav: 0.985, change: 2.35, premium: 0.18,
+        index: "科创50指数", aum: "418.2亿", expense: 0.50, tracking: 0.15, turnover: "6.2%",
+        high: 0.998, low: 0.962, open: 0.965, preClose: 0.962,
+        mainFlow: "+6.25亿", retailFlow: "-1.12亿", bigOrder: "+10.5%", flowDesc: "科创板今日强势上行，半导体与生物医药权重股表现突出，资金大幅流入，市场情绪高涨。",
+        holdings: [
+          { name: "中芯国际", code: "688981", weight: 8.52, price: 52.18, change: 3.28, industry: "半导体" },
+          { name: "海光信息", code: "688041", weight: 6.85, price: 85.60, change: 4.12, industry: "半导体" },
+          { name: "中微公司", code: "688012", weight: 5.72, price: 168.50, change: 2.85, industry: "半导体设备" },
+          { name: "澜起科技", code: "688008", weight: 4.22, price: 52.30, change: 1.98, industry: "半导体" },
+          { name: "晶晨股份", code: "688099", weight: 3.85, price: 62.45, change: 2.15, industry: "半导体设计" },
+          { name: "君实生物", code: "688180", weight: 3.18, price: 28.50, change: 0.85, industry: "生物医药" },
+          { name: "传音控股", code: "688036", weight: 2.95, price: 128.50, change: 1.45, industry: "消费电子" },
+          { name: "金山办公", code: "688111", weight: 2.68, price: 285.40, change: 3.65, industry: "计算机软件" },
+          { name: "华润微", code: "688396", weight: 2.42, price: 42.80, change: 1.22, industry: "半导体" },
+          { name: "拓荆科技", code: "688072", weight: 2.18, price: 185.20, change: 4.85, industry: "半导体设备" }
+        ]
+      },
+      {
+        name: "半导体ETF", code: "512480", tag: "科技",
+        nav: 0.968, change: 2.18, premium: 0.22,
+        index: "中华半导体芯片行业指数", aum: "238.5亿", expense: 0.50, tracking: 0.15, turnover: "7.8%",
+        high: 0.978, low: 0.945, open: 0.948, preClose: 0.945,
+        mainFlow: "+4.85亿", retailFlow: "-0.92亿", bigOrder: "+9.2%", flowDesc: "半导体板块今日全面走强，国产替代逻辑持续强化，主力资金大幅流入，板块景气度提升。",
+        holdings: [
+          { name: "北方华创", code: "002371", weight: 8.42, price: 318.50, change: 3.28, industry: "半导体设备" },
+          { name: "中芯国际", code: "688981", weight: 6.85, price: 52.18, change: 1.02, industry: "晶圆代工" },
+          { name: "韦尔股份", code: "603501", weight: 5.70, price: 102.35, change: 1.55, industry: "半导体设计" },
+          { name: "兆易创新", code: "603986", weight: 4.52, price: 85.60, change: 2.88, industry: "半导体设计" },
+          { name: "紫光国微", code: "002049", weight: 3.95, price: 58.20, change: 0.74, industry: "集成电路" },
+          { name: "长电科技", code: "600584", weight: 3.60, price: 28.45, change: 2.15, industry: "封测" },
+          { name: "圣邦股份", code: "300661", weight: 3.35, price: 155.80, change: 1.20, industry: "半导体设计" },
+          { name: "卓胜微", code: "300782", weight: 2.98, price: 102.50, change: 0.92, industry: "半导体设计" },
+          { name: "华天科技", code: "002185", weight: 2.74, price: 12.85, change: 0.58, industry: "封测" },
+          { name: "通富微电", code: "002156", weight: 2.42, price: 18.32, change: 1.85, industry: "封测" }
+        ]
+      },
+      {
+        name: "新能源ETF", code: "516160", tag: "新能源",
+        nav: 0.625, change: -0.85, premium: -0.15,
+        index: "中证新能源指数", aum: "126.8亿", expense: 0.50, tracking: 0.18, turnover: "4.5%",
+        high: 0.635, low: 0.618, open: 0.630, preClose: 0.630,
+        mainFlow: "-1.85亿", retailFlow: "+0.42亿", bigOrder: "-3.5%", flowDesc: "新能源板块今日小幅回调，锂电与光伏承压，主力资金净流出，短期需关注支撑位表现。",
+        holdings: [
+          { name: "宁德时代", code: "300750", weight: 12.85, price: 182.30, change: 2.18, industry: "锂电池" },
+          { name: "隆基绿能", code: "601012", weight: 8.52, price: 22.18, change: -1.35, industry: "光伏" },
+          { name: "通威股份", code: "600438", weight: 6.72, price: 28.50, change: -2.15, industry: "光伏" },
+          { name: "阳光电源", code: "300274", weight: 5.85, price: 85.60, change: 3.85, industry: "逆变器" },
+          { name: "亿纬锂能", code: "300014", weight: 4.95, price: 38.60, change: -0.82, industry: "锂电池" },
+          { name: "晶澳科技", code: "002459", weight: 4.22, price: 18.52, change: -1.28, industry: "光伏" },
+          { name: "天合光能", code: "688599", weight: 3.85, price: 25.80, change: -0.95, industry: "光伏" },
+          { name: "恩捷股份", code: "002812", weight: 3.42, price: 52.30, change: -1.62, industry: "隔膜" },
+          { name: "德业股份", code: "605117", weight: 2.98, price: 68.50, change: 0.85, industry: "逆变器" },
+          { name: "派能科技", code: "688063", weight: 2.42, price: 45.80, change: -0.42, industry: "储能" }
+        ]
+      },
+      {
+        name: "医药ETF", code: "512010", tag: "医药",
+        nav: 0.428, change: 0.65, premium: -0.08,
+        index: "中证医药卫生指数", aum: "98.5亿", expense: 0.50, tracking: 0.14, turnover: "2.8%",
+        high: 0.432, low: 0.424, open: 0.425, preClose: 0.425,
+        mainFlow: "+1.25亿", retailFlow: "-0.35亿", bigOrder: "+2.8%", flowDesc: "医药板块今日温和上涨，创新药与医疗器械表现较好，资金小幅流入，板块估值处于历史低位。",
+        holdings: [
+          { name: "药明康德", code: "603259", weight: 8.52, price: 58.40, change: 2.65, industry: "CXO" },
+          { name: "迈瑞医疗", code: "300760", weight: 7.85, price: 285.40, change: 0.95, industry: "医疗器械" },
+          { name: "恒瑞医药", code: "600276", weight: 6.42, price: 42.50, change: 1.28, industry: "创新药" },
+          { name: "爱尔眼科", code: "300015", weight: 5.18, price: 12.45, change: 1.28, industry: "医疗服务" },
+          { name: "片仔癀", code: "600436", weight: 4.85, price: 235.60, change: 0.42, industry: "中药" },
+          { name: "云南白药", code: "000538", weight: 3.95, price: 52.30, change: -0.28, industry: "中药" },
+          { name: "智飞生物", code: "300122", weight: 3.72, price: 45.80, change: 0.85, industry: "疫苗" },
+          { name: "长春高新", code: "000661", weight: 3.42, price: 128.50, change: -0.65, industry: "生物制品" },
+          { name: "泰格医药", code: "300347", weight: 2.98, price: 58.20, change: 1.55, industry: "CXO" },
+          { name: "华兰生物", code: "002007", weight: 2.65, price: 18.52, change: 0.42, industry: "血液制品" }
+        ]
+      },
+      {
+        name: "消费ETF", code: "510150", tag: "消费",
+        nav: 0.915, change: 0.38, premium: 0.03,
+        index: "中证主要消费指数", aum: "85.6亿", expense: 0.50, tracking: 0.11, turnover: "2.2%",
+        high: 0.922, low: 0.910, open: 0.912, preClose: 0.912,
+        mainFlow: "+0.85亿", retailFlow: "-0.18亿", bigOrder: "+1.5%", flowDesc: "消费板块今日小幅上涨，白酒龙头表现稳健，资金小幅流入，消费复苏预期升温。",
+        holdings: [
+          { name: "贵州茅台", code: "600519", weight: 15.85, price: 1685.50, change: 1.24, industry: "白酒" },
+          { name: "五粮液", code: "000858", weight: 8.52, price: 156.20, change: 0.88, industry: "白酒" },
+          { name: "伊利股份", code: "600887", weight: 6.72, price: 25.80, change: 0.42, industry: "乳品" },
+          { name: "泸州老窖", code: "000568", weight: 5.85, price: 185.60, change: 1.12, industry: "白酒" },
+          { name: "山西汾酒", code: "600809", weight: 4.95, price: 215.40, change: 2.15, industry: "白酒" },
+          { name: "牧原股份", code: "002714", weight: 4.22, price: 42.50, change: -0.85, industry: "养殖" },
+          { name: "洋河股份", code: "002304", weight: 3.85, price: 98.50, change: 0.65, industry: "白酒" },
+          { name: "古井贡酒", code: "000596", weight: 3.42, price: 225.80, change: 1.85, industry: "白酒" },
+          { name: "海天味业", code: "603288", weight: 2.98, price: 38.60, change: -0.28, industry: "调味品" },
+          { name: "今世缘", code: "603369", weight: 2.42, price: 48.50, change: 0.92, industry: "白酒" }
+        ]
+      }
+    ];
+
+    // ===== Render ETF List =====
+    function renderEtfList() {
+      var container = document.getElementById('etfList');
+      container.innerHTML = '';
+      etfData.forEach(function(etf, i) {
+        var changeClass = etf.change >= 0 ? 'qs-rise' : 'qs-fall';
+        var changeStr = (etf.change >= 0 ? '+' : '') + etf.change.toFixed(2) + '%';
+        var premiumClass = etf.premium >= 0 ? 'qs-rise' : 'qs-fall';
+        var premiumStr = (etf.premium >= 0 ? '+' : '') + etf.premium.toFixed(2) + '%';
+        var card = document.createElement('div');
+        card.className = 'etf-card';
+        card.setAttribute('data-index', i);
+        card.addEventListener('click', function() { openDetail(i); });
+        card.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
+                '<span style="font-size:15px;font-weight:600;color:var(--qs-ink);">' + etf.name + '</span>' +
+                '<span class="category-tag">' + etf.tag + '</span>' +
+              '</div>' +
+              '<div class="qs-mono" style="font-size:11px;color:var(--qs-ink-3);margin-top:3px;">' + etf.code + ' · ' + etf.index + '</div>' +
+            '</div>' +
+            '<div style="text-align:right;flex-shrink:0;">' +
+              '<div class="qs-mono" style="font-size:17px;font-weight:600;color:var(--qs-ink);">' + etf.nav.toFixed(3) + '</div>' +
+              '<div class="qs-mono ' + changeClass + '" style="font-size:12px;font-weight:600;margin-top:1px;">' + changeStr + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--qs-line);">' +
+            '<span style="font-size:11px;color:var(--qs-ink-3);">折溢价 <span class="qs-mono ' + premiumClass + '" style="font-weight:600;">' + premiumStr + '</span></span>' +
+            '<span style="font-size:11px;color:var(--qs-ink-3);">规模 <span class="qs-mono" style="color:var(--qs-ink-2);">' + etf.aum + '</span></span>' +
+            '<span style="font-size:11px;color:var(--qs-ink-3);">换手 <span class="qs-mono" style="color:var(--qs-ink-2);">' + etf.turnover + '</span></span>' +
+          '</div>';
+        container.appendChild(card);
+      });
+    }
+
+    // ===== Detail View =====
+    var klineChart = null;
+    var navChart = null;
+    var corrChart = null;
+    var currentTf = 'intraday';
+    var currentIndex = -1;
+
+    function openDetail(index) {
+      currentIndex = index;
+      var etf = etfData[index];
+      document.getElementById('listView').style.display = 'none';
+      document.getElementById('detailView').style.display = 'block';
+      document.getElementById('topTitle').textContent = etf.name;
+      document.getElementById('backBtn').style.display = 'flex';
+
+      // Header
+      document.getElementById('dName').textContent = etf.name;
+      document.getElementById('dTag').textContent = etf.tag;
+      document.getElementById('dCode').textContent = etf.code;
+      document.getElementById('dIndex').textContent = etf.index;
+      document.getElementById('dNav').textContent = etf.nav.toFixed(3);
+      var dChangeEl = document.getElementById('dChange');
+      dChangeEl.textContent = (etf.change >= 0 ? '+' : '') + etf.change.toFixed(2) + '%';
+      dChangeEl.className = 'qs-mono qs-body ' + (etf.change >= 0 ? 'qs-rise' : 'qs-fall');
+
+      // K-line header
+      document.getElementById('klinePrice').textContent = etf.nav.toFixed(3);
+      var kChangeEl = document.getElementById('klineChange');
+      kChangeEl.textContent = (etf.change >= 0 ? '+' : '') + etf.change.toFixed(2) + '%';
+      kChangeEl.style.color = etf.change >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      document.getElementById('klineNav').textContent = etf.nav.toFixed(3);
+      var kPremEl = document.getElementById('klinePremium');
+      kPremEl.textContent = (etf.premium >= 0 ? '+' : '') + etf.premium.toFixed(2) + '%';
+      kPremEl.style.color = etf.premium >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      document.getElementById('klineHigh').textContent = etf.high.toFixed(3);
+      document.getElementById('klineLow').textContent = etf.low.toFixed(3);
+      document.getElementById('klineOpen').textContent = etf.open.toFixed(3);
+      document.getElementById('klinePreClose').textContent = etf.preClose.toFixed(3);
+
+      // Metrics
+      document.getElementById('mAum').textContent = etf.aum;
+      document.getElementById('mExpense').textContent = etf.expense.toFixed(2) + '%';
+      document.getElementById('mTracking').textContent = etf.tracking.toFixed(2) + '%';
+      var mPremEl = document.getElementById('mPremium');
+      mPremEl.textContent = (etf.premium >= 0 ? '+' : '') + etf.premium.toFixed(2) + '%';
+      mPremEl.style.color = etf.premium >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+
+      // Holdings table
+      var hBody = document.getElementById('holdingsBody');
+      hBody.innerHTML = '';
+      etf.holdings.forEach(function(h) {
+        var tr = document.createElement('tr');
+        var chgClass = h.change >= 0 ? 'qs-rise' : 'qs-fall';
+        var chgStr = (h.change >= 0 ? '+' : '') + h.change.toFixed(2) + '%';
+        tr.innerHTML =
+          '<td><div style="font-size:12px;font-weight:500;color:var(--qs-ink);">' + h.name + '</div>' +
+          '<div class="qs-mono" style="font-size:10px;color:var(--qs-ink-3);">' + h.code + '</div></td>' +
+          '<td class="qs-mono" style="text-align:right;color:var(--qs-ink);">' + h.weight.toFixed(2) + '%</td>' +
+          '<td class="qs-mono" style="text-align:right;color:var(--qs-ink);">' + h.price.toFixed(2) + '</td>' +
+          '<td class="qs-mono ' + chgClass + '" style="text-align:right;font-weight:600;">' + chgStr + '</td>';
+        hBody.appendChild(tr);
+      });
+
+      // Component stocks list
+      var cList = document.getElementById('componentsList');
+      cList.innerHTML = '';
+      etf.holdings.forEach(function(h) {
+        var chgClass = h.change >= 0 ? 'qs-rise' : 'qs-fall';
+        var chgStr = (h.change >= 0 ? '+' : '') + h.change.toFixed(2) + '%';
+        var item = document.createElement('div');
+        item.className = 'stock-item';
+        item.innerHTML =
+          '<div style="flex:1;min-width:0;">' +
+            '<div style="display:flex;align-items:center;gap:6px;">' +
+              '<span style="font-size:13px;font-weight:500;color:var(--qs-ink);">' + h.name + '</span>' +
+              '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:var(--qs-surface-2);color:var(--qs-ink-3);">' + h.industry + '</span>' +
+            '</div>' +
+            '<div class="qs-mono" style="font-size:10px;color:var(--qs-ink-3);margin-top:2px;">' + h.code + ' · 权重 ' + h.weight.toFixed(2) + '%</div>' +
+          '</div>' +
+          '<div style="text-align:right;flex-shrink:0;">' +
+            '<div class="qs-mono" style="font-size:13px;font-weight:600;color:var(--qs-ink);">' + h.price.toFixed(2) + '</div>' +
+            '<div class="qs-mono ' + chgClass + '" style="font-size:11px;font-weight:600;margin-top:1px;">' + chgStr + '</div>' +
+          '</div>';
+        cList.appendChild(item);
+      });
+
+      // Premium/discount indicator
+      var pdValEl = document.getElementById('pdValue');
+      pdValEl.textContent = (etf.premium >= 0 ? '+' : '') + etf.premium.toFixed(2) + '%';
+      pdValEl.style.color = etf.premium >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      var pdFill = document.getElementById('pdFill');
+      var pct = Math.abs(etf.premium) / 1.0 * 50;
+      if (etf.premium >= 0) {
+        pdFill.style.left = '50%';
+        pdFill.style.width = pct + '%';
+        pdFill.style.background = 'var(--qs-state-rise)';
+      } else {
+        pdFill.style.left = (50 - pct) + '%';
+        pdFill.style.width = pct + '%';
+        pdFill.style.background = 'var(--qs-state-fall)';
+      }
+      var pdMeta = document.getElementById('pdMeta');
+      var pdDesc = document.getElementById('pdDesc');
+      if (Math.abs(etf.premium) < 0.15) {
+        pdMeta.textContent = '合理区间';
+        pdDesc.textContent = '当前折溢价率处于合理区间，IOPV 与市场价基本一致，套利空间有限。';
+      } else if (etf.premium >= 0.15) {
+        pdMeta.textContent = '溢价偏高';
+        pdDesc.textContent = '当前处于溢价状态，市场情绪偏热，追高需谨慎，注意溢价回落风险。';
+      } else {
+        pdMeta.textContent = '折价偏大';
+        pdDesc.textContent = '当前处于折价状态，可能存在套利机会，可关注申购套利空间。';
+      }
+
+      // Fund flow
+      document.getElementById('flowMain').textContent = etf.mainFlow;
+      document.getElementById('flowRetail').textContent = etf.retailFlow;
+      document.getElementById('flowBig').textContent = etf.bigOrder;
+      document.getElementById('flowTurnover').textContent = etf.turnover;
+      var flowIn = parseFloat(etf.mainFlow.replace(/[+亿]/g, ''));
+      var flowOut = Math.abs(parseFloat(etf.retailFlow.replace(/[-亿]/g, '')));
+      var total = flowIn + flowOut;
+      document.getElementById('flowBarIn').style.width = (flowIn / total * 100) + '%';
+      document.getElementById('flowBarOut').style.width = (flowOut / total * 100) + '%';
+      document.getElementById('flowInLabel').textContent = '流入 ' + etf.mainFlow;
+      document.getElementById('flowOutLabel').textContent = '流出 ' + etf.retailFlow.replace('-', '');
+      document.getElementById('flowDesc').textContent = etf.flowDesc;
+
+      // Render charts
+      currentTf = 'intraday';
+      document.querySelectorAll('.tf-btn').forEach(function(b) {
+        b.classList.remove('active');
+        if (b.dataset.tf === 'intraday') b.classList.add('active');
+      });
+      setTimeout(function() {
+        renderKline(etf, 'intraday');
+        renderNavChart(etf);
+        renderCorrChart(etf);
+      }, 50);
+    }
+
+    function showList() {
+      document.getElementById('listView').style.display = 'block';
+      document.getElementById('detailView').style.display = 'none';
+      document.getElementById('topTitle').textContent = 'ETF策略';
+      document.getElementById('backBtn').style.display = 'none';
+      currentIndex = -1;
+      if (klineChart) { klineChart.destroy(); klineChart = null; }
+      if (navChart) { navChart.destroy(); navChart = null; }
+      if (corrChart) { corrChart.destroy(); corrChart = null; }
+    }
+
+    // ===== K-line Chart =====
+    function switchTf(btn) {
+      document.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentTf = btn.dataset.tf;
+      if (currentIndex >= 0) {
+        renderKline(etfData[currentIndex], currentTf);
+      }
+    }
+
+    function genSeries(basePrice, count, tf) {
+      var data = [];
+      var price = basePrice * 0.92;
+      var step = basePrice * (tf === 'month' ? 0.025 : (tf === 'week' ? 0.015 : 0.008));
+      for (var i = 0; i < count; i++) {
+        var change = (Math.random() - 0.48) * step;
+        price = price + change;
+        data.push(price);
+      }
+      if (data.length) data[data.length - 1] = basePrice;
+      return data;
+    }
+
+    function renderKline(etf, tf) {
+      var canvas = document.getElementById('klineChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      var ctx = canvas.getContext('2d');
+      var count = tf === 'intraday' ? 48 : (tf === 'month' ? 30 : (tf === 'week' ? 60 : 90));
+      var data = genSeries(etf.nav, count, tf);
+      var labels = [];
+      for (var i = 1; i <= count; i++) labels.push(i);
+
+      if (klineChart) klineChart.destroy();
+
+      var rise = '#ef5350';
+      var fall = '#26c584';
+
+      klineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '净值',
+            data: data,
+            borderColor: etf.change >= 0 ? rise : fall,
+            backgroundColor: 'rgba(45,212,191,0.08)',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            pointHoverRadius: 3,
+            tension: 0.15,
+            fill: true,
+            segment: {
+              borderColor: function(segCtx) {
+                var idx = segCtx.p0DataIndex;
+                if (idx === 0) return '#2dd4bf';
+                var prev = segCtx.chart.data.datasets[0].data[idx - 1];
+                var cur = segCtx.chart.data.datasets[0].data[idx];
+                return cur >= prev ? rise : fall;
+              }
+            }
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(11,11,15,0.92)',
+              titleColor: '#6c6c80',
+              bodyColor: '#f2f2f5',
+              borderColor: '#2a2a36',
+              borderWidth: 1,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return '净值 ' + context.parsed.y.toFixed(3);
+                }
+              }
+            }
+          },
+          scales: {
+            x: { display: false },
+            y: {
+              position: 'right',
+              grid: { color: '#2a2a36' },
+              ticks: { color: '#6c6c80', font: { size: 10 }, maxTicksLimit: 5 }
+            }
+          }
+        }
+      });
+    }
+
+    // ===== NAV Tracking Chart =====
+    function renderNavChart(etf) {
+      var canvas = document.getElementById('navChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      var ctx = canvas.getContext('2d');
+      var count = 60;
+      var navData = [];
+      var indexData = [];
+      var startNav = etf.nav * 0.92;
+      var startIndex = etf.nav * 0.90;
+      var driftNav = (etf.nav - startNav) / (count - 1);
+      var driftIndex = (etf.nav - startIndex) / (count - 1);
+      var navVal = startNav;
+      var indexVal = startIndex;
+      for (var i = 0; i < count; i++) {
+        navVal = navVal + driftNav + (Math.random() - 0.5) * etf.nav * 0.012;
+        indexVal = indexVal + driftIndex + (Math.random() - 0.5) * etf.nav * 0.015;
+        navData.push(navVal);
+        indexData.push(indexVal);
+      }
+      navData[count - 1] = etf.nav;
+      indexData[count - 1] = etf.nav * 0.998;
+
+      var labels = [];
+      for (var j = count; j >= 1; j--) labels.push(j + '日前');
+
+      if (navChart) navChart.destroy();
+      navChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'ETF净值',
+              data: navData,
+              borderColor: '#2dd4bf',
+              backgroundColor: 'rgba(45,212,191,0.08)',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              pointHoverRadius: 3,
+              tension: 0.3,
+              fill: true
+            },
+            {
+              label: '跟踪指数',
+              data: indexData,
+              borderColor: '#3b82f6',
+              backgroundColor: 'transparent',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              pointHoverRadius: 3,
+              tension: 0.3,
+              fill: false,
+              borderDash: [4, 3]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(11,11,15,0.92)',
+              titleColor: '#6c6c80',
+              bodyColor: '#f2f2f5',
+              borderColor: '#2a2a36',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            x: { display: false },
+            y: {
+              grid: { color: '#2a2a36' },
+              ticks: { color: '#6c6c80', font: { size: 10 }, maxTicksLimit: 4 }
+            }
+          }
+        }
+      });
+    }
+
+    // ===== Correlation Chart =====
+    function renderCorrChart(etf) {
+      var canvas = document.getElementById('corrChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      var ctx = canvas.getContext('2d');
+      var labels = ['沪深300', '中证500', '创业板指', '科创50', '中证科技', '半导体', '新能源', '医药'];
+      var seed = parseInt(etf.code, 10);
+      var values = labels.map(function(_, i) {
+        var base = 0.40 + (i * 0.06) + (seed % 9) * 0.03;
+        var v = Math.min(0.98, Math.max(0.30, base + (Math.random() - 0.5) * 0.20));
+        return parseFloat(v.toFixed(2));
+      });
+
+      if (corrChart) corrChart.destroy();
+      corrChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '相关系数',
+            data: values,
+            backgroundColor: values.map(function(v) {
+              return v >= 0.7 ? '#2dd4bf' : (v >= 0.5 ? '#3b82f6' : '#6c6c80');
+            }),
+            borderRadius: 3,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(11,11,15,0.92)',
+              titleColor: '#6c6c80',
+              bodyColor: '#f2f2f5',
+              borderColor: '#2a2a36',
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  return '相关系数 ' + context.parsed.y.toFixed(2);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#6c6c80', font: { size: 9 }, maxRotation: 0, autoSkip: false }
+            },
+            y: {
+              min: 0,
+              max: 1,
+              grid: { color: '#2a2a36' },
+              ticks: { color: '#6c6c80', font: { size: 10 }, maxTicksLimit: 4 }
+            }
+          }
+        }
+      });
+    }
+
+    // ===== Init =====
+    renderEtfList();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

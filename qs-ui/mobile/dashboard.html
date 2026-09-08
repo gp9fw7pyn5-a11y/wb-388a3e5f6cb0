@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0f">
+  <title>量化选股 · 仪表盘</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@1.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --qs-primary: #2dd4bf;
+      --qs-primary-foreground: #020617;
+      --qs-state-rise: #ef5350;
+      --qs-state-fall: #26c584;
+      --qs-state-warning: #f59e0b;
+      --qs-state-info: #3b82f6;
+      --qs-background: #0b0b0f;
+      --qs-surface: #141419;
+      --qs-surface-2: #1c1c24;
+      --qs-ink: #f2f2f5;
+      --qs-ink-2: #a0a0b0;
+      --qs-ink-3: #6c6c80;
+      --qs-line: #2a2a36;
+      --qs-font-primary: "Inter","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+      --qs-font-mono: "JetBrains Mono","SFMono-Regular",Consolas,monospace;
+      --qs-radius-md: 8px;
+      --qs-radius-lg: 12px;
+    }
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body { font-family: var(--qs-font-primary); background: var(--qs-background); color: var(--qs-ink); margin:0; -webkit-font-smoothing: antialiased; }
+    .qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+    .qs-caption { font-size: 11px; line-height: 1.4; }
+    .qs-body { font-size: 13px; line-height: 1.5; }
+    .qs-h3 { font-size: 16px; font-weight: 600; }
+    .qs-h2 { font-size: 18px; font-weight: 600; }
+    .qs-h1 { font-size: 22px; font-weight: 600; }
+
+    .card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px; }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Top bar */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; height: 48px; z-index: 60;
+      background: var(--qs-background); border-bottom: 1px solid var(--qs-line);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+    .topbar .brand { display: flex; align-items: center; gap: 8px; }
+    .topbar .logo { width: 26px; height: 26px; border-radius: 7px; display:flex; align-items:center; justify-content:center;
+      font-weight: 700; font-size: 13px; background: var(--qs-primary); color: var(--qs-primary-foreground); }
+    .topbar .title { font-size: 16px; font-weight: 600; color: var(--qs-ink); letter-spacing: .01em; }
+    .topbar .icon-btn { width: 34px; height: 34px; border-radius: 8px; display:flex; align-items:center; justify-content:center;
+      color: var(--qs-ink-2); background: transparent; border: 1px solid var(--qs-line); }
+
+    /* Scroll region */
+    .content { position: fixed; top: 48px; left: 0; right: 0; bottom: 56px; overflow-y: auto; overflow-x: hidden;
+      padding: 12px 12px 20px; }
+
+    /* Section header */
+    .sec-head { display: flex; align-items: center; justify-content: space-between; margin: 14px 2px 8px; }
+    .sec-head h2 { font-size: 15px; font-weight: 600; color: var(--qs-ink); margin: 0; display:flex; align-items:center; gap:6px; }
+    .sec-head .more { font-size: 11px; color: var(--qs-ink-3); display:flex; align-items:center; gap:2px; }
+
+    /* KPI horizontal scroll */
+    .kpi-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 6px; scroll-snap-type: x mandatory; }
+    .kpi-card { flex: 0 0 150px; scroll-snap-align: start; background: var(--qs-surface); border: 1px solid var(--qs-line);
+      border-radius: var(--qs-radius-lg); padding: 12px; display: flex; flex-direction: column; }
+    .kpi-card .name { font-size: 12px; font-weight: 600; color: var(--qs-ink); display:flex; align-items:center; justify-content:space-between; }
+    .kpi-card .price { font-size: 18px; font-weight: 600; margin-top: 4px; }
+    .kpi-card .chg { font-size: 11px; margin-top: 1px; }
+    .kpi-card .spark { height: 34px; margin-top: 6px; position: relative; }
+    .kpi-card .vol { font-size: 10px; color: var(--qs-ink-3); margin-top: 4px; }
+
+    /* Market status pill */
+    .status-pill { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 8px; border-radius:999px;
+      background: rgba(45,212,191,0.12); color: var(--qs-primary); }
+    .status-dot { width:6px; height:6px; border-radius:50%; background: var(--qs-primary); }
+
+    /* Breadth grid */
+    .breadth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-tile { background: var(--qs-surface-2); border-radius: var(--qs-radius-md); padding: 10px; }
+    .stat-tile .lbl { font-size: 11px; color: var(--qs-ink-3); }
+    .stat-tile .val { font-size: 18px; font-weight: 600; margin-top: 2px; }
+    .stat-tile .bar { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.06); margin-top: 8px; overflow:hidden; }
+    .stat-tile .bar > span { display:block; height:100%; border-radius:999px; }
+
+    /* Segmented control */
+    .seg { display:flex; background: var(--qs-surface-2); border-radius: 999px; padding: 3px; gap: 3px; }
+    .seg button { flex:1; border:none; background: transparent; color: var(--qs-ink-3); font-size: 12px; font-weight: 500;
+      padding: 6px 0; border-radius: 999px; cursor:pointer; transition: all .15s; }
+    .seg button.active { background: var(--qs-surface); color: var(--qs-ink); box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+
+    /* Sector list */
+    .sector-list { list-style:none; margin:0; padding:0; }
+    .sector-list li { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:9px 2px; border-bottom:1px solid var(--qs-line); }
+    .sector-list li:last-child { border-bottom:none; }
+    .sector-list .sname { font-size:13px; color:var(--qs-ink); }
+    .sector-list .smid { flex:1; margin:0 8px; height:4px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden; }
+    .sector-list .smid > span { display:block; height:100%; border-radius:999px; }
+    .sector-list .spct { font-size:12px; min-width:54px; text-align:right; }
+
+    /* Sentiment */
+    .fg-wrap { position: relative; }
+    .fg-track { height: 8px; border-radius: 999px; background: linear-gradient(90deg,#ef5350 0%,#f59e0b 45%,#2dd4bf 100%); opacity:.85; }
+    .fg-needle { position:absolute; top:-3px; width:3px; height:14px; border-radius:999px; background:var(--qs-ink); box-shadow:0 0 0 2px var(--qs-surface); }
+    .sent-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+
+    /* News */
+    .news-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .news-item { background: var(--qs-surface-2); border-radius: var(--qs-radius-md); padding: 10px; }
+    .news-item .nhead { display:flex; align-items:flex-start; gap:8px; }
+    .news-item .ntime { display:flex; flex-direction:column; align-items:center; flex-shrink:0; padding-top:1px; }
+    .news-item .ntime .t { font-size:10px; color:var(--qs-ink-3); }
+    .news-item .nbody { flex:1; min-width:0; }
+    .news-item .ntitle { font-size:13px; color:var(--qs-ink); line-height:1.45; }
+    .news-item .nmeta { display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; }
+    .chip { font-size:10px; padding:2px 7px; border-radius:999px; white-space:nowrap; }
+    .chip-bull { background: rgba(239,83,80,.14); color: var(--qs-state-rise); }
+    .chip-bear { background: rgba(38,197,132,.14); color: var(--qs-state-fall); }
+    .chip-neutral { background: rgba(160,160,176,.16); color: var(--qs-ink-2); }
+    .chip-src { background: rgba(45,212,191,.12); color: var(--qs-primary); }
+    .chip-cat { background: rgba(108,108,128,.18); color: var(--qs-ink-2); }
+    .ticker-row { display:flex; gap:6px; margin-top:7px; padding-top:7px; border-top:1px solid var(--qs-line); overflow-x:auto; }
+    .ticker-row::-webkit-scrollbar{display:none;}
+    .ticker { flex:0 0 auto; background:var(--qs-surface); border:1px solid var(--qs-line); border-radius:var(--qs-radius-md); padding:6px 8px; min-width:104px; }
+    .ticker .tn { font-size:11px; font-weight:600; color:var(--qs-ink); }
+    .ticker .tc { font-size:9px; color:var(--qs-ink-3); }
+    .ticker .tp { font-size:12px; font-weight:600; }
+
+    .fade { transition: opacity .15s; }
+    .hidden-tab { display:none !important; }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo qs-mono">Q</div>
+      <span class="title">量化选股</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button class="icon-btn" aria-label="搜索"><i data-lucide="search" style="width:18px;height:18px;"></i></button>
+      <button class="icon-btn" aria-label="通知"><i data-lucide="bell" style="width:18px;height:18px;"></i></button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <!-- Market overview row -->
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:0 2px 8px;">
+      <div>
+        <div class="qs-h3" style="color:var(--qs-ink);">市场总览</div>
+        <div class="qs-caption" style="color:var(--qs-ink-3); margin-top:2px;">2026-09-08 · 周二</div>
+      </div>
+      <span class="status-pill"><span class="status-dot"></span>交易进行中</span>
+    </div>
+
+    <!-- 1. KPI strip -->
+    <section>
+      <div class="kpi-scroll no-scrollbar">
+        <!-- 上证指数 -->
+        <div class="kpi-card">
+          <div class="name">上证指数 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">3,198.42</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+18.65 (+0.59%)</div>
+          <div class="spark"><canvas id="spark-sh"></canvas></div>
+          <div class="vol">成交 3,847 亿</div>
+        </div>
+        <!-- 深证成指 -->
+        <div class="kpi-card">
+          <div class="name">深证成指 <i data-lucide="trending-down" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">10,512.36</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-fall);">-23.14 (-0.22%)</div>
+          <div class="spark"><canvas id="spark-sz"></canvas></div>
+          <div class="vol">成交 4,521 亿</div>
+        </div>
+        <!-- 创业板指 -->
+        <div class="kpi-card">
+          <div class="name">创业板指 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">2,058.74</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+7.12 (+0.35%)</div>
+          <div class="spark"><canvas id="spark-cyb"></canvas></div>
+          <div class="vol">成交 1,892 亿</div>
+        </div>
+        <!-- 科创50 -->
+        <div class="kpi-card">
+          <div class="name">科创50 <i data-lucide="rocket" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">884.62</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+9.43 (+1.08%)</div>
+          <div class="spark"><canvas id="spark-kc"></canvas></div>
+          <div class="vol">成交 642 亿</div>
+        </div>
+        <!-- 沪深300 -->
+        <div class="kpi-card">
+          <div class="name">沪深300 <i data-lucide="bar-chart-2" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">3,728.16</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+15.40 (+0.42%)</div>
+          <div class="spark"><canvas id="spark-hs"></canvas></div>
+          <div class="vol">成交 2,104 亿</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Market breadth -->
+    <div class="sec-head">
+      <h2><i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--qs-primary);"></i>市场宽度</h2>
+    </div>
+    <section class="card" style="margin-bottom:8px;">
+      <div class="breadth-grid">
+        <div class="stat-tile">
+          <div class="lbl">上涨家数</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">3,284</div>
+          <div class="bar"><span style="width:65%;background:var(--qs-state-rise);"></span></div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">下跌家数</div>
+          <div class="val qs-mono" style="color:var(--qs-state-fall);">1,756</div>
+          <div class="bar"><span style="width:35%;background:var(--qs-state-fall);"></span></div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">涨停</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">82</div>
+          <div class="bar"><span style="width:24%;background:var(--qs-state-rise);"></span></div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">跌停</div>
+          <div class="val qs-mono" style="color:var(--qs-state-fall);">14</div>
+          <div class="bar"><span style="width:6%;background:var(--qs-state-fall);"></span></div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">北向资金</div>
+          <div class="val qs-mono" style="color:var(--qs-primary);">+42.8 亿</div>
+          <div class="bar"><span style="width:58%;background:var(--qs-primary);"></span></div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">成交额</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">8,932 亿</div>
+          <div class="bar"><span style="width:72%;background:var(--qs-ink-3);"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Sector ranking -->
+    <div class="sec-head">
+      <h2><i data-lucide="layers" style="width:16px;height:16px;color:var(--qs-primary);"></i>行业涨幅排行</h2>
+    </div>
+    <section class="card">
+      <div class="seg" id="sectorSeg">
+        <button class="active" data-tab="up">领涨行业</button>
+        <button data-tab="down">领跌行业</button>
+      </div>
+      <ul class="sector-list" id="sectorUp">
+        <li><span class="sname">半导体</span><span class="smid"><span style="width:90%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+4.32%</span></li>
+        <li><span class="sname">证券</span><span class="smid"><span style="width:66%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+3.18%</span></li>
+        <li><span class="sname">通信设备</span><span class="smid"><span style="width:61%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.95%</span></li>
+        <li><span class="sname">消费电子</span><span class="smid"><span style="width:56%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.67%</span></li>
+        <li><span class="sname">白酒</span><span class="smid"><span style="width:43%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.05%</span></li>
+        <li><span class="sname">医疗器械</span><span class="smid"><span style="width:38%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+1.82%</span></li>
+      </ul>
+      <ul class="sector-list hidden-tab" id="sectorDown">
+        <li><span class="sname">煤炭</span><span class="smid"><span style="width:44%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-2.11%</span></li>
+        <li><span class="sname">银行</span><span class="smid"><span style="width:30%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-1.45%</span></li>
+        <li><span class="sname">电力</span><span class="smid"><span style="width:25%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-1.22%</span></li>
+        <li><span class="sname">石油</span><span class="smid"><span style="width:20%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.98%</span></li>
+        <li><span class="sname">航运</span><span class="smid"><span style="width:16%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.76%</span></li>
+        <li><span class="sname">房地产</span><span class="smid"><span style="width:12%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.58%</span></li>
+      </ul>
+    </section>
+
+    <!-- 4. Sentiment indicators -->
+    <div class="sec-head">
+      <h2><i data-lucide="thermometer" style="width:16px;height:16px;color:var(--qs-primary);"></i>情绪指标</h2>
+    </div>
+    <section class="card">
+      <!-- Fear & Greed -->
+      <div style="padding:2px 2px 12px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;">
+          <span class="qs-caption" style="color:var(--qs-ink-3);">恐慌 / 贪婪指数</span>
+          <span class="qs-caption" style="color:var(--qs-primary);">贪婪</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:10px;">
+          <span class="qs-mono qs-h2" style="color:var(--qs-primary);">62</span>
+          <span class="qs-caption" style="color:var(--qs-ink-3);">/ 100</span>
+        </div>
+        <div class="fg-wrap">
+          <div class="fg-track"></div>
+          <div class="fg-needle" style="left:62%; transform:translateX(-50%);"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:6px;">
+          <span class="qs-caption" style="color:var(--qs-state-fall);">恐慌</span>
+          <span class="qs-caption" style="color:var(--qs-state-warning);">中性</span>
+          <span class="qs-caption" style="color:var(--qs-state-rise);">贪婪</span>
+        </div>
+      </div>
+      <div style="height:1px; background:var(--qs-line); margin:0 2px 12px;"></div>
+      <div class="sent-grid">
+        <div class="stat-tile">
+          <div class="lbl">市场温度</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">偏热</div>
+          <div class="qs-caption" style="color:var(--qs-ink-3); margin-top:4px; display:flex; align-items:center; gap:3px;">
+            <i data-lucide="arrow-up-right" style="width:12px;height:12px;color:var(--qs-state-rise);"></i>较昨日升温
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">融资余额</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">15,247 亿</div>
+          <div class="qs-caption" style="color:var(--qs-state-rise); margin-top:4px; display:flex; align-items:center; gap:3px;">
+            <i data-lucide="arrow-up-right" style="width:12px;height:12px;"></i>+0.30%
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">波动率 (VIX)</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">14.80</div>
+          <div class="qs-caption" style="color:var(--qs-state-fall); margin-top:4px; display:flex; align-items:center; gap:3px;">
+            <i data-lucide="arrow-down-right" style="width:12px;height:12px;"></i>-3.20%
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="lbl">涨跌中位数</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">+0.85%</div>
+          <div class="bar" style="margin-top:8px;"><span style="width:55%;background:var(--qs-state-rise);"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. News feed -->
+    <div class="sec-head">
+      <h2><i data-lucide="newspaper" style="width:16px;height:16px;color:var(--qs-primary);"></i>新闻面</h2>
+      <span class="more">更多 <i data-lucide="chevron-right" style="width:12px;height:12px;"></i></span>
+    </div>
+    <section class="card" style="padding:8px;">
+      <ul class="news-list">
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:42</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">工信部印发《新材料产业发展指南》，重点扶持半导体材料与高端装备</p>
+                <span class="chip chip-bull">利好</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip chip-src">国内政策</span>
+                <span class="chip chip-cat">半导体</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
+              </div>
+              <div class="ticker-row">
+                <div class="ticker"><div class="tn">中芯国际</div><div class="tc qs-mono">688981</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+18.5%</div></div>
+                <div class="ticker"><div class="tn">北方华创</div><div class="tc qs-mono">002371</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+16.2%</div></div>
+                <div class="ticker"><div class="tn">沪硅产业</div><div class="tc qs-mono">688126</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+12.8%</div></div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:28</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">宁德时代发布三季度业绩预告，储能业务同比增长超80%</p>
+                <span class="chip chip-bull">利好</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip chip-src">国内新闻</span>
+                <span class="chip chip-cat">新能源</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">证券时报</span>
+              </div>
+              <div class="ticker-row">
+                <div class="ticker"><div class="tn">宁德时代</div><div class="tc qs-mono">300750</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+15.2%</div></div>
+                <div class="ticker"><div class="tn">亿纬锂能</div><div class="tc qs-mono">300014</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+11.5%</div></div>
+                <div class="ticker"><div class="tn">阳光电源</div><div class="tc qs-mono">300274</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+9.8%</div></div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:15</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">Goldman Sachs 上调中国科技股评级至"超配"，看好 AI 与云计算龙头</p>
+                <span class="chip chip-bull">利好</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip" style="background:rgba(245,158,11,.14);color:var(--qs-state-warning);">八大投行</span>
+                <span class="chip chip-cat">科技股</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">Goldman Sachs</span>
+              </div>
+              <div class="ticker-row">
+                <div class="ticker"><div class="tn">腾讯控股</div><div class="tc qs-mono">00700</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+12.0%</div></div>
+                <div class="ticker"><div class="tn">阿里巴巴</div><div class="tc qs-mono">09988</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+10.5%</div></div>
+                <div class="ticker"><div class="tn">中芯国际</div><div class="tc qs-mono">688981</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+18.5%</div></div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">08:56</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">中信证券：中央政治局会议明确"稳增长"基调，建议超配消费与高端制造</p>
+                <span class="chip chip-bull">利好</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip" style="background:rgba(59,130,246,.16);color:var(--qs-state-info);">国内顶级投行</span>
+                <span class="chip chip-cat">国家级会议</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">中信证券</span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">07:48</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">JPMorgan 下调部分欧洲银行评级，警告商业地产风险外溢</p>
+                <span class="chip chip-bear">利空</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip" style="background:rgba(245,158,11,.14);color:var(--qs-state-warning);">八大投行</span>
+                <span class="chip chip-cat">银行</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">JPMorgan</span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">07:30</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">国家统计局：8月制造业PMI为49.6%，景气水平继续改善</p>
+                <span class="chip chip-neutral">中性</span>
+              </div>
+              <div class="nmeta">
+                <span class="chip chip-src">国内新闻</span>
+                <span class="chip chip-cat">宏观</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">新华社</span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <div style="height:8px;"></div>
+  </main>
+
+  <!-- Bottom tab bar -->
+  <nav style="position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+    <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);">
+      <i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;">仪表盘</span>
+    </a>
+    <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);">
+      <i data-lucide="zap" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;">波段</span>
+    </a>
+    <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);">
+      <i data-lucide="trending-up" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;">长线</span>
+    </a>
+    <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);">
+      <i data-lucide="package" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;">ETF</span>
+    </a>
+    <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);">
+      <i data-lucide="wallet" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;">模拟盘</span>
+    </a>
+  </nav>
+
+  <script>
+    // Sparkline mini charts for index cards
+    (function () {
+      function hexToRgba(hex, alpha) {
+        var m = hex.replace('#', '');
+        var big = parseInt(m.length === 3 ? m.split('').map(function (c) { return c + c; }).join('') : m, 16);
+        var r = (big >> 16) & 255, g = (big >> 8) & 255, b = big & 255;
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+      }
+      function spark(id, hex, data) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var ctx = el.getContext('2d');
+        var grad = ctx.createLinearGradient(0, 0, 0, 34);
+        grad.addColorStop(0, hexToRgba(hex, 0.32));
+        grad.addColorStop(1, hexToRgba(hex, 0.0));
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.map(function (_, i) { return i; }),
+            datasets: [{
+              data: data,
+              borderColor: hex,
+              backgroundColor: grad,
+              borderWidth: 1.6,
+              fill: true,
+              tension: 0.32,
+              pointRadius: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } }
+          }
+        });
+      }
+      var rise = getComputedStyle(document.documentElement).getPropertyValue('--qs-state-rise').trim();
+      var fall = getComputedStyle(document.documentElement).getPropertyValue('--qs-state-fall').trim();
+      var cards = [
+        { id: 'spark-sh',  c: rise, d: [3150, 3148, 3155, 3152, 3160, 3158, 3165, 3170, 3168, 3175, 3172, 3180, 3185, 3192, 3198.42] },
+        { id: 'spark-sz',  c: fall, d: [10560, 10555, 10548, 10552, 10540, 10535, 10542, 10530, 10525, 10520, 10528, 10515, 10510, 10518, 10512.36] },
+        { id: 'spark-cyb', c: rise, d: [2040, 2042, 2038, 2045, 2048, 2044, 2050, 2048, 2052, 2055, 2050, 2055, 2052, 2056, 2058.74] },
+        { id: 'spark-kc',  c: rise, d: [870, 872, 868, 875, 872, 878, 875, 880, 878, 882, 880, 884, 881, 883, 884.62] },
+        { id: 'spark-hs',  c: rise, d: [3690, 3695, 3692, 3700, 3698, 3705, 3702, 3708, 3710, 3705, 3712, 3710, 3715, 3712, 3728.16] }
+      ];
+      cards.forEach(function (s) { spark(s.id, s.c, s.d); });
+    })();
+
+    // Sector segmented control
+    (function () {
+      var seg = document.getElementById('sectorSeg');
+      var up = document.getElementById('sectorUp');
+      var down = document.getElementById('sectorDown');
+      if (!seg) return;
+      seg.addEventListener('click', function (e) {
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        seg.querySelectorAll('button').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var tab = btn.getAttribute('data-tab');
+        if (tab === 'up') { up.classList.remove('hidden-tab'); down.classList.add('hidden-tab'); }
+        else { down.classList.remove('hidden-tab'); up.classList.add('hidden-tab'); }
+      });
+    })();
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

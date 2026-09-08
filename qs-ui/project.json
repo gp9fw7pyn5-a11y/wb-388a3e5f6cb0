@@ -1,0 +1,61 @@
+{
+  "projectName": "量化选股终端 UI",
+  "version": "1.0.0",
+  "description": "量化选股终端 - 桌面端 + 移动端完整 UI 设计系统",
+  "techStack": {
+    "css": "Tailwind CSS v4 (CDN) + 内嵌语义化 CSS tokens",
+    "js": "原生 JavaScript (无框架依赖)",
+    "charts": "Chart.js 4.4.1 (CDN)",
+    "icons": "Lucide 1.8.0 (CDN)",
+    "fonts": "Inter + Noto Sans SC + JetBrains Mono"
+  },
+  "designTokens": {
+    "primary": "#2dd4bf (青绿)",
+    "background": "#0b0b0f (深色)",
+    "surface": "#141419",
+    "surface2": "#1c1c24",
+    "ink": "#f2f2f5",
+    "stateRise": "#ef5350 (红涨)",
+    "stateFall": "#26c584 (绿跌)",
+    "stateWarning": "#f59e0b",
+    "stateInfo": "#3b82f6",
+    "fontPrimary": "Inter, Noto Sans SC, PingFang SC, system-ui, sans-serif",
+    "fontMono": "JetBrains Mono, SFMono-Regular, Consolas, monospace",
+    "radiusMd": "8px",
+    "radiusLg": "12px"
+  },
+  "structure": {
+    "desktop/": "桌面端页面 (1440px 宽, 左侧边栏240px + 顶部栏64px)",
+    "mobile/": "移动端页面 (375px 宽, 底部Tab栏56px + 顶部栏48px)",
+    "shared/": "共享设计 token CSS (colors_and_type.css)",
+    "quant-stock-ui.design": "Trae Design 画布项目文件"
+  },
+  "pages": {
+    "dashboard": "综合仪表盘 - 指数行情/市场宽度/行业排名/情绪指标/新闻面",
+    "swing": "波段选股 - 信号列表 + K线图 + 建仓计划 + 信号详情/技术面/资金流向/基本面(含财报+订单)/订单簿",
+    "longterm": "长线选股 - 股票列表 + K线图 + 因子评分 + 基本面/估值/持仓/财务数据",
+    "etf": "ETF策略 - ETF列表 + K线图 + 重仓股/成分股/净值跟踪/折溢价/资金流向/相关性",
+    "sim": "模拟盘 - 账户概览 + 持仓列表 + 委托/成交/资金 (移动端无下单面板)"
+  },
+  "stocks": [
+    { "code": "688981", "name": "中芯国际", "sector": "半导体" },
+    { "code": "300750", "name": "宁德时代", "sector": "新能源" },
+    { "code": "600519", "name": "贵州茅台", "sector": "白酒" },
+    { "code": "002594", "name": "比亚迪", "sector": "汽车" },
+    { "code": "600276", "name": "恒瑞医药", "sector": "医药" },
+    { "code": "000858", "name": "五粮液", "sector": "白酒" },
+    { "code": "300760", "name": "迈瑞医疗", "sector": "医疗器械" },
+    { "code": "601012", "name": "隆基绿能", "sector": "光伏" }
+  ],
+  "cdnLinks": {
+    "tailwind": "https://cdn.tailwindcss.com",
+    "lucide": "https://unpkg.com/lucide@1.8.0",
+    "chartjs": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+  },
+  "notes": {
+    "data": "所有行情、财务、持仓数据均为模拟数据，非实时行情",
+    "convention": "A 股配色习惯：红涨绿跌",
+    "responsive": "桌面端和移动端为独立页面，非响应式适配，按设备类型分别加载",
+    "offline": "页面依赖 CDN (Tailwind/Lucide/Chart.js)，离线环境需替换为本地引用"
+  }
+}

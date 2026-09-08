@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>长线选股</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+  <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+  <style>
+    :root {
+      --qs-primary: #2dd4bf;
+      --qs-primary-foreground: #020617;
+      --qs-state-rise: #ef5350;
+      --qs-state-fall: #26c584;
+      --qs-state-warning: #f59e0b;
+      --qs-state-info: #3b82f6;
+      --qs-background: #0b0b0f;
+      --qs-surface: #141419;
+      --qs-surface-2: #1c1c24;
+      --qs-ink: #f2f2f5;
+      --qs-ink-2: #a0a0b0;
+      --qs-ink-3: #6c6c80;
+      --qs-line: #2a2a36;
+      --qs-font-primary: "Inter","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+      --qs-font-mono: "JetBrains Mono","SFMono-Regular",Consolas,monospace;
+      --qs-radius-md: 8px;
+      --qs-radius-lg: 12px;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: var(--qs-font-primary); background: var(--qs-background); color: var(--qs-ink); margin:0; -webkit-font-smoothing: antialiased; }
+    .qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+    .qs-caption { font-size: 11px; line-height: 1.4; }
+    .qs-body { font-size: 13px; line-height: 1.5; }
+    .qs-h3 { font-size: 16px; font-weight: 600; }
+    .qs-h2 { font-size: 18px; font-weight: 600; }
+    .qs-h1 { font-size: 22px; font-weight: 600; }
+    .card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px; }
+
+    .top-bar {
+      position: fixed; top: 0; left: 0; right: 0; height: 48px;
+      background: var(--qs-surface); border-bottom: 1px solid var(--qs-line);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; z-index: 50;
+    }
+
+    .content-area {
+      padding-top: 48px; padding-bottom: 64px;
+      padding-left: 12px; padding-right: 12px;
+      min-height: 100vh;
+    }
+
+    .stock-card {
+      background: var(--qs-surface); border: 1px solid var(--qs-line);
+      border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px;
+      cursor: pointer; transition: background .15s, border-color .15s;
+    }
+    .stock-card:active { background: var(--qs-surface-2); }
+    .stock-card.expanded { border-color: rgba(45,212,191,0.35); background: var(--qs-surface-2); }
+
+    .stock-card-top { display: flex; align-items: center; justify-content: space-between; }
+    .stock-card-name { font-size: 15px; font-weight: 600; color: var(--qs-ink); }
+    .stock-card-code { font-size: 11px; color: var(--qs-ink-3); font-family: var(--qs-font-mono); margin-top: 2px; }
+
+    .score-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.25);
+      border-radius: 999px; padding: 3px 10px;
+    }
+    .score-badge .score-num { font-family: var(--qs-font-mono); font-size: 14px; font-weight: 600; color: var(--qs-primary); }
+
+    .stock-metrics { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+    .stock-metric { font-size: 11px; color: var(--qs-ink-2); }
+    .stock-metric .metric-val { font-family: var(--qs-font-mono); color: var(--qs-ink); font-weight: 500; }
+
+    .chevron { transition: transform .2s; color: var(--qs-ink-3); }
+    .stock-card.expanded .chevron { transform: rotate(180deg); }
+
+    .stock-detail { margin-bottom: 8px; }
+
+    .detail-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .detail-name { font-size: 18px; font-weight: 600; color: var(--qs-ink); }
+    .detail-code { font-size: 12px; color: var(--qs-ink-3); font-family: var(--qs-font-mono); margin-top: 2px; }
+    .sector-tag { font-size: 11px; color: var(--qs-ink-2); background: var(--qs-surface-2); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--qs-line); display: inline-block; margin-top: 4px; }
+    .detail-score { text-align: right; flex-shrink: 0; }
+    .detail-score .score-label { font-size: 11px; color: var(--qs-ink-3); display: block; }
+    .detail-score .score-num { font-family: var(--qs-font-mono); font-size: 24px; font-weight: 600; color: var(--qs-primary); }
+
+    .kline-price-row { display: flex; align-items: baseline; gap: 8px; }
+    .kline-price { font-family: var(--qs-font-mono); font-size: 22px; font-weight: 600; color: var(--qs-ink); }
+    .kline-change { font-family: var(--qs-font-mono); font-size: 16px; font-weight: 600; }
+    .kline-stats { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
+    .kline-stat .stat-label { font-size: 10px; color: var(--qs-ink-3); display: block; }
+    .kline-stat .stat-val { font-family: var(--qs-font-mono); font-size: 12px; color: var(--qs-ink); }
+
+    .timeframe-group { display: inline-flex; background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); overflow: hidden; }
+    .timeframe-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--qs-ink-2); background: transparent; border: none; border-left: 1px solid var(--qs-line); cursor: pointer; }
+    .timeframe-btn:first-child { border-left: none; }
+    .timeframe-btn.active { color: var(--qs-ink); background: var(--qs-primary); }
+
+    .chart-wrap { height: 240px; width: 100%; border-radius: var(--qs-radius-md); overflow: hidden; background: var(--qs-surface); border: 1px solid var(--qs-line); margin-top: 8px; }
+
+    .factor-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .factor-row:last-child { margin-bottom: 0; }
+    .factor-label { font-size: 12px; color: var(--qs-ink-2); width: 40px; flex-shrink: 0; }
+    .factor-bar { flex: 1; height: 6px; background: var(--qs-surface-2); border-radius: 999px; overflow: hidden; }
+    .factor-bar-fill { height: 100%; border-radius: 999px; }
+    .factor-val { font-family: var(--qs-font-mono); font-size: 12px; color: var(--qs-ink); width: 28px; text-align: right; flex-shrink: 0; }
+
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .metric-cell { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 10px; }
+    .metric-cell .mc-label { font-size: 10px; color: var(--qs-ink-3); display: block; }
+    .metric-cell .mc-val { font-family: var(--qs-font-mono); font-size: 15px; font-weight: 600; color: var(--qs-ink); display: block; margin-top: 2px; }
+    .metric-cell .mc-sub { font-size: 10px; color: var(--qs-ink-3); display: block; margin-top: 2px; }
+
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table.fin-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    table.fin-table th { font-size: 10px; color: var(--qs-ink-2); font-weight: 500; padding: 6px 4px; text-align: right; border-bottom: 1px solid var(--qs-line); white-space: nowrap; }
+    table.fin-table th:first-child { text-align: left; }
+    table.fin-table td { padding: 6px 4px; color: var(--qs-ink); border-bottom: 1px solid var(--qs-line); }
+    table.fin-table td:first-child { font-size: 12px; color: var(--qs-ink-2); }
+    table.fin-table td:not(:first-child) { font-family: var(--qs-font-mono); text-align: right; white-space: nowrap; }
+    table.fin-table tr:last-child td { border-bottom: none; }
+
+    .inst-hold-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .inst-hold-cell { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 10px; text-align: center; }
+    .inst-hold-cell .ih-label { font-size: 10px; color: var(--qs-ink-3); display: block; }
+    .inst-hold-cell .ih-val { font-family: var(--qs-font-mono); font-size: 18px; font-weight: 600; color: var(--qs-ink); display: block; margin-top: 2px; }
+
+    .section-title { font-size: 14px; font-weight: 600; color: var(--qs-ink); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .summary-text { font-size: 13px; line-height: 1.6; color: var(--qs-ink-2); }
+  </style>
+</head>
+<body>
+  <!-- Top bar (48px) -->
+  <header class="top-bar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <i data-lucide="trending-up" style="width:20px;height:20px;color:var(--qs-primary);"></i>
+      <span style="font-size:16px;font-weight:600;color:var(--qs-ink);">长线选股</span>
+    </div>
+    <i data-lucide="search" style="width:20px;height:20px;color:var(--qs-ink-2);"></i>
+  </header>
+
+  <!-- Content area (scrollable) -->
+  <main class="content-area">
+    <div id="stock-list"></div>
+  </main>
+
+  <!-- Bottom tab bar (56px) -->
+  <nav style="position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+    <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span style="font-size:10px;">仪表盘</span></a>
+    <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span style="font-size:10px;">波段</span></a>
+    <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span style="font-size:10px;">长线</span></a>
+    <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="package" style="width:20px;height:20px;"></i><span style="font-size:10px;">ETF</span></a>
+    <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a>
+  </nav>
+
+  <script>
+    // Stock data (8 stocks, sorted by composite score descending)
+    const stocks = [
+      {
+        code: '600519.SH', name: '贵州茅台', sector: '消费 / 白酒', score: 92,
+        price: 1685.50, changePct: 1.28,
+        pe: 28.4, pb: 8.1, roe: 24.5, dividendYield: 1.8, fcf: 32.4,
+        netProfitGrowth: 16.2, grossMargin: 91.6, netMargin: 52.7,
+        marketCap: '21,180 亿', floatCap: '21,180 亿',
+        factors: { value: 72, quality: 94, growth: 68, momentum: 46 },
+        financials: {
+          revenue: [1061.7, 1275.4, 1505.6, 1716.2],
+          netProfit: [524.6, 627.2, 747.3, 862.4],
+          deducted: [521.8, 623.5, 742.1, 855.6],
+          cashFlow: [640.3, 366.0, 665.9, 780.5]
+        },
+        fundHold: 6.2, northHold: 4.1,
+        topHolders: [
+          { name: '中国贵州茅台酒厂', shares: '6.78 亿', pct: '53.96%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '0.92 亿', pct: '7.30%', change: '-0.12%', color: 'var(--qs-state-fall)' },
+          { name: '贵州省国有资本运营', shares: '0.57 亿', pct: '4.54%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中央汇金资产管理', shares: '0.10 亿', pct: '0.80%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '高端白酒绝对龙头，批价与库存保持健康，现金流充裕。当前估值回落至近五年低位，长期配置价值凸显。机构持仓稳定，北向资金近期小幅波动，适合作为核心底仓长期持有。'
+      },
+      {
+        code: '000858.SZ', name: '五粮液', sector: '消费 / 白酒', score: 86,
+        price: 152.80, changePct: 0.88,
+        pe: 22.1, pb: 5.4, roe: 21.8, dividendYield: 2.1, fcf: 28.5,
+        netProfitGrowth: 14.5, grossMargin: 75.5, netMargin: 38.2,
+        marketCap: '5,930 亿', floatCap: '5,930 亿',
+        factors: { value: 65, quality: 85, growth: 58, momentum: 52 },
+        financials: {
+          revenue: [662.1, 739.7, 832.5, 915.8],
+          netProfit: [233.8, 269.8, 302.5, 338.5],
+          deducted: [230.5, 265.2, 298.2, 335.2],
+          cashFlow: [268.5, 295.6, 328.5, 365.8]
+        },
+        fundHold: 5.5, northHold: 3.5,
+        topHolders: [
+          { name: '宜宾五粮液集团', shares: '13.58 亿', pct: '35.04%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '4.28 亿', pct: '11.05%', change: '-0.22%', color: 'var(--qs-state-fall)' },
+          { name: '中国证券金融', shares: '1.85 亿', pct: '4.77%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中央汇金资产管理', shares: '0.95 亿', pct: '2.45%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '浓香型白酒龙头，品牌力与渠道力兼备。产品结构持续优化，经典装放量明确。估值处于历史低位，分红率提升，长期配置性价比突出。'
+      },
+      {
+        code: '300750.SZ', name: '宁德时代', sector: '新能源 / 电池', score: 85,
+        price: 182.60, changePct: 2.45,
+        pe: 35.2, pb: 5.8, roe: 18.6, dividendYield: 0.3, fcf: 12.8,
+        netProfitGrowth: 28.5, grossMargin: 22.4, netMargin: 11.2,
+        marketCap: '8,030 亿', floatCap: '6,420 亿',
+        factors: { value: 48, quality: 72, growth: 92, momentum: 68 },
+        financials: {
+          revenue: [1303.6, 3285.9, 4009.2, 4620.5],
+          netProfit: [159.3, 307.3, 441.2, 535.8],
+          deducted: [134.4, 281.2, 410.8, 502.3],
+          cashFlow: [312.6, 612.3, 928.5, 1045.6]
+        },
+        fundHold: 8.5, northHold: 5.2,
+        topHolders: [
+          { name: '曾毓群', shares: '2.48 亿', pct: '11.14%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '1.85 亿', pct: '8.30%', change: '+0.35%', color: 'var(--qs-state-rise)' },
+          { name: '宁波联合创新投资', shares: '1.20 亿', pct: '5.38%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '李平', shares: '0.92 亿', pct: '4.13%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '全球动力电池龙头，市占率稳居第一。储能业务高速增长，海外市场持续突破。技术壁垒深厚，规模效应显著，长期成长确定性高。'
+      },
+      {
+        code: '002594.SZ', name: '比亚迪', sector: '新能源 / 汽车', score: 83,
+        price: 245.80, changePct: 3.12,
+        pe: 25.8, pb: 4.2, roe: 16.8, dividendYield: 0.8, fcf: 8.5,
+        netProfitGrowth: 34.5, grossMargin: 18.5, netMargin: 5.2,
+        marketCap: '7,150 亿', floatCap: '6,580 亿',
+        factors: { value: 52, quality: 65, growth: 88, momentum: 75 },
+        financials: {
+          revenue: [2161.4, 4240.6, 6023.2, 7680.5],
+          netProfit: [30.5, 166.2, 312.5, 385.8],
+          deducted: [24.2, 158.5, 305.2, 378.2],
+          cashFlow: [52.6, 286.5, 580.6, 720.5]
+        },
+        fundHold: 7.2, northHold: 4.8,
+        topHolders: [
+          { name: '王传福', shares: '4.82 亿', pct: '16.58%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '3.65 亿', pct: '12.56%', change: '+0.52%', color: 'var(--qs-state-rise)' },
+          { name: '吕向阳', shares: '2.48 亿', pct: '8.54%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '融捷投资控股', shares: '1.85 亿', pct: '6.37%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '新能源汽车销量连续多年第一，垂直一体化供应链优势突出。海外市场加速拓展，高端品牌仰望与腾势打开增量空间，规模效应持续释放。'
+      },
+      {
+        code: '300760.SZ', name: '迈瑞医疗', sector: '医药 / 器械', score: 80,
+        price: 285.60, changePct: 1.55,
+        pe: 42.5, pb: 9.2, roe: 25.4, dividendYield: 1.2, fcf: 22.5,
+        netProfitGrowth: 20.8, grossMargin: 65.2, netMargin: 32.1,
+        marketCap: '3,460 亿', floatCap: '3,120 亿',
+        factors: { value: 45, quality: 88, growth: 72, momentum: 58 },
+        financials: {
+          revenue: [252.7, 303.7, 349.3, 402.5],
+          netProfit: [80.0, 96.0, 115.8, 135.6],
+          deducted: [78.5, 94.5, 113.2, 132.8],
+          cashFlow: [89.6, 112.3, 132.5, 155.2]
+        },
+        fundHold: 6.8, northHold: 4.5,
+        topHolders: [
+          { name: '深圳迈瑞医疗电子', shares: '9.28 亿', pct: '27.65%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '2.85 亿', pct: '8.49%', change: '+0.18%', color: 'var(--qs-state-rise)' },
+          { name: '宁波睿康投资', shares: '1.65 亿', pct: '4.92%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中国证券金融', shares: '0.82 亿', pct: '2.44%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '国内医疗器械龙头，监护仪与体外诊断全球领先。海外市场快速增长，高端产品渗透率提升。受益于医疗新基建与国产替代，长期成长可期。'
+      },
+      {
+        code: '600276.SH', name: '恒瑞医药', sector: '医药 / 创新药', score: 78,
+        price: 42.80, changePct: -0.85,
+        pe: 48.6, pb: 7.9, roe: 15.3, dividendYield: 0.5, fcf: 15.6,
+        netProfitGrowth: 22.4, grossMargin: 84.2, netMargin: 18.5,
+        marketCap: '2,730 亿', floatCap: '2,730 亿',
+        factors: { value: 38, quality: 68, growth: 85, momentum: 42 },
+        financials: {
+          revenue: [259.1, 212.8, 228.2, 278.5],
+          netProfit: [45.3, 39.2, 43.1, 52.8],
+          deducted: [42.1, 35.6, 40.8, 50.2],
+          cashFlow: [58.6, 42.8, 48.5, 58.3]
+        },
+        fundHold: 5.8, northHold: 3.2,
+        topHolders: [
+          { name: '江苏恒瑞医药集团', shares: '21.5 亿', pct: '33.78%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '3.28 亿', pct: '5.15%', change: '-0.28%', color: 'var(--qs-state-fall)' },
+          { name: '西藏达远企业管理', shares: '1.85 亿', pct: '2.90%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中国证券金融', shares: '1.20 亿', pct: '1.88%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '国内创新药龙头，集采影响逐步出清，创新药收入占比持续提升。管线丰富，出海进展顺利，长期受益于医药创新升级趋势。'
+      },
+      {
+        code: '601012.SH', name: '隆基绿能', sector: '新能源 / 光伏', score: 72,
+        price: 18.50, changePct: -2.15,
+        pe: 18.5, pb: 2.6, roe: 14.2, dividendYield: 2.5, fcf: 10.2,
+        netProfitGrowth: -15.8, grossMargin: 12.5, netMargin: 6.8,
+        marketCap: '1,405 亿', floatCap: '1,405 亿',
+        factors: { value: 68, quality: 55, growth: 42, momentum: 28 },
+        financials: {
+          revenue: [809.3, 1289.9, 1294.9, 1102.5],
+          netProfit: [90.8, 148.1, 107.8, 85.6],
+          deducted: [88.5, 145.2, 105.6, 82.3],
+          cashFlow: [102.3, 165.8, 85.2, 92.5]
+        },
+        fundHold: 5.5, northHold: 3.8,
+        topHolders: [
+          { name: '李振国', shares: '6.82 亿', pct: '18.04%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '4.28 亿', pct: '11.32%', change: '-0.45%', color: 'var(--qs-state-fall)' },
+          { name: '李喜燕', shares: '3.85 亿', pct: '10.18%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中国证券金融', shares: '1.65 亿', pct: '4.36%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '全球光伏硅片与组件龙头，BC技术引领行业升级。短期受行业供给过剩与价格下行影响，长期受益于碳中和趋势与海外市场拓展。'
+      },
+      {
+        code: '600900.SH', name: '长江电力', sector: '公用 / 电力', score: 68,
+        price: 28.50, changePct: 0.45,
+        pe: 18.6, pb: 2.4, roe: 12.9, dividendYield: 3.9, fcf: 18.5,
+        netProfitGrowth: 6.2, grossMargin: 58.5, netMargin: 28.2,
+        marketCap: '6,950 亿', floatCap: '6,950 亿',
+        factors: { value: 75, quality: 62, growth: 38, momentum: 32 },
+        financials: {
+          revenue: [557.5, 519.6, 781.1, 835.2],
+          netProfit: [248.6, 213.5, 272.5, 298.5],
+          deducted: [245.2, 210.8, 268.3, 295.2],
+          cashFlow: [285.6, 240.5, 305.8, 328.5]
+        },
+        fundHold: 4.2, northHold: 2.8,
+        topHolders: [
+          { name: '中国长江三峡集团', shares: '140.5 亿', pct: '57.58%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '香港中央结算有限公司', shares: '18.5 亿', pct: '7.58%', change: '+0.15%', color: 'var(--qs-state-rise)' },
+          { name: '中国证券金融', shares: '8.2 亿', pct: '3.36%', change: '0.00%', color: 'var(--qs-ink-3)' },
+          { name: '中央汇金资产管理', shares: '6.5 亿', pct: '2.66%', change: '0.00%', color: 'var(--qs-ink-3)' }
+        ],
+        summary: '全球最大水电企业，三峡六库联调带来发电量提升。现金流稳定，高股息特征突出，作为防御性底仓配置价值显著。'
+      }
+    ];
+
+    // State
+    let expandedCode = null;
+    let klineChart = null;
+    let currentTimeframe = 'day';
+
+    // Helper: generate unique DOM ID from stock code
+    function chartId(code) { return 'kline-' + code.replace(/\./g, '-'); }
+
+    // Helper: format number for financial table
+    function fmt(n) {
+      return n.toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+    }
+
+    // Render the stock list (collapsed cards)
+    function renderStockList() {
+      const container = document.getElementById('stock-list');
+      container.innerHTML = stocks.map(function(stock) {
+        return '\
+          <div class="stock-card" data-code="' + stock.code + '" onclick="toggleStock(\'' + stock.code + '\')">\
+            <div class="stock-card-top">\
+              <div>\
+                <div class="stock-card-name">' + stock.name + '</div>\
+                <div class="stock-card-code">' + stock.code + '</div>\
+              </div>\
+              <div style="display:flex;align-items:center;gap:8px;">\
+                <span class="score-badge"><span class="score-num">' + stock.score + '</span></span>\
+                <i class="chevron" data-lucide="chevron-down" style="width:18px;height:18px;"></i>\
+              </div>\
+            </div>\
+            <div class="stock-metrics">\
+              <span class="stock-metric">PE <span class="metric-val">' + stock.pe + '</span></span>\
+              <span class="stock-metric">PB <span class="metric-val">' + stock.pb + '</span></span>\
+              <span class="stock-metric">ROE <span class="metric-val">' + stock.roe + '%</span></span>\
+              <span class="stock-metric">股息 <span class="metric-val">' + stock.dividendYield + '%</span></span>\
+            </div>\
+          </div>\
+          <div class="stock-detail" id="detail-' + chartId(stock.code) + '" style="display:none;"></div>';
+      }).join('');
+    }
+
+    // Render detail HTML for a stock
+    function renderDetailHTML(stock) {
+      var id = chartId(stock.code);
+      var changeColor = stock.changePct >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      var changeSign = stock.changePct >= 0 ? '+' : '';
+      var growthColor = stock.netProfitGrowth >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      var growthSign = stock.netProfitGrowth >= 0 ? '+' : '';
+      var floatSub = stock.marketCap === stock.floatCap ? '全流通' : '部分流通';
+
+      // Factor rows
+      var factors = [
+        { label: '价值', score: stock.factors.value, color: 'var(--qs-primary)' },
+        { label: '质量', score: stock.factors.quality, color: 'var(--qs-state-fall)' },
+        { label: '成长', score: stock.factors.growth, color: 'var(--qs-state-info)' },
+        { label: '动量', score: stock.factors.momentum, color: 'var(--qs-state-warning)' }
+      ];
+      var factorRows = factors.map(function(f) {
+        return '<div class="factor-row">\
+          <span class="factor-label">' + f.label + '</span>\
+          <div class="factor-bar"><div class="factor-bar-fill" style="width:' + f.score + '%;background:' + f.color + '"></div></div>\
+          <span class="factor-val">' + f.score + '</span>\
+        </div>';
+      }).join('');
+
+      // Financial table rows
+      var finLabels = ['营业收入', '归母净利润', '扣非净利润', '经营现金流'];
+      var finData = [stock.financials.revenue, stock.financials.netProfit, stock.financials.deducted, stock.financials.cashFlow];
+      var finRows = finLabels.map(function(label, i) {
+        return '<tr>\
+          <td>' + label + '</td>\
+          <td>' + fmt(finData[i][0]) + '</td>\
+          <td>' + fmt(finData[i][1]) + '</td>\
+          <td>' + fmt(finData[i][2]) + '</td>\
+          <td>' + fmt(finData[i][3]) + '</td>\
+        </tr>';
+      }).join('');
+
+      // Top holders rows
+      var holderRows = stock.topHolders.map(function(h) {
+        return '<tr>\
+          <td style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + h.name + '</td>\
+          <td>' + h.shares + '</td>\
+          <td>' + h.pct + '</td>\
+          <td style="color:' + h.color + '">' + h.change + '</td>\
+        </tr>';
+      }).join('');
+
+      return '\
+        <div class="detail-header">\
+          <div>\
+            <div class="detail-name">' + stock.name + '</div>\
+            <div class="detail-code">' + stock.code + '</div>\
+            <span class="sector-tag">' + stock.sector + '</span>\
+          </div>\
+          <div class="detail-score">\
+            <span class="score-label">综合评分</span>\
+            <span class="score-num">' + stock.score + '</span>\
+          </div>\
+        </div>\
+        \
+        <div class="card">\
+          <div class="kline-price-row">\
+            <span class="kline-price" id="price-' + id + '">' + stock.price.toFixed(2) + '</span>\
+            <span class="kline-change" id="change-' + id + '" style="color:' + changeColor + '">' + changeSign + stock.changePct.toFixed(2) + '%</span>\
+          </div>\
+          <div class="kline-stats">\
+            <div class="kline-stat"><span class="stat-label">最高</span><span class="stat-val" id="high-' + id + '">—</span></div>\
+            <div class="kline-stat"><span class="stat-label">最低</span><span class="stat-val" id="low-' + id + '">—</span></div>\
+            <div class="kline-stat"><span class="stat-label">开盘</span><span class="stat-val" id="open-' + id + '">—</span></div>\
+            <div class="kline-stat"><span class="stat-label">昨收</span><span class="stat-val" id="preclose-' + id + '">—</span></div>\
+          </div>\
+          <div style="margin-top:10px;">\
+            <div class="timeframe-group" id="tf-' + id + '">\
+              <button class="timeframe-btn" data-tf="intraday" type="button">分时</button>\
+              <button class="timeframe-btn active" data-tf="day" type="button">日K</button>\
+              <button class="timeframe-btn" data-tf="week" type="button">周K</button>\
+              <button class="timeframe-btn" data-tf="month" type="button">月K</button>\
+            </div>\
+          </div>\
+          <div class="chart-wrap">\
+            <canvas id="' + id + '"></canvas>\
+          </div>\
+        </div>\
+        \
+        <div class="card">\
+          <div class="section-title"><i data-lucide="bar-chart-3" style="width:16px;height:16px;color:var(--qs-primary);"></i>因子得分</div>\
+          ' + factorRows + '\
+        </div>\
+        \
+        <div class="card">\
+          <div class="section-title"><i data-lucide="layout-grid" style="width:16px;height:16px;color:var(--qs-primary);"></i>核心指标</div>\
+          <div class="metric-grid">\
+            <div class="metric-cell"><span class="mc-label">市盈率 (PE-TTM)</span><span class="mc-val">' + stock.pe + '</span><span class="mc-sub">TTM</span></div>\
+            <div class="metric-cell"><span class="mc-label">市净率 (PB)</span><span class="mc-val">' + stock.pb + '</span><span class="mc-sub">MRQ</span></div>\
+            <div class="metric-cell"><span class="mc-label">ROE (TTM)</span><span class="mc-val" style="color:var(--qs-state-fall)">' + stock.roe + '%</span><span class="mc-sub">净资产收益率</span></div>\
+            <div class="metric-cell"><span class="mc-label">净利润增速</span><span class="mc-val" style="color:' + growthColor + '">' + growthSign + stock.netProfitGrowth + '%</span><span class="mc-sub">YoY</span></div>\
+            <div class="metric-cell"><span class="mc-label">毛利率</span><span class="mc-val">' + stock.grossMargin + '%</span><span class="mc-sub">最新报告期</span></div>\
+            <div class="metric-cell"><span class="mc-label">净利率</span><span class="mc-val">' + stock.netMargin + '%</span><span class="mc-sub">最新报告期</span></div>\
+            <div class="metric-cell"><span class="mc-label">总市值</span><span class="mc-val">' + stock.marketCap + '</span><span class="mc-sub">' + floatSub + '</span></div>\
+            <div class="metric-cell"><span class="mc-label">流通市值</span><span class="mc-val">' + stock.floatCap + '</span><span class="mc-sub">流通占比</span></div>\
+            <div class="metric-cell"><span class="mc-label">股息率</span><span class="mc-val">' + stock.dividendYield + '%</span><span class="mc-sub">近12月</span></div>\
+            <div class="metric-cell"><span class="mc-label">自由现金流/营收</span><span class="mc-val">' + stock.fcf + '%</span><span class="mc-sub">FCF Margin</span></div>\
+          </div>\
+        </div>\
+        \
+        <div class="card">\
+          <div class="section-title"><i data-lucide="table" style="width:16px;height:16px;color:var(--qs-primary);"></i>财务数据 (亿元)</div>\
+          <div class="table-wrap">\
+            <table class="fin-table">\
+              <thead>\
+                <tr>\
+                  <th>项目</th>\
+                  <th>2021</th>\
+                  <th>2022</th>\
+                  <th>2023</th>\
+                  <th>2024E</th>\
+                </tr>\
+              </thead>\
+              <tbody>\
+                ' + finRows + '\
+              </tbody>\
+            </table>\
+          </div>\
+        </div>\
+        \
+        <div class="card">\
+          <div class="section-title"><i data-lucide="building-2" style="width:16px;height:16px;color:var(--qs-primary);"></i>机构持仓</div>\
+          <div class="inst-hold-grid">\
+            <div class="inst-hold-cell"><span class="ih-label">基金持仓比例</span><span class="ih-val">' + stock.fundHold + '%</span></div>\
+            <div class="inst-hold-cell"><span class="ih-label">北向资金持股</span><span class="ih-val">' + stock.northHold + '%</span></div>\
+          </div>\
+          <div class="table-wrap">\
+            <table class="fin-table">\
+              <thead>\
+                <tr>\
+                  <th>股东名称</th>\
+                  <th>持股数量</th>\
+                  <th>比例</th>\
+                  <th>变动</th>\
+                </tr>\
+              </thead>\
+              <tbody>\
+                ' + holderRows + '\
+              </tbody>\
+            </table>\
+          </div>\
+        </div>\
+        \
+        <div class="card">\
+          <div class="section-title"><i data-lucide="file-text" style="width:16px;height:16px;color:var(--qs-primary);"></i>基本面摘要</div>\
+          <p class="summary-text">' + stock.summary + '</p>\
+        </div>';
+    }
+
+    // Generate synthetic OHLC data
+    function genOHLC(basePrice, count, timeframe) {
+      var data = [];
+      var price = basePrice * 0.92;
+      var step = basePrice * (timeframe === 'month' ? 0.025 : timeframe === 'week' ? 0.015 : 0.008);
+      for (var i = 0; i < count; i++) {
+        var change = (Math.random() - 0.48) * step;
+        var open = price;
+        var close = price + change;
+        var high = Math.max(open, close) + Math.random() * step * 0.4;
+        var low = Math.min(open, close) - Math.random() * step * 0.4;
+        data.push({ x: i, o: open, h: high, l: low, c: close });
+        price = close;
+      }
+      if (data.length) data[data.length - 1].c = basePrice;
+      return data;
+    }
+
+    // Render K-line chart for a stock
+    function renderKline(stock, timeframe) {
+      var id = chartId(stock.code);
+      var canvas = document.getElementById(id);
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      if (klineChart) { klineChart.destroy(); klineChart = null; }
+
+      var style = getComputedStyle(document.documentElement);
+      var rise = style.getPropertyValue('--qs-state-rise').trim() || '#ef5350';
+      var fall = style.getPropertyValue('--qs-state-fall').trim() || '#26c584';
+      var primary = style.getPropertyValue('--qs-primary').trim() || '#2dd4bf';
+      var ink3 = style.getPropertyValue('--qs-ink-3').trim() || '#6c6c80';
+      var lineColor = style.getPropertyValue('--qs-line').trim() || '#2a2a36';
+
+      var basePrice = stock.price;
+      var changePct = stock.changePct;
+      var count = timeframe === 'intraday' ? 48 : (timeframe === 'month' ? 30 : (timeframe === 'week' ? 60 : 90));
+      var ohlc = genOHLC(basePrice, count, timeframe);
+      var labels = ohlc.map(function(_, i) { return i + 1; });
+      var closes = ohlc.map(function(d) { return d.c; });
+
+      // Update K-line header stats
+      var changeColor = changePct >= 0 ? rise : fall;
+      var sign = changePct >= 0 ? '+' : '';
+      function setText(elId, text) { var el = document.getElementById(elId); if (el) el.textContent = text; }
+      function setColor(elId, color) { var el = document.getElementById(elId); if (el) el.style.color = color; }
+
+      setText('price-' + id, basePrice.toFixed(2));
+      setText('change-' + id, sign + changePct.toFixed(2) + '%');
+      setColor('change-' + id, changeColor);
+      setText('high-' + id, (basePrice * 1.018).toFixed(2));
+      setText('low-' + id, (basePrice * 0.982).toFixed(2));
+      setText('open-' + id, (basePrice * 0.995).toFixed(2));
+      setText('preclose-' + id, (basePrice / (1 + changePct / 100)).toFixed(2));
+
+      klineChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '收盘价',
+            data: closes,
+            segment: {
+              borderColor: function(ctx) {
+                var idx = ctx.p0DataIndex;
+                if (idx === 0) return primary;
+                var prev = ctx.chart.data.datasets[0].data[idx - 1];
+                var cur = ctx.chart.data.datasets[0].data[idx];
+                return cur >= prev ? rise : fall;
+              }
+            },
+            backgroundColor: 'rgba(45, 212, 191, 0.08)',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            tension: 0.1,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a22',
+              titleColor: '#f2f2f5',
+              bodyColor: '#a0a0b0',
+              borderColor: '#2a2a36',
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  var d = ohlc[context.dataIndex];
+                  return '开 ' + d.o.toFixed(2) + '  高 ' + d.h.toFixed(2) + '  低 ' + d.l.toFixed(2) + '  收 ' + d.c.toFixed(2);
+                }
+              }
+            }
+          },
+          scales: {
+            x: { display: false },
+            y: {
+              position: 'right',
+              grid: { color: lineColor },
+              ticks: { color: ink3, font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Destroy current chart
+    function destroyChart() {
+      if (klineChart) { klineChart.destroy(); klineChart = null; }
+    }
+
+    // Attach timeframe button handlers
+    function attachTimeframeHandlers(stock) {
+      var id = chartId(stock.code);
+      var group = document.getElementById('tf-' + id);
+      if (!group) return;
+      var btns = group.querySelectorAll('.timeframe-btn');
+      for (var i = 0; i < btns.length; i++) {
+        (function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            for (var j = 0; j < btns.length; j++) { btns[j].classList.remove('active'); }
+            btn.classList.add('active');
+            currentTimeframe = btn.getAttribute('data-tf');
+            renderKline(stock, currentTimeframe);
+          });
+        })(btns[i]);
+      }
+    }
+
+    // Toggle stock detail (accordion: one open at a time)
+    function toggleStock(code) {
+      // Collapse if already expanded
+      if (expandedCode === code) {
+        destroyChart();
+        var detail = document.getElementById('detail-' + chartId(code));
+        if (detail) { detail.innerHTML = ''; detail.style.display = 'none'; }
+        var card = document.querySelector('.stock-card[data-code="' + code + '"]');
+        if (card) card.classList.remove('expanded');
+        expandedCode = null;
+        return;
+      }
+
+      // Collapse previous
+      if (expandedCode) {
+        destroyChart();
+        var prevDetail = document.getElementById('detail-' + chartId(expandedCode));
+        if (prevDetail) { prevDetail.innerHTML = ''; prevDetail.style.display = 'none'; }
+        var prevCard = document.querySelector('.stock-card[data-code="' + expandedCode + '"]');
+        if (prevCard) prevCard.classList.remove('expanded');
+      }
+
+      // Expand new
+      var stock = null;
+      for (var i = 0; i < stocks.length; i++) {
+        if (stocks[i].code === code) { stock = stocks[i]; break; }
+      }
+      if (!stock) return;
+
+      var id = chartId(code);
+      var detail = document.getElementById('detail-' + id);
+      if (!detail) return;
+
+      detail.innerHTML = renderDetailHTML(stock);
+      detail.style.display = 'block';
+
+      var card = document.querySelector('.stock-card[data-code="' + code + '"]');
+      if (card) card.classList.add('expanded');
+
+      expandedCode = code;
+      currentTimeframe = 'day';
+
+      // Re-render icons for the newly injected detail HTML
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      // Attach timeframe handlers
+      attachTimeframeHandlers(stock);
+
+      // Render chart after DOM is ready
+      setTimeout(function() { renderKline(stock, currentTimeframe); }, 50);
+    }
+
+    // Initialize
+    renderStockList();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

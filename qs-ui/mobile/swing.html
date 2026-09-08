@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>波段选股</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@1.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --qs-primary: #2dd4bf;
+      --qs-primary-foreground: #020617;
+      --qs-state-rise: #ef5350;
+      --qs-state-fall: #26c584;
+      --qs-state-warning: #f59e0b;
+      --qs-state-info: #3b82f6;
+      --qs-state-success: #22c55e;
+      --qs-background: #0b0b0f;
+      --qs-surface: #141419;
+      --qs-surface-2: #1c1c24;
+      --qs-popover: #1a1a22;
+      --qs-ink: #f2f2f5;
+      --qs-ink-2: #a0a0b0;
+      --qs-ink-3: #6c6c80;
+      --qs-line: #2a2a36;
+      --qs-font-primary: "Inter","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+      --qs-font-mono: "JetBrains Mono","SFMono-Regular",Consolas,monospace;
+      --qs-radius-md: 8px;
+      --qs-radius-lg: 12px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--qs-font-primary); background: var(--qs-background); color: var(--qs-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
+    .qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+    .qs-caption { font-size: 11px; line-height: 1.4; }
+    .qs-body { font-size: 13px; line-height: 1.5; }
+    .qs-h3 { font-size: 16px; font-weight: 600; }
+    .qs-h2 { font-size: 18px; font-weight: 600; }
+    .qs-h1 { font-size: 22px; font-weight: 600; }
+    .card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px; }
+
+    .app-root { width: 100%; max-width: 375px; margin: 0 auto; height: 100vh; height: 100dvh; position: relative; overflow: hidden; background: var(--qs-background); }
+
+    .topbar { position: fixed; top: 0; left: 0; right: 0; height: 48px; background: var(--qs-background); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 60; }
+    .topbar-title { font-size: 16px; font-weight: 600; color: var(--qs-ink); }
+    .icon-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--qs-ink-2); cursor: pointer; border-radius: var(--qs-radius-md); }
+    .icon-btn:active { background: var(--qs-surface-2); }
+
+    .scroll-area { position: absolute; top: 48px; left: 0; right: 0; bottom: 56px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+    .scroll-area::-webkit-scrollbar { display: none; }
+    .scroll-area { scrollbar-width: none; }
+
+    .list-view, .detail-view { display: none; }
+    .list-view.active, .detail-view.active { display: block; }
+
+    /* Stock signal card */
+    .signal-card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin: 8px 12px; cursor: pointer; transition: border-color .15s; }
+    .signal-card:active { border-color: var(--qs-primary); }
+    .signal-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .stock-name { font-size: 15px; font-weight: 600; color: var(--qs-ink); }
+    .stock-code { font-size: 11px; color: var(--qs-ink-3); }
+    .signal-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+    .signal-tag-break { background: rgba(239,83,80,0.15); color: var(--qs-state-rise); }
+    .signal-tag-pullback { background: rgba(59,130,246,0.15); color: var(--qs-state-info); }
+    .signal-tag-volume { background: rgba(245,158,11,0.15); color: var(--qs-state-warning); }
+    .score-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--qs-primary); color: var(--qs-primary-foreground); }
+    .signal-card-mid { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .price-text { font-size: 18px; font-weight: 600; }
+    .change-text { font-size: 14px; font-weight: 600; }
+    .signal-card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .mini-info { font-size: 11px; color: var(--qs-ink-3); }
+
+    /* Detail header */
+    .detail-header-card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin: 8px 12px; }
+    .detail-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .detail-price-block { text-align: right; }
+
+    /* K-line */
+    .kline-section { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin: 8px 12px; }
+    .kline-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .kline-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .kline-stats > div { text-align: left; }
+    .tf-btn-group { display: inline-flex; background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); overflow: hidden; margin-bottom: 8px; }
+    .tf-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--qs-ink-2); background: transparent; border: none; cursor: pointer; }
+    .tf-btn:not(:first-child) { border-left: 1px solid var(--qs-line); }
+    .tf-btn.active { color: var(--qs-ink); background: var(--qs-primary); }
+    .kline-wrap { height: 240px; width: 100%; border-radius: var(--qs-radius-md); overflow: hidden; background: var(--qs-surface); }
+
+    /* Entry plan metrics */
+    .entry-plan { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin: 8px 12px; }
+    .mini-metric { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 8px; text-align: center; }
+    .mini-metric-label { font-size: 10px; color: var(--qs-ink-3); margin-bottom: 2px; }
+    .mini-metric-value { font-size: 15px; font-weight: 600; }
+
+    /* Tabs */
+    .tabs-section { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); overflow: hidden; margin: 8px 12px 16px; }
+    .tabs-bar { display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--qs-line); background: var(--qs-surface); }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; font-weight: 500; color: var(--qs-ink-2); background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
+    .tab-btn.active { color: var(--qs-primary); border-bottom-color: var(--qs-primary); }
+    .tab-panel { padding: 12px; display: none; }
+    .tab-panel.active { display: block; animation: fadeIn .18s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .info-box { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 10px; margin-bottom: 8px; }
+    .info-box-title { font-size: 12px; font-weight: 600; color: var(--qs-ink); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+    .info-box-text { font-size: 12px; color: var(--qs-ink-2); line-height: 1.55; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 8px; }
+    .metric-cell { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 8px; }
+    .metric-cell-label { font-size: 10px; color: var(--qs-ink-3); margin-bottom: 2px; }
+    .metric-cell-value { font-size: 14px; font-weight: 600; }
+
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    table.data-table th { font-weight: 500; color: var(--qs-ink-2); text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--qs-line); white-space: nowrap; }
+    table.data-table td { color: var(--qs-ink); padding: 6px 4px; border-bottom: 1px solid var(--qs-line); }
+    table.data-table tr:last-child td { border-bottom: none; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .back-btn { display: flex; align-items: center; gap: 2px; }
+    .chart-wrap-inner { height: 180px; width: 100%; }
+
+    /* Bottom tab bar */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: var(--qs-surface); border-top: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-around; z-index: 50; }
+    .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--qs-ink-3); }
+    .bottom-nav a span { font-size: 10px; }
+  </style>
+</head>
+<body>
+<div class="app-root">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <button class="icon-btn back-btn" id="backBtn" type="button" aria-label="返回">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <span class="topbar-title" id="topbarTitle">波段选股</span>
+    <button class="icon-btn" type="button" aria-label="通知">
+      <i data-lucide="bell" style="width:20px;height:20px;"></i>
+    </button>
+  </header>
+
+  <!-- Scrollable content -->
+  <div class="scroll-area">
+
+    <!-- ============ LIST VIEW ============ -->
+    <div class="list-view active" id="listView">
+      <div style="padding:12px 12px 4px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <i data-lucide="list-filter" style="width:14px;height:14px;color:var(--qs-primary);"></i>
+          <span class="qs-body" style="font-weight:600;color:var(--qs-ink);">波段信号</span>
+        </div>
+        <span class="qs-caption" style="color:var(--qs-ink-3);" id="signalCount">三类标的 · 8 只（示例）</span>
+      </div>
+      <div id="stockList"></div>
+      <div style="height:8px;"></div>
+    </div>
+
+    <!-- ============ DETAIL VIEW ============ -->
+    <div class="detail-view" id="detailView">
+      <!-- Detail header -->
+      <section class="detail-header-card">
+        <div class="detail-header-row">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
+              <span class="qs-h2" id="dName" style="color:var(--qs-ink);">中芯国际</span>
+              <span class="qs-mono qs-caption" id="dCode" style="padding:1px 5px; border-radius:4px; background:var(--qs-surface-2); color:var(--qs-ink-2); border:1px solid var(--qs-line);">688981</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:4px;">
+              <span class="signal-tag" id="dSignal">突破</span>
+              <span style="font-size:10px; padding:1px 5px; border-radius:4px; background:var(--qs-surface-2); color:var(--qs-primary); border:1px solid var(--qs-line);" id="dCycleTag">5-10日</span>
+            </div>
+            <p class="qs-caption" style="color:var(--qs-ink-3);">
+              <span id="dIndustry">科技</span> · 触发 <span class="qs-mono" id="dTime">09:35</span>
+            </p>
+          </div>
+          <div class="detail-price-block">
+            <div class="qs-h1 qs-mono" id="dPrice" style="color:var(--qs-ink);">58.72</div>
+            <div class="qs-h3 qs-mono" id="dChange" style="color:var(--qs-state-rise);">+5.28%</div>
+            <div style="margin-top:4px;">
+              <span class="qs-caption" style="color:var(--qs-ink-3);">评分</span>
+              <span class="qs-body" style="font-weight:700; color:var(--qs-primary);" id="dScore">92</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- K-line chart -->
+      <section class="kline-section">
+        <div class="kline-price-row">
+          <span class="qs-h1 qs-mono" id="kPrice" style="color:var(--qs-ink);">58.72</span>
+          <span class="qs-h3 qs-mono" id="kChange" style="color:var(--qs-state-rise);">+5.28%</span>
+        </div>
+        <div class="kline-stats">
+          <div><div class="qs-caption" style="color:var(--qs-ink-3);">最高</div><div class="qs-body qs-mono" id="kHigh" style="color:var(--qs-ink);">59.80</div></div>
+          <div><div class="qs-caption" style="color:var(--qs-ink-3);">最低</div><div class="qs-body qs-mono" id="kLow" style="color:var(--qs-ink);">56.10</div></div>
+          <div><div class="qs-caption" style="color:var(--qs-ink-3);">开盘</div><div class="qs-body qs-mono" id="kOpen" style="color:var(--qs-ink);">56.50</div></div>
+          <div><div class="qs-caption" style="color:var(--qs-ink-3);">昨收</div><div class="qs-body qs-mono" id="kPreClose" style="color:var(--qs-ink);">55.78</div></div>
+        </div>
+        <div class="tf-btn-group">
+          <button class="tf-btn active" data-timeframe="intraday" type="button">分时</button>
+          <button class="tf-btn" data-timeframe="day" type="button">日K</button>
+          <button class="tf-btn" data-timeframe="week" type="button">周K</button>
+          <button class="tf-btn" data-timeframe="month" type="button">月K</button>
+        </div>
+        <div class="kline-wrap">
+          <canvas id="klineChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Entry plan -->
+      <section class="entry-plan">
+        <div style="display:flex; align-items:center; gap:4px; margin-bottom:8px;">
+          <i data-lucide="target" style="width:14px;height:14px;color:var(--qs-primary);"></i>
+          <span class="qs-body" style="font-weight:600;color:var(--qs-ink);">建仓计划</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:8px;">
+          <div class="mini-metric"><div class="mini-metric-label">建仓价</div><div class="mini-metric-value qs-mono" id="dEntryPrice" style="color:var(--qs-ink);">58.50</div></div>
+          <div class="mini-metric"><div class="mini-metric-label">目标价</div><div class="mini-metric-value qs-mono" id="dTargetPrice" style="color:var(--qs-state-rise);">62.80</div></div>
+          <div class="mini-metric"><div class="mini-metric-label">止损价</div><div class="mini-metric-value qs-mono" id="dStopPrice" style="color:var(--qs-state-fall);">55.20</div></div>
+          <div class="mini-metric"><div class="mini-metric-label">盈亏比</div><div class="mini-metric-value qs-mono" id="dRiskReward" style="color:var(--qs-primary);">1:2.1</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+          <span class="qs-caption" style="color:var(--qs-ink-3);">周期</span>
+          <span class="qs-caption" style="color:var(--qs-ink);" id="dCycle">5-10 交易日</span>
+          <span class="qs-caption" style="color:var(--qs-ink-3);">·</span>
+          <span class="qs-caption" style="color:var(--qs-ink-3);">时间止损</span>
+          <span class="qs-caption" style="color:var(--qs-ink);" id="dTimeStop">10 个交易日未达目标即离场</span>
+        </div>
+      </section>
+
+      <!-- Tabbed sections -->
+      <section class="tabs-section">
+        <div class="tabs-bar">
+          <button class="tab-btn active" data-tab="signal" type="button">信号详情</button>
+          <button class="tab-btn" data-tab="technical" type="button">技术面</button>
+          <button class="tab-btn" data-tab="capital" type="button">资金流向</button>
+          <button class="tab-btn" data-tab="fundamental" type="button">基本面</button>
+          <button class="tab-btn" data-tab="order" type="button">订单</button>
+        </div>
+
+        <!-- Signal detail panel -->
+        <div class="tab-panel active" data-panel="signal" id="panel-signal">
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="sparkles" style="width:14px;height:14px;color:var(--qs-primary);"></i>触发理由</div>
+            <div class="info-box-text" id="dReason">—</div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-cell"><div class="metric-cell-label">信号强度</div><div class="metric-cell-value" id="dStrength" style="color:var(--qs-primary);">强</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">建议周期</div><div class="metric-cell-value" id="dCycle2" style="color:var(--qs-ink);">5-10 交易日</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">目标价位</div><div class="metric-cell-value qs-mono" id="dTarget" style="color:var(--qs-ink);">62.50</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">止损价位</div><div class="metric-cell-value qs-mono" id="dStop" style="color:var(--qs-state-fall);">55.80</div></div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="log-in" style="width:14px;height:14px;color:var(--qs-primary);"></i>建仓策略</div>
+            <div class="info-box-text" id="dEntryPlan">—</div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="log-out" style="width:14px;height:14px;color:var(--qs-primary);"></i>离场计划</div>
+            <div class="info-box-text" id="dExitPlan">—</div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="scale" style="width:14px;height:14px;color:var(--qs-primary);"></i>仓位建议</div>
+            <div class="info-box-text" id="dPosition">—</div>
+          </div>
+        </div>
+
+        <!-- Technical panel -->
+        <div class="tab-panel" data-panel="technical" id="panel-technical">
+          <div class="metric-grid">
+            <div class="metric-cell"><div class="metric-cell-label">RSI(14)</div><div class="metric-cell-value qs-mono" id="dRSI" style="color:var(--qs-ink);">62.4</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">MACD</div><div class="metric-cell-value" id="dMACD" style="color:var(--qs-state-rise);">金叉</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">KDJ</div><div class="metric-cell-value qs-mono" id="dKDJ" style="color:var(--qs-ink);">J 82.5</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">布林带</div><div class="metric-cell-value qs-mono" id="dBoll" style="color:var(--qs-ink);">上穿上轨</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">量比</div><div class="metric-cell-value qs-mono" id="dVolRatio" style="color:var(--qs-primary);">2.30</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">ATR(14)</div><div class="metric-cell-value qs-mono" id="dATR" style="color:var(--qs-ink);">1.85</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">支撑位</div><div class="metric-cell-value qs-mono" id="dSupport" style="color:var(--qs-state-success);">55.20</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">阻力位</div><div class="metric-cell-value qs-mono" id="dResistance" style="color:var(--qs-state-warning);">62.80</div></div>
+          </div>
+          <div class="info-box" style="padding:8px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <span class="qs-body" style="font-weight:600; color:var(--qs-ink);">技术走势</span>
+              <span class="qs-caption" style="padding:1px 5px; border-radius:4px; background:var(--qs-surface); color:var(--qs-primary); border:1px solid var(--qs-line);">示例</span>
+            </div>
+            <div class="chart-wrap-inner"><canvas id="techChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Capital panel -->
+        <div class="tab-panel" data-panel="capital" id="panel-capital">
+          <div class="metric-grid">
+            <div class="metric-cell"><div class="metric-cell-label">主力净流入</div><div class="metric-cell-value qs-mono" id="dMainFlow" style="color:var(--qs-state-rise);">+3.24 亿</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">散户净流入</div><div class="metric-cell-value qs-mono" id="dRetailFlow" style="color:var(--qs-state-fall);">-1.08 亿</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">大单净比</div><div class="metric-cell-value qs-mono" id="dBigRatio" style="color:var(--qs-state-rise);">+18.2%</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">换手率</div><div class="metric-cell-value qs-mono" id="dTurnover" style="color:var(--qs-ink);">4.7%</div></div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-primary);"></i>资金解读</div>
+            <div class="info-box-text" id="dCapSummary">—</div>
+          </div>
+        </div>
+
+        <!-- Fundamental panel -->
+        <div class="tab-panel" data-panel="fundamental" id="panel-fundamental">
+          <div class="metric-grid">
+            <div class="metric-cell"><div class="metric-cell-label">市盈率 PE(TTM)</div><div class="metric-cell-value qs-mono" id="dPE" style="color:var(--qs-ink);">68.5</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">市净率 PB</div><div class="metric-cell-value qs-mono" id="dPB" style="color:var(--qs-ink);">3.82</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">ROE</div><div class="metric-cell-value qs-mono" id="dROE" style="color:var(--qs-ink);">6.8%</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">营收增速</div><div class="metric-cell-value qs-mono" id="dProfit" style="color:var(--qs-state-rise);">+23.5%</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">毛利率</div><div class="metric-cell-value qs-mono" id="dGrossMargin" style="color:var(--qs-ink);">22.5%</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">净利率</div><div class="metric-cell-value qs-mono" id="dNetMargin" style="color:var(--qs-ink);">18.2%</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">总市值</div><div class="metric-cell-value qs-mono" id="dMarketCap" style="color:var(--qs-ink);">4,685 亿</div></div>
+            <div class="metric-cell"><div class="metric-cell-label">流通市值</div><div class="metric-cell-value qs-mono" id="dFloatCap" style="color:var(--qs-ink);">3,920 亿</div></div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="briefcase" style="width:14px;height:14px;color:var(--qs-primary);"></i>主营业务构成</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>板块</th><th style="text-align:right;">营收(亿)</th><th style="text-align:right;">占比</th><th style="text-align:right;">同比</th></tr></thead>
+                <tbody id="dBusiness"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="bar-chart-3" style="width:14px;height:14px;color:var(--qs-primary);"></i>财务数据（亿元）</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>项目</th><th style="text-align:right;">2021</th><th style="text-align:right;">2022</th><th style="text-align:right;">2023</th><th style="text-align:right;">2024E</th></tr></thead>
+                <tbody id="dFinance"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="file-text" style="width:14px;height:14px;color:var(--qs-primary);"></i>近期重大订单/合同</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>日期</th><th>客户/项目</th><th style="text-align:right;">金额</th><th style="text-align:right;">状态</th></tr></thead>
+                <tbody id="dOrders"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="align-left" style="width:14px;height:14px;color:var(--qs-primary);"></i>基本面摘要</div>
+            <div class="info-box-text" id="dFundSummary">—</div>
+          </div>
+        </div>
+
+        <!-- Order panel -->
+        <div class="tab-panel" data-panel="order" id="panel-order">
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="book-open" style="width:14px;height:14px;color:var(--qs-primary);"></i>买卖五档</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>档位</th><th style="text-align:right;">买价</th><th style="text-align:right;">买量</th><th style="text-align:right;">卖价</th><th style="text-align:right;">卖量</th></tr></thead>
+                <tbody id="dOrderBook"></tbody>
+              </table>
+            </div>
+            <div style="margin-top:8px; display:grid; grid-template-columns:repeat(3,1fr); gap:4px; text-align:center;">
+              <div style="padding:6px; border-radius:6px; background:var(--qs-surface); border:1px solid var(--qs-line);"><div class="qs-caption" style="color:var(--qs-ink-3);">买盘累计</div><div class="qs-mono" style="font-size:12px; font-weight:600; color:var(--qs-state-rise);" id="dBidTotal">—</div></div>
+              <div style="padding:6px; border-radius:6px; background:var(--qs-surface); border:1px solid var(--qs-line);"><div class="qs-caption" style="color:var(--qs-ink-3);">卖盘累计</div><div class="qs-mono" style="font-size:12px; font-weight:600; color:var(--qs-state-fall);" id="dAskTotal">—</div></div>
+              <div style="padding:6px; border-radius:6px; background:var(--qs-surface); border:1px solid var(--qs-line);"><div class="qs-caption" style="color:var(--qs-ink-3);">委比</div><div class="qs-mono" style="font-size:12px; font-weight:600; color:var(--qs-ink);" id="dOrderRatio">—</div></div>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="activity" style="width:14px;height:14px;color:var(--qs-primary);"></i>盘口异动</div>
+            <ul id="dAbnormal" style="list-style:none; padding:0; margin:0;"></ul>
+          </div>
+          <div class="info-box">
+            <div class="info-box-title"><i data-lucide="clock" style="width:14px;height:14px;color:var(--qs-primary);"></i>分时成交</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>时间</th><th style="text-align:right;">价格</th><th style="text-align:right;">成交量</th><th style="text-align:right;">方向</th></tr></thead>
+                <tbody id="dTimeSales"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style="height:8px;"></div>
+    </div>
+
+  </div><!-- /scroll-area -->
+
+  <!-- Bottom tab bar -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span>仪表盘</span></a>
+    <a href="swing.html" style="color:var(--qs-primary);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span>波段</span></a>
+    <a href="longterm.html"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span>长线</span></a>
+    <a href="etf.html"><i data-lucide="package" style="width:20px;height:20px;"></i><span>ETF</span></a>
+    <a href="sim.html"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span>模拟盘</span></a>
+  </nav>
+
+</div>
+
+<script>
+(function() {
+  const stocks = [
+    {
+      code: '688981', group: 'trend', name: '中芯国际', signal: '突破', score: 92, price: 58.72, change: 5.28, industry: '科技',
+      time: '09:35', strength: '强', cycle: '5-10 交易日', cycleTag: '5-10日', target: '62.50', stop: '55.80',
+      entryPrice: 58.50, targetPrice: 62.80, stopPrice: 55.20, riskReward: '1:2.1', timeStop: '10 个交易日未达目标即离场',
+      reason: '股价放量突破近期整理平台上沿，成交量较前 5 日均量放大 2.3 倍，MACD 金叉且红柱扩大，短期动能转强。',
+      entryPlan: '回踩 58.50 附近分批介入，首笔 30%，突破确认后加仓至 60%，剩余仓位用于回踩加仓。',
+      exitPlan: '目标价 62.80 附近分批止盈；跌破止损价 55.20 无条件止损；10 个交易日未达目标则时间止损离场。',
+      position: '单票仓位建议不超过总资金的 8%，组合内同板块敞口控制在 15% 以内。',
+      pe: '68.5', pb: '3.82', roe: '6.8%', profit: '+23.5%',
+      fundSummary: '公司作为国内晶圆代工龙头，受益于国产替代与 AI 算力需求，营收与毛利率持续改善。当前估值处于近三年中枢偏上，需关注资本开支节奏与行业周期波动。',
+      rsi: '62.4', macd: '金叉', kdj: 'J 82.5', boll: '上穿上轨', volumeRatio: '2.30', atr: '1.85', support: '55.20', resistance: '62.80',
+      mainFlow: '+3.24 亿', retailFlow: '-1.08 亿', bigRatio: '+18.2%', turnover: '4.7%',
+      capitalSummary: '今日主力资金持续流入，大单买入占比明显高于近 5 日均值；融资余额小幅回升，北向资金净买入约 0.8 亿元，资金面偏积极。',
+      prices: [52.10, 52.45, 51.80, 53.20, 54.00, 53.60, 54.50, 55.10, 54.80, 55.90, 56.40, 55.80, 56.20, 57.50, 56.90, 57.20, 58.00, 57.60, 58.30, 58.72]
+    },
+    {
+      code: '300750', group: 'trend', name: '宁德时代', signal: '量价齐升', score: 88, price: 187.40, change: 3.15, industry: '新能源',
+      time: '09:36', strength: '较强', cycle: '5-8 交易日', cycleTag: '5-8日', target: '198.00', stop: '178.00',
+      entryPrice: 186.00, targetPrice: 198.00, stopPrice: 178.00, riskReward: '1:1.6', timeStop: '8 个交易日未达目标即离场',
+      reason: '成交量温和放大，价格沿 5 日均线稳步上行，KDJ 进入强势区，动力电池订单能见度提升催化情绪。',
+      entryPlan: '186.00 附近逢低吸纳，分两次建仓，首次 40%，回落加仓 40%，保留 20% 机动仓位。',
+      exitPlan: '198.00 目标位分批止盈；跌破 178.00 止损；8 日内未突破 195 减仓。',
+      position: '建议仓位 5%-7%，与比亚迪等新能源标的合计不超过 12%。',
+      pe: '22.4', pb: '5.16', roe: '18.5%', profit: '+12.3%',
+      fundSummary: '全球动力电池龙头，出货份额稳居第一，储能业务高速增长。海外产能扩张与碳酸锂成本下行利好盈利修复，估值处于历史偏低分位。',
+      rsi: '58.7', macd: '红柱扩大', kdj: 'J 75.2', boll: '中轨上方', volumeRatio: '1.85', atr: '3.20', support: '178.00', resistance: '198.00',
+      mainFlow: '+4.12 亿', retailFlow: '-0.86 亿', bigRatio: '+14.6%', turnover: '2.1%',
+      capitalSummary: '机构资金逢低布局，北向资金连续 3 日净流入；两融余额温和上升，筹码锁定性较好。',
+      prices: [178.50, 179.20, 177.80, 180.00, 181.50, 182.30, 181.00, 183.40, 184.20, 183.80, 185.00, 184.50, 186.20, 185.80, 186.50, 187.00, 186.80, 187.20, 187.10, 187.40]
+    },
+    {
+      code: '600519', group: 'cont', name: '贵州茅台', signal: '回踩', score: 86, price: 1488.00, change: 1.02, industry: '消费',
+      time: '09:38', strength: '中', cycle: '10-15 交易日', cycleTag: '10-15日', target: '1560.00', stop: '1420.00',
+      entryPrice: 1485.00, targetPrice: 1560.00, stopPrice: 1420.00, riskReward: '1:1.3', timeStop: '15 个交易日未达目标即离场',
+      reason: '股价回踩 60 日均线获得支撑，缩量止跌，长下影线显示下方承接有力，具备反弹条件。',
+      entryPlan: '1485 附近分批低吸，首次 30%，跌破 1470 加仓 30%，剩余观望。',
+      exitPlan: '1560 附近分批止盈；有效跌破 1420 止损；15 日未反弹至 1540 减仓。',
+      position: '防御仓位 5%-8%，白酒板块合计不超过 10%。',
+      pe: '28.6', pb: '8.92', roe: '28.3%', profit: '+15.7%',
+      fundSummary: '高端白酒绝对龙头，批价与库存保持健康，现金流充裕。当前估值回落至近五年低位，长期配置价值凸显。',
+      rsi: '45.2', macd: '绿柱收窄', kdj: 'J 28.6', boll: '下轨反弹', volumeRatio: '0.95', atr: '18.50', support: '1420.00', resistance: '1560.00',
+      mainFlow: '+1.85 亿', retailFlow: '-0.42 亿', bigRatio: '+9.8%', turnover: '0.4%',
+      capitalSummary: '外资近期小幅增持，机构逢低配置；市场风格偏向防御，白酒板块获避险资金青睐。',
+      prices: [1510.00, 1505.00, 1502.00, 1498.00, 1495.00, 1490.00, 1485.00, 1482.00, 1480.00, 1483.00, 1485.00, 1486.00, 1487.00, 1486.50, 1487.50, 1488.00, 1487.80, 1488.20, 1488.00, 1488.00]
+    },
+    {
+      code: '002594', group: 'low', name: '比亚迪', signal: '突破', score: 79, price: 258.60, change: 2.41, industry: '新能源',
+      time: '09:40', strength: '较强', cycle: '5-10 交易日', cycleTag: '5-10日', target: '275.00', stop: '245.00',
+      entryPrice: 257.00, targetPrice: 275.00, stopPrice: 245.00, riskReward: '1:1.8', timeStop: '10 个交易日未达目标即离场',
+      reason: '股价放量突破箱体震荡上沿，新能源汽车销量超预期，品牌高端化进展顺利，情绪面回暖。',
+      entryPlan: '257 附近跟进，突破 260 加仓，分两次建仓完成 60% 仓位。',
+      exitPlan: '275 附近止盈；跌破 245 止损；10 日未突破 270 减仓。',
+      position: '建议仓位 6%-8%，新能源整车仓位合计不超过 12%。',
+      pe: '26.8', pb: '5.45', roe: '21.4%', profit: '+28.6%',
+      fundSummary: '新能源汽车龙头，垂直整合能力强，海外出口保持高增。价格战背景下单车盈利略有波动，但规模效应持续显现。',
+      rsi: '61.5', macd: '金叉', kdj: 'J 78.3', boll: '突破上轨', volumeRatio: '2.10', atr: '4.50', support: '245.00', resistance: '275.00',
+      mainFlow: '+2.76 亿', retailFlow: '-0.95 亿', bigRatio: '+12.4%', turnover: '1.8%',
+      capitalSummary: '主力资金净流入居前，大单持续买入；港股通南向资金亦有增持，资金面积极。',
+      prices: [248.00, 249.50, 248.80, 250.00, 251.20, 250.50, 252.00, 253.40, 254.00, 253.80, 255.00, 254.50, 256.00, 255.80, 257.00, 257.50, 258.00, 257.80, 258.20, 258.60]
+    },
+    {
+      code: '600276', group: 'trend', name: '恒瑞医药', signal: '回踩', score: 91, price: 45.18, change: -0.62, industry: '医药',
+      time: '09:43', strength: '强', cycle: '8-12 交易日', cycleTag: '8-12日', target: '49.00', stop: '42.50',
+      entryPrice: 45.00, targetPrice: 49.00, stopPrice: 42.50, riskReward: '1:1.8', timeStop: '12 个交易日未达目标即离场',
+      reason: '创新药管线催化剂临近，股价缩量回踩前期突破平台，医药板块情绪回暖，资金回流明显。',
+      entryPlan: '45.00 以下逢低吸纳，分三次建仓，每次 25%-30%。',
+      exitPlan: '49.00 附近分批止盈；跌破 42.50 止损；12 日未反弹至 47.5 减仓。',
+      position: '建议仓位 6%-8%，医药板块合计不超过 12%。',
+      pe: '62.3', pb: '7.85', roe: '12.4%', profit: '+18.2%',
+      fundSummary: '国内创新药龙头，研发管线丰富，国际化授权持续落地。集采影响逐步消化，创新药收入占比提升。',
+      rsi: '48.6', macd: '红柱初现', kdj: 'J 45.0', boll: '中轨支撑', volumeRatio: '1.25', atr: '1.20', support: '42.50', resistance: '49.00',
+      mainFlow: '+1.32 亿', retailFlow: '-0.38 亿', bigRatio: '+11.5%', turnover: '1.2%',
+      capitalSummary: '医药基金仓位回补，创新药主题 ETF 获申购；北向资金小幅净流入，情绪边际改善。',
+      prices: [46.20, 46.00, 45.80, 45.60, 45.40, 45.20, 45.00, 44.90, 45.00, 45.10, 45.05, 45.15, 45.20, 45.10, 45.25, 45.30, 45.20, 45.25, 45.18, 45.18]
+    },
+    {
+      code: '000858', group: 'cont', name: '五粮液', signal: '量价齐升', score: 74, price: 132.50, change: 0.88, industry: '消费',
+      time: '09:42', strength: '中', cycle: '7-10 交易日', cycleTag: '7-10日', target: '140.00', stop: '126.00',
+      entryPrice: 132.00, targetPrice: 140.00, stopPrice: 126.00, riskReward: '1:1.3', timeStop: '10 个交易日未达目标即离场',
+      reason: '底部成交量持续温和放大，价格沿短期均线上行，宴席与商务需求环比改善，估值修复空间可观。',
+      entryPlan: '132 附近分批建仓，首次 40%，回踩 130 加仓 30%。',
+      exitPlan: '140 附近止盈；跌破 126 止损；10 日未突破 138 减仓。',
+      position: '建议仓位 5%-7%，白酒板块合计不超过 10%。',
+      pe: '18.5', pb: '4.32', roe: '22.1%', profit: '+11.4%',
+      fundSummary: '浓香型白酒龙头，渠道库存去化顺利，分红率稳定。估值处于历史底部区间，具备安全边际。',
+      rsi: '54.3', macd: '金叉', kdj: 'J 62.4', boll: '中轨上方', volumeRatio: '1.45', atr: '2.80', support: '126.00', resistance: '140.00',
+      mainFlow: '+0.96 亿', retailFlow: '-0.22 亿', bigRatio: '+8.7%', turnover: '0.9%',
+      capitalSummary: '白酒板块整体获资金回流，五粮液作为次高端龙头获机构加仓；融资余额小幅回升。',
+      prices: [129.00, 129.50, 129.20, 130.00, 130.50, 130.80, 131.00, 131.50, 131.80, 132.00, 131.90, 132.10, 132.20, 132.00, 132.30, 132.40, 132.35, 132.50, 132.45, 132.50]
+    },
+    {
+      code: '300760', group: 'cont', name: '迈瑞医疗', signal: '量价齐升', score: 85, price: 298.00, change: 1.78, industry: '医药',
+      time: '09:48', strength: '较强', cycle: '6-10 交易日', cycleTag: '6-10日', target: '315.00', stop: '282.00',
+      entryPrice: 296.00, targetPrice: 315.00, stopPrice: 282.00, riskReward: '1:1.7', timeStop: '10 个交易日未达目标即离场',
+      reason: '医疗器械龙头业绩稳健，股价放量突破短期下降趋势线，海外高端客户持续突破。',
+      entryPlan: '296 附近低吸，分两次建仓，突破 300 加仓至 60%。',
+      exitPlan: '315 附近止盈；跌破 282 止损；10 日未突破 310 减仓。',
+      position: '建议仓位 5%-7%，医疗器械板块合计不超过 10%。',
+      pe: '32.4', pb: '10.20', roe: '32.5%', profit: '+20.1%',
+      fundSummary: '医疗器械平台型龙头，生命信息与支持、体外诊断、医学影像三大业务协同。全球化布局领先，研发转化效率高。',
+      rsi: '59.8', macd: '金叉', kdj: 'J 74.2', boll: '接近上轨', volumeRatio: '1.65', atr: '5.20', support: '282.00', resistance: '315.00',
+      mainFlow: '+1.58 亿', retailFlow: '-0.45 亿', bigRatio: '+13.2%', turnover: '1.1%',
+      capitalSummary: '机构资金逢低吸纳，医疗器械板块政策担忧缓和；北向资金连续净流入，资金面偏正面。',
+      prices: [288.00, 289.00, 288.50, 290.00, 291.00, 290.50, 292.00, 293.00, 294.50, 294.00, 295.00, 295.50, 296.00, 296.50, 297.00, 297.50, 297.80, 298.00, 297.90, 298.00]
+    },
+    {
+      code: '601012', group: 'low', name: '隆基绿能', signal: '回踩', score: 72, price: 21.35, change: -1.25, industry: '新能源',
+      time: '09:46', strength: '中', cycle: '10-15 交易日', cycleTag: '10-15日', target: '23.50', stop: '19.80',
+      entryPrice: 21.30, targetPrice: 23.50, stopPrice: 19.80, riskReward: '1:1.5', timeStop: '15 个交易日未达目标即离场',
+      reason: '光伏板块阶段性触底，股价回踩前期低点附近缩量整理，组件价格止跌迹象显现，具备左侧布局价值。',
+      entryPlan: '21.30 附近轻仓试多，跌破 20.80 加仓，分三次布局。',
+      exitPlan: '23.50 附近止盈；跌破 19.80 止损；15 日未突破 22.50 减仓。',
+      position: '建议仓位 4%-6%，光伏板块左侧仓位不超过 8%。',
+      pe: '14.2', pb: '1.85', roe: '13.6%', profit: '-8.4%',
+      fundSummary: '光伏一体化龙头，组件与硅片产能全球领先。行业产能过剩导致盈利承压，但现金成本优势明显，静待周期反转。',
+      rsi: '42.1', macd: '绿柱收窄', kdj: 'J 32.5', boll: '下轨附近', volumeRatio: '0.80', atr: '0.65', support: '19.80', resistance: '23.50',
+      mainFlow: '+0.48 亿', retailFlow: '-0.72 亿', bigRatio: '+5.3%', turnover: '2.4%',
+      capitalSummary: '资金分歧较大，部分长线资金左侧布局；光伏 ETF 获小额申购，短期仍以震荡筑底为主。',
+      prices: [22.00, 21.90, 21.80, 21.70, 21.60, 21.50, 21.40, 21.30, 21.35, 21.40, 21.38, 21.36, 21.35, 21.32, 21.34, 21.35, 21.36, 21.35, 21.34, 21.35]
+    }
+  ];
+
+  const extras = {
+    '688981': { marketCap: '4,685 亿', floatCap: '3,920 亿', grossMargin: '22.5%', netMargin: '18.2%', revenue: ['102.5','118.3','125.6','132.4'], netProfit: ['12.4','15.8','18.2','19.6'], deductProfit: ['11.8','15.2','17.5','18.9'], opCashFlow: ['28.5','35.2','42.1','48.6'], business: [{seg:'晶圆代工', rev:'98.2', share:'74.0%', yoy:'+15.3%'},{seg:'晶圆制造服务', rev:'21.5', share:'16.2%', yoy:'+12.8%'},{seg:'其他', rev:'12.7', share:'9.8%', yoy:'+6.2%'}], orders: [{date:'2024-08', client:'国内某头部芯片设计公司', amount:'3.2 亿美元', status:'已签约'},{date:'2024-06', client:'汽车 MCU 量产代工', amount:'1.8 亿美元', status:'执行中'},{date:'2024-03', client:'消费电子 SoC 代工', amount:'2.5 亿人民币', status:'已交付'}], fundSummary: '公司作为国内晶圆代工龙头，受益于国产替代与 AI 算力需求，营收与毛利率持续改善。2024 年资本开支聚焦先进制程扩产，产能利用率保持高位。当前估值处于近三年中枢偏上，需关注行业周期波动及设备进口政策变化。' },
+    '300750': { marketCap: '8,240 亿', floatCap: '7,350 亿', grossMargin: '22.3%', netMargin: '10.2%', revenue: ['797.7','870.2','922.8','988.5'], netProfit: ['98.2','105.6','112.4','120.3'], deductProfit: ['86.5','98.4','104.2','112.8'], opCashFlow: ['185.3','210.5','256.8','298.4'], business: [{seg:'动力电池系统', rev:'786.5', share:'79.5%', yoy:'+12.6%'},{seg:'储能电池系统', rev:'168.2', share:'17.0%', yoy:'+45.3%'},{seg:'电池材料及回收', rev:'33.8', share:'3.5%', yoy:'+8.2%'}], orders: [{date:'2024-07', client:'福特汽车欧洲工厂', amount:'125 GWh', status:'执行中'},{date:'2024-05', client:'国内某储能运营商', amount:'45 GWh', status:'已签约'},{date:'2024-02', client:'特斯拉储能项目', amount:'8 GWh', status:'已交付'}], fundSummary: '全球动力电池龙头，出货份额稳居第一，储能业务高速增长。海外产能扩张与碳酸锂成本下行利好盈利修复，2024 年海外收入占比持续提升。估值处于历史偏低分位，适合作为成长风格核心配置。' },
+    '600519': { marketCap: '18,720 亿', floatCap: '18,720 亿', grossMargin: '91.6%', netMargin: '52.7%', revenue: ['387.6','422.1','458.3','520.8'], netProfit: ['193.2','214.5','236.8','275.4'], deductProfit: ['192.8','213.6','235.2','273.5'], opCashFlow: ['188.5','205.2','268.4','310.6'], business: [{seg:'茅台酒', rev:'465.2', share:'89.3%', yoy:'+13.5%'},{seg:'系列酒', rev:'42.1', share:'8.1%', yoy:'+28.6%'},{seg:'其他', rev:'13.5', share:'2.6%', yoy:'+5.2%'}], orders: [{date:'2024-09', client:'i 茅台直营渠道扩容', amount:'新增 200 家', status:'执行中'},{date:'2024-06', client:'商超直采年度协议', amount:'120 亿', status:'执行中'},{date:'2024-01', client:'海外市场拓展', amount:'15 个国家', status:'已签约'}], fundSummary: '高端白酒绝对龙头，批价与库存保持健康，现金流充裕。2024 年直营化改革与系列酒增长提供增量，分红率稳定。当前估值回落至近五年低位，长期配置价值凸显，适合作为防御底仓。' },
+    '002594': { marketCap: '7,520 亿', floatCap: '3,010 亿', grossMargin: '21.9%', netMargin: '5.0%', revenue: ['1,249.4','1,380.5','1,502.6','1,643.2'], netProfit: ['41.3','62.5','72.8','85.4'], deductProfit: ['35.2','55.8','68.4','79.6'], opCashFlow: ['145.2','168.5','220.4','285.6'], business: [{seg:'汽车及电池', rev:'1,180.5', share:'71.9%', yoy:'+22.4%'},{seg:'手机部件及组装', rev:'285.2', share:'17.4%', yoy:'+15.8%'},{seg:'其他', rev:'177.5', share:'10.7%', yoy:'+10.2%'}], orders: [{date:'2024-08', client:'欧洲某车企电动车平台', amount:'80 GWh', status:'已签约'},{date:'2024-05', client:'国内储能集采项目', amount:'25 GWh', status:'执行中'},{date:'2024-03', client:'东南亚电动公交订单', amount:'1.2 万辆', status:'执行中'}], fundSummary: '新能源汽车龙头，垂直整合能力强，海外出口保持高增。2024 年高端车型放量与智能化升级带动均价上行，但价格战背景下单车盈利略有波动。规模效应持续显现，中长期出海空间广阔。' },
+    '600276': { marketCap: '2,884 亿', floatCap: '2,884 亿', grossMargin: '84.2%', netMargin: '22.5%', revenue: ['54.9','65.2','71.8','78.5'], netProfit: ['12.4','14.8','16.2','18.6'], deductProfit: ['11.8','14.2','15.5','17.8'], opCashFlow: ['16.5','18.2','22.4','28.6'], business: [{seg:'抗肿瘤药', rev:'52.8', share:'67.2%', yoy:'+18.5%'},{seg:'麻醉及造影剂', rev:'15.2', share:'19.4%', yoy:'+8.6%'},{seg:'其他', rev:'10.5', share:'13.4%', yoy:'+5.2%'}], orders: [{date:'2024-09', client:'阿黛昕利国际授权', amount:'6.5 亿美元', status:'已签约'},{date:'2024-06', client:'NMPA 新药获批', amount:'2 款创新药', status:'已获批'},{date:'2024-03', client:'美国 FDA 临床试验', amount:'3 项 III 期', status:'执行中'}], fundSummary: '国内创新药龙头，研发管线丰富，国际化授权持续落地。2024 年集采影响逐步消化，创新药收入占比突破 50%，多款重磅产品进入放量期。医药基金仓位回补，北向资金小幅净流入。' },
+    '000858': { marketCap: '5,142 亿', floatCap: '5,142 亿', grossMargin: '75.8%', netMargin: '37.2%', revenue: ['311.4','348.2','382.5','426.8'], netProfit: ['125.2','142.6','158.4','178.5'], deductProfit: ['124.5','141.2','156.8','176.2'], opCashFlow: ['108.5','128.4','152.6','185.3'], business: [{seg:'五粮液产品', rev:'358.5', share:'84.1%', yoy:'+12.6%'},{seg:'系列酒', rev:'45.2', share:'10.6%', yoy:'+18.3%'},{seg:'其他', rev:'23.1', share:'5.3%', yoy:'+4.5%'}], orders: [{date:'2024-08', client:'直营渠道扩容', amount:'新增 150 家', status:'执行中'},{date:'2024-05', client:'商超直采年度协议', amount:'85 亿', status:'执行中'},{date:'2024-02', client:'海外经销商签约', amount:'35 个国家', status:'已签约'}], fundSummary: '浓香型白酒龙头，渠道库存去化顺利，分红率稳定。2024 年千元价格带竞争加剧但动销稳健，估值处于历史底部区间，具备安全边际，适合震荡市配置。' },
+    '300760': { marketCap: '3,612 亿', floatCap: '3,612 亿', grossMargin: '66.2%', netMargin: '31.5%', revenue: ['76.5','88.4','96.2','105.8'], netProfit: ['25.2','28.6','31.5','35.2'], deductProfit: ['24.8','28.2','30.8','34.5'], opCashFlow: ['28.5','32.4','38.6','45.2'], business: [{seg:'生命信息与支持', rev:'42.5', share:'40.2%', yoy:'+15.6%'},{seg:'体外诊断', rev:'32.8', share:'31.0%', yoy:'+22.4%'},{seg:'医学影像', rev:'18.6', share:'17.6%', yoy:'+12.8%'},{seg:'其他', rev:'11.9', share:'11.2%', yoy:'+8.2%'}], orders: [{date:'2024-09', client:'欧洲 ICU 设备集采', amount:'1.8 亿欧元', status:'已签约'},{date:'2024-06', client:'国内三甲医院设备更新', amount:'3.2 亿人民币', status:'执行中'},{date:'2024-03', client:'拉美体外诊断项目', amount:'0.8 亿美元', status:'已交付'}], fundSummary: '医疗器械平台型龙头，生命信息与支持、体外诊断、医学影像三大业务协同。2024 年全球化布局领先，海外高端客户持续突破，研发转化效率高。机构资金逢低吸纳，政策担忧缓和。' },
+    '601012': { marketCap: '1,618 亿', floatCap: '1,618 亿', grossMargin: '18.2%', netMargin: '6.5%', revenue: ['176.2','198.5','210.4','225.6'], netProfit: ['22.5','25.8','15.2','12.6'], deductProfit: ['21.8','24.5','14.2','11.5'], opCashFlow: ['35.2','28.5','18.6','15.4'], business: [{seg:'组件', rev:'125.6', share:'55.7%', yoy:'+8.5%'},{seg:'硅片', rev:'58.2', share:'25.8%', yoy:'+5.2%'},{seg:'电池片', rev:'28.5', share:'12.6%', yoy:'+3.8%'},{seg:'其他', rev:'11.3', share:'5.9%', yoy:'+2.1%'}], orders: [{date:'2024-07', client:'欧洲大型光伏电站', amount:'2.5 GW', status:'已签约'},{date:'2024-05', client:'国内央企组件集采', amount:'5 GW', status:'执行中'},{date:'2024-02', client:'中东光伏项目', amount:'1.2 GW', status:'已交付'}], fundSummary: '光伏一体化龙头，组件与硅片产能全球领先。2024 年行业产能过剩导致盈利承压，但现金成本优势明显，静待周期反转。资金分歧较大，部分长线资金左侧布局。' }
+  };
+
+  let activeIndex = 0;
+  let klineChart = null;
+  let techChart = null;
+  let currentTimeframe = 'intraday';
+
+  function signalTagClass(signal) {
+    if (signal === '突破') return 'signal-tag-break';
+    if (signal === '回踩') return 'signal-tag-pullback';
+    return 'signal-tag-volume';
+  }
+
+  const GROUPS = [
+    { key: 'trend', label: '趋势回调', tag: '主力', desc: '止损-10% · 目标+20% · ≤20交易日', color: 'var(--qs-primary)' },
+    { key: 'cont', label: '反弹延续', tag: '升级单', desc: '超跌反弹确认后跟进', color: 'var(--qs-state-warning)' },
+    { key: 'low', label: '低位异动', tag: '试运行', desc: '长期低位 + 量价异动', color: 'var(--qs-state-info)' }
+  ];
+
+  function renderList() {
+    const cardHtml = (s, i) => {
+      const changeColor = s.change >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      const changeSign = s.change >= 0 ? '+' : '';
+      return `
+        <div class="signal-card" data-index="${i}">
+          <div class="signal-card-top">
+            <div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="stock-name">${s.name}</span>
+                <span class="stock-code qs-mono">${s.code}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:4px; margin-top:4px;">
+                <span class="signal-tag ${signalTagClass(s.signal)}">${s.signal}</span>
+                <span class="mini-info">${s.cycleTag}</span>
+              </div>
+            </div>
+            <span class="score-badge">${s.score}</span>
+          </div>
+          <div class="signal-card-mid">
+            <span class="price-text qs-mono" style="color:var(--qs-ink);">${s.price.toFixed(2)}</span>
+            <span class="change-text qs-mono" style="color:${changeColor};">${changeSign}${s.change.toFixed(2)}%</span>
+          </div>
+          <div class="signal-card-bottom">
+            <span class="mini-info">${s.industry} · ${s.time}</span>
+            <span class="mini-info" style="color:var(--qs-primary);">强度 ${s.strength}</span>
+          </div>
+        </div>
+      `;
+    };
+    const html = GROUPS.map(g => {
+      const items = stocks.map((s, i) => ({ s: s, i: i })).filter(x => x.s.group === g.key);
+      if (!items.length) return '';
+      return `
+        <div style="margin:14px 2px 6px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="qs-caption" style="font-weight:700;color:${g.color};">${g.label}</span>
+            <span class="qs-caption" style="padding:1px 6px;border-radius:999px;border:1px solid ${g.color}55;color:${g.color};background:${g.color}12;">${g.tag}</span>
+            <span class="qs-caption" style="color:var(--qs-ink-3);margin-left:auto;">${items.length} 只</span>
+          </div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);margin-top:2px;">${g.desc}</div>
+        </div>
+        ${items.map(x => cardHtml(x.s, x.i)).join('')}
+      `;
+    }).join('');
+    document.getElementById('stockList').innerHTML = html;
+
+    document.querySelectorAll('.signal-card').forEach(card => {
+      card.addEventListener('click', function() {
+        activeIndex = parseInt(this.dataset.index, 10);
+        showDetail();
+      });
+    });
+  }
+
+    function showList() {
+    document.getElementById('listView').classList.add('active');
+    document.getElementById('detailView').classList.remove('active');
+    document.getElementById('topbarTitle').textContent = '波段选股';
+    document.getElementById('backBtn').style.visibility = 'hidden';
+    document.querySelector('.scroll-area').scrollTop = 0;
+    if (klineChart) { klineChart.destroy(); klineChart = null; }
+    if (techChart) { techChart.destroy(); techChart = null; }
+    lucide.createIcons();
+  }
+
+  function showDetail() {
+    document.getElementById('listView').classList.remove('active');
+    document.getElementById('detailView').classList.add('active');
+    document.getElementById('topbarTitle').textContent = stocks[activeIndex].name;
+    document.getElementById('backBtn').style.visibility = 'visible';
+    document.querySelector('.scroll-area').scrollTop = 0;
+    renderDetail();
+  }
+
+  function renderDetail() {
+    const s = stocks[activeIndex];
+    const changeColor = s.change >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+    const changeSign = s.change >= 0 ? '+' : '';
+
+    document.getElementById('dName').textContent = s.name;
+    document.getElementById('dCode').textContent = s.code;
+    const sigEl = document.getElementById('dSignal');
+    sigEl.textContent = s.signal;
+    sigEl.className = 'signal-tag ' + signalTagClass(s.signal);
+    document.getElementById('dCycleTag').textContent = s.cycleTag;
+    document.getElementById('dIndustry').textContent = s.industry;
+    document.getElementById('dTime').textContent = s.time;
+    document.getElementById('dPrice').textContent = s.price.toFixed(2);
+    const dChangeEl = document.getElementById('dChange');
+    dChangeEl.textContent = changeSign + s.change.toFixed(2) + '%';
+    dChangeEl.style.color = changeColor;
+    document.getElementById('dScore').textContent = s.score;
+
+    document.getElementById('kPrice').textContent = s.price.toFixed(2);
+    const kChangeEl = document.getElementById('kChange');
+    kChangeEl.textContent = changeSign + s.change.toFixed(2) + '%';
+    kChangeEl.style.color = changeColor;
+    document.getElementById('kHigh').textContent = (s.price * 1.018).toFixed(2);
+    document.getElementById('kLow').textContent = (s.price * 0.982).toFixed(2);
+    document.getElementById('kOpen').textContent = (s.price * 0.995).toFixed(2);
+    document.getElementById('kPreClose').textContent = (s.price / (1 + s.change / 100)).toFixed(2);
+
+    document.getElementById('dEntryPrice').textContent = s.entryPrice.toFixed(2);
+    document.getElementById('dTargetPrice').textContent = s.targetPrice.toFixed(2);
+    document.getElementById('dStopPrice').textContent = s.stopPrice.toFixed(2);
+    document.getElementById('dRiskReward').textContent = s.riskReward;
+    document.getElementById('dCycle').textContent = s.cycle;
+    document.getElementById('dTimeStop').textContent = s.timeStop;
+
+    document.getElementById('dReason').textContent = s.reason;
+    document.getElementById('dStrength').textContent = s.strength;
+    document.getElementById('dCycle2').textContent = s.cycle;
+    document.getElementById('dTarget').textContent = s.target;
+    document.getElementById('dStop').textContent = s.stop;
+    document.getElementById('dEntryPlan').textContent = s.entryPlan;
+    document.getElementById('dExitPlan').textContent = s.exitPlan;
+    document.getElementById('dPosition').textContent = s.position;
+
+    document.getElementById('dRSI').textContent = s.rsi;
+    document.getElementById('dMACD').textContent = s.macd;
+    document.getElementById('dKDJ').textContent = s.kdj;
+    document.getElementById('dBoll').textContent = s.boll;
+    document.getElementById('dVolRatio').textContent = s.volumeRatio;
+    document.getElementById('dATR').textContent = s.atr;
+    document.getElementById('dSupport').textContent = s.support;
+    document.getElementById('dResistance').textContent = s.resistance;
+
+    document.getElementById('dPE').textContent = s.pe;
+    document.getElementById('dPB').textContent = s.pb;
+    document.getElementById('dROE').textContent = s.roe;
+    document.getElementById('dProfit').textContent = s.profit;
+    document.getElementById('dFundSummary').textContent = s.fundSummary;
+
+    const ex = extras[s.code] || {};
+    document.getElementById('dGrossMargin').textContent = ex.grossMargin || '—';
+    document.getElementById('dNetMargin').textContent = ex.netMargin || '—';
+    document.getElementById('dMarketCap').textContent = ex.marketCap || '—';
+    document.getElementById('dFloatCap').textContent = ex.floatCap || '—';
+
+    var bizEl = document.getElementById('dBusiness');
+    if (ex.business && ex.business.length) {
+      bizEl.innerHTML = ex.business.map(function(b) {
+        var yc = b.yoy.indexOf('-') >= 0 ? 'var(--qs-state-fall)' : 'var(--qs-state-rise)';
+        return '<tr><td>' + b.seg + '</td><td class="qs-mono" style="text-align:right;">' + b.rev + '</td><td class="qs-mono" style="text-align:right;">' + b.share + '</td><td class="qs-mono" style="text-align:right; color:' + yc + ';">' + b.yoy + '</td></tr>';
+      }).join('');
+    } else {
+      bizEl.innerHTML = '<tr><td colspan="4" style="color:var(--qs-ink-3);">暂无数据</td></tr>';
+    }
+
+    var finEl = document.getElementById('dFinance');
+    if (ex.revenue && ex.revenue.length) {
+      var items = [
+        { label: '营业收入', data: ex.revenue },
+        { label: '归母净利润', data: ex.netProfit },
+        { label: '扣非净利润', data: ex.deductProfit },
+        { label: '经营现金流', data: ex.opCashFlow }
+      ];
+      finEl.innerHTML = items.map(function(it) {
+        var tds = '<td>' + it.label + '</td>';
+        for (var c = 0; c < 4; c++) {
+          tds += '<td class="qs-mono" style="text-align:right;">' + (it.data[c] || '—') + '</td>';
+        }
+        return '<tr>' + tds + '</tr>';
+      }).join('');
+    } else {
+      finEl.innerHTML = '<tr><td colspan="5" style="color:var(--qs-ink-3);">暂无数据</td></tr>';
+    }
+
+    var ordEl = document.getElementById('dOrders');
+    if (ex.orders && ex.orders.length) {
+      ordEl.innerHTML = ex.orders.map(function(o) {
+        var sc = o.status === '已交付' ? 'var(--qs-state-fall)' : (o.status === '执行中' ? 'var(--qs-state-warning)' : 'var(--qs-state-rise)');
+        return '<tr><td class="qs-mono">' + o.date + '</td><td>' + o.client + '</td><td class="qs-mono" style="text-align:right;">' + o.amount + '</td><td style="text-align:right; color:' + sc + ';">' + o.status + '</td></tr>';
+      }).join('');
+    } else {
+      ordEl.innerHTML = '<tr><td colspan="4" style="color:var(--qs-ink-3);">暂无数据</td></tr>';
+    }
+
+    document.getElementById('dMainFlow').textContent = s.mainFlow;
+    document.getElementById('dRetailFlow').textContent = s.retailFlow;
+    document.getElementById('dBigRatio').textContent = s.bigRatio;
+    document.getElementById('dTurnover').textContent = s.turnover;
+    document.getElementById('dCapSummary').textContent = s.capitalSummary;
+
+    renderOrderBook(s);
+    renderOrderFlow(s);
+    renderKlineChart(currentTimeframe);
+    renderTechChart(s);
+    lucide.createIcons();
+  }
+
+  function genOrderBook(price) {
+    var step = Math.max(0.01, price * 0.0002);
+    var bids = [], asks = [];
+    var bidVol = 0, askVol = 0;
+    for (var i = 5; i >= 1; i--) {
+      var p = price - step * i;
+      var v = Math.floor(500 + Math.random() * 900 + i * 120);
+      bids.push({ label: '买' + (6 - i), price: p.toFixed(2), vol: v.toLocaleString() });
+      bidVol += v;
+    }
+    for (var i = 1; i <= 5; i++) {
+      var p = price + step * i;
+      var v = Math.floor(400 + Math.random() * 800 + i * 90);
+      asks.push({ label: '卖' + i, price: p.toFixed(2), vol: v.toLocaleString() });
+      askVol += v;
+    }
+    var ratio = ((bidVol - askVol) / (bidVol + askVol) * 100).toFixed(1);
+    return { bids: bids, asks: asks, bidTotal: bidVol.toLocaleString() + ' 手', askTotal: askVol.toLocaleString() + ' 手', ratio: (ratio >= 0 ? '+' : '') + ratio + '%' };
+  }
+
+  function renderOrderBook(s) {
+    var ob = genOrderBook(s.price);
+    var rows = [];
+    for (var i = 0; i < 5; i++) {
+      var b = ob.bids[i], a = ob.asks[i];
+      rows.push('<tr><td>' + b.label + '/' + a.label + '</td><td class="qs-mono" style="text-align:right; color:var(--qs-state-rise);">' + b.price + '</td><td class="qs-mono" style="text-align:right;">' + b.vol + '</td><td class="qs-mono" style="text-align:right; color:var(--qs-state-fall);">' + a.price + '</td><td class="qs-mono" style="text-align:right;">' + a.vol + '</td></tr>');
+    }
+    document.getElementById('dOrderBook').innerHTML = rows.join('');
+    document.getElementById('dBidTotal').textContent = ob.bidTotal;
+    document.getElementById('dAskTotal').textContent = ob.askTotal;
+    var ratioEl = document.getElementById('dOrderRatio');
+    ratioEl.textContent = ob.ratio;
+    ratioEl.style.color = parseFloat(ob.ratio) > 0 ? 'var(--qs-state-rise)' : (parseFloat(ob.ratio) < 0 ? 'var(--qs-state-fall)' : 'var(--qs-ink)');
+  }
+
+  function renderOrderFlow(s) {
+    var templates = [
+      { time: '14:32', type: '大单买入', vol: '1,240', dir: 'rise' },
+      { time: '14:28', type: '大单买入', vol: '856', dir: 'rise' },
+      { time: '14:15', type: '大单卖出', vol: '620', dir: 'fall' },
+      { time: '14:06', type: '大单买入', vol: '1,105', dir: 'rise' }
+    ];
+    var items = templates.map(function(t) {
+      var price = (s.price + (t.dir === 'rise' ? 0.02 : -0.02) + (Math.random() - 0.5) * 0.04).toFixed(2);
+      var color = t.dir === 'rise' ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      return '<li style="font-size:12px; color:var(--qs-ink-2); display:flex; justify-content:space-between; align-items:center; padding:4px 0;"><span>' + t.time + ' ' + t.type + '</span><span class="qs-mono" style="color:' + color + ';">' + t.vol + ' 手 @ ' + price + '</span></li>';
+    }).join('');
+    document.getElementById('dAbnormal').innerHTML = items;
+
+    var tsTemplates = [
+      { time: '14:32:05', vol: '1,240', dir: 'rise' },
+      { time: '14:31:48', vol: '320', dir: 'rise' },
+      { time: '14:31:22', vol: '540', dir: 'fall' },
+      { time: '14:30:55', vol: '180', dir: 'rise' }
+    ];
+    var tsRows = tsTemplates.map(function(t, idx) {
+      var price = (s.price + (t.dir === 'rise' ? 0.01 : -0.01) + (Math.random() - 0.5) * 0.03).toFixed(2);
+      var color = t.dir === 'rise' ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+      var dirText = t.dir === 'rise' ? '买入' : '卖出';
+      return '<tr><td class="qs-mono">' + t.time + '</td><td class="qs-mono" style="text-align:right;">' + price + '</td><td class="qs-mono" style="text-align:right;">' + t.vol + '</td><td class="qs-mono" style="text-align:right; color:' + color + ';">' + dirText + '</td></tr>';
+    }).join('');
+    document.getElementById('dTimeSales').innerHTML = tsRows;
+  }
+
+  function genOHLC(basePrice, count, timeframe) {
+    var data = [];
+    var price = basePrice * 0.92;
+    var step = basePrice * (timeframe === 'month' ? 0.025 : timeframe === 'week' ? 0.015 : 0.008);
+    for (var i = 0; i < count; i++) {
+      var change = (Math.random() - 0.48) * step;
+      var open = price;
+      var close = price + change;
+      var high = Math.max(open, close) + Math.random() * step * 0.4;
+      var low = Math.min(open, close) - Math.random() * step * 0.4;
+      data.push({ o: open, h: high, l: low, c: close });
+      price = close;
+    }
+    if (data.length) data[data.length - 1].c = basePrice;
+    return data;
+  }
+
+  function renderKlineChart(timeframe) {
+    var canvas = document.getElementById('klineChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    var ctx = canvas.getContext('2d');
+    var s = stocks[activeIndex];
+    var basePrice = s.price;
+    var count = timeframe === 'intraday' ? 48 : (timeframe === 'month' ? 30 : (timeframe === 'week' ? 60 : 90));
+    var ohlc = genOHLC(basePrice, count, timeframe);
+    var labels = ohlc.map(function(_, i) { return i + 1; });
+    var closes = ohlc.map(function(d) { return d.c; });
+
+    if (klineChart) klineChart.destroy();
+
+    var rise = '#ef5350';
+    var fall = '#26c584';
+
+    klineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '收盘价',
+          data: closes,
+          segment: {
+            borderColor: function(ctx) {
+              var idx = ctx.p0DataIndex;
+              if (idx === 0) return '#2dd4bf';
+              var prev = ctx.chart.data.datasets[0].data[idx - 1];
+              var cur = ctx.chart.data.datasets[0].data[idx];
+              return cur >= prev ? rise : fall;
+            }
+          },
+          backgroundColor: 'rgba(45, 212, 191, 0.08)',
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          tension: 0.1,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1a22',
+            titleColor: '#f2f2f5',
+            bodyColor: '#a0a0b0',
+            borderColor: '#2a2a36',
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                var d = ohlc[context.dataIndex];
+                return '开 ' + d.o.toFixed(2) + ' 高 ' + d.h.toFixed(2) + ' 低 ' + d.l.toFixed(2) + ' 收 ' + d.c.toFixed(2);
+              }
+            }
+          }
+        },
+        scales: {
+          x: { display: false },
+          y: {
+            position: 'right',
+            grid: { color: '#2a2a36' },
+            ticks: { color: '#6c6c80', font: { size: 10 } }
+          }
+        }
+      }
+    });
+  }
+
+  function ma(data, n) {
+    return data.map(function(_, i) {
+      if (i < n - 1) return null;
+      var sum = data.slice(i - n + 1, i + 1).reduce(function(a, b) { return a + b; }, 0);
+      return parseFloat((sum / n).toFixed(2));
+    });
+  }
+
+  function renderTechChart(s) {
+    var canvas = document.getElementById('techChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    var ctx = canvas.getContext('2d');
+    var labels = Array.from({ length: 20 }, function(_, i) { return 'T-' + (19 - i); });
+    var prices = s.prices.map(function(v) { return Number(v.toFixed(2)); });
+    var ma5 = ma(prices, 5);
+    var ma10 = ma(prices, 10);
+
+    if (techChart) techChart.destroy();
+
+    techChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          { label: '收盘价', data: prices, borderColor: '#2dd4bf', backgroundColor: 'rgba(45, 212, 191, 0.08)', borderWidth: 2, pointRadius: 2, tension: 0.3, fill: true },
+          { label: 'MA5', data: ma5, borderColor: '#f59e0b', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'MA10', data: ma10, borderColor: '#3b82f6', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#a0a0b0', font: { size: 10 }, boxWidth: 10 } },
+          tooltip: { backgroundColor: '#1a1a22', titleColor: '#f2f2f5', bodyColor: '#a0a0b0', borderColor: '#2a2a36', borderWidth: 1 }
+        },
+        scales: {
+          x: { ticks: { color: '#6c6c80', font: { size: 9 }, maxRotation: 0 }, grid: { color: '#2a2a36' } },
+          y: { ticks: { color: '#6c6c80', font: { size: 9 } }, grid: { color: '#2a2a36' } }
+        }
+      }
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      var panel = document.getElementById('panel-' + target);
+      if (panel) panel.classList.add('active');
+      if (target === 'technical' && techChart) {
+        setTimeout(function() { techChart.resize(); }, 50);
+      }
+    });
+  });
+
+  // Timeframe buttons
+  document.querySelectorAll('.tf-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      currentTimeframe = this.dataset.timeframe;
+      renderKlineChart(currentTimeframe);
+    });
+  });
+
+  // Back button
+  document.getElementById('backBtn').addEventListener('click', function() {
+    showList();
+  });
+
+  document.getElementById('backBtn').style.visibility = 'hidden';
+
+  renderList();
+  lucide.createIcons();
+})();
+</script>
+</body>
+</html>
