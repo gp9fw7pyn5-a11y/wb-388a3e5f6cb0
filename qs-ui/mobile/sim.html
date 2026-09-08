@@ -2,7 +2,7 @@
 <html class="dark" lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=500, initial-scale=1.0, viewport-fit=cover"><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
 <title>模拟盘</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@1.8.0"></script>
@@ -82,6 +82,13 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .section-title { font-size: 13px; font-weight: 600; color: var(--qs-ink); margin: 14px 0 8px; display: flex; align-items: center; gap: 6px; }
 .disclaimer { display: flex; align-items: flex-start; gap: 6px; background: var(--qs-surface-2); border-radius: var(--qs-radius-md); padding: 10px; margin-top: 12px; font-size: 11px; color: var(--qs-ink-2); line-height: 1.5; }
+</style>
+<style id="qs-density">
+.kpi-card{padding:8px 10px !important}
+.signal-card{padding:10px !important}
+.metric-card{padding:8px 10px !important}
+section{margin-bottom:10px !important}
+.scroll-area{padding:10px !important}
 </style>
 </head>
 <body>

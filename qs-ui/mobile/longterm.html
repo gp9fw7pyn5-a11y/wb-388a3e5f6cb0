@@ -2,7 +2,7 @@
 <html class="dark" lang="zh-CN">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=500, initial-scale=1.0, viewport-fit=cover"><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
   <title>长线选股</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
   <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
@@ -130,6 +130,13 @@
     .section-title { font-size: 14px; font-weight: 600; color: var(--qs-ink); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
     .summary-text { font-size: 13px; line-height: 1.6; color: var(--qs-ink-2); }
   </style>
+<style id="qs-density">
+.kpi-card{padding:8px 10px !important}
+.signal-card{padding:10px !important}
+.metric-card{padding:8px 10px !important}
+section{margin-bottom:10px !important}
+.scroll-area{padding:10px !important}
+</style>
 </head>
 <body>
   <!-- Top bar (48px) -->
