@@ -1,34 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>量化选股终端 · 新UI预览</title>
-<style>
-body{background:#0b0b0f;color:#f2f2f5;font-family:Inter,'Noto Sans SC',sans-serif;margin:0;padding:32px 20px;}
-h1{font-size:22px;margin:0 0 6px;} .sub{color:#a0a0b0;font-size:13px;margin-bottom:28px;}
-h2{font-size:15px;color:#2dd4bf;margin:28px 0 12px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:720px;}
-a{display:block;padding:14px 16px;background:#141419;border:1px solid #26262e;border-radius:10px;color:#f2f2f5;text-decoration:none;font-size:14px;}
-a span{display:block;color:#6c6c80;font-size:11px;margin-top:4px;}
-a:hover{border-color:#2dd4bf;}
-.note{color:#6c6c80;font-size:12px;margin-top:30px;max-width:720px;line-height:1.8;}
-</style></head><body>
-<h1>量化选股终端 · 新UI预览</h1>
-<div class="sub">模拟数据版式预览 · 波段页已按三类标的改造 · 旧工作台不受影响</div>
-<h2>📱 手机端（375px）</h2>
-<div class="grid">
-<a href="mobile/dashboard.html">综合仪表盘<span>指数/宽度/情绪/新闻</span></a>
-<a href="mobile/swing.html">波段选股<span>三类标的 · 已改造</span></a>
-<a href="mobile/longterm.html">长线选股<span>因子评分</span></a>
-<a href="mobile/etf.html">ETF策略<span>折溢价/重仓</span></a>
-<a href="mobile/sim.html">模拟盘<span>账户/持仓</span></a>
-</div>
-<h2>🖥 电脑端（1440px）</h2>
-<div class="grid">
-<a href="desktop/dashboard.html">综合仪表盘<span>指数/宽度/情绪/新闻</span></a>
-<a href="desktop/swing.html">波段选股<span>三类标的 · 已改造</span></a>
-<a href="desktop/longterm.html">长线选股<span>因子评分</span></a>
-<a href="desktop/etf.html">ETF策略<span>折溢价/重仓</span></a>
-<a href="desktop/sim.html">模拟盘<span>账户/持仓/下单</span></a>
-</div>
-<div class="note">⚠ 页面内全部为模拟数据，非实时行情；波段选股页已按「趋势回调 / 反弹延续 / 低位异动」三类改造，真实数据接入为下一阶段。不构成投资建议。</div>
-</body></html>
+<title>量化选股终端</title>
+<style>body{background:#0b0b0f;color:#f2f2f5;font-family:'Noto Sans SC',sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;}
+a{color:#2dd4bf;} p{color:#a0a0b0;font-size:13px;}</style>
+<script>
+(function(){
+  var mobile = window.innerWidth < 900 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+  location.replace(mobile ? "mobile/dashboard.html" : "desktop/dashboard.html");
+})();
+</script></head>
+<body><div style="text-align:center;padding:40px;"><h2>量化选股终端</h2><p>正在进入主页面…</p>
+<p><a href="desktop/dashboard.html">电脑版主页</a> ｜ <a href="mobile/dashboard.html">手机版主页</a></p>
+<p style="margin-top:24px;">不构成投资建议。价格以券商实盘为准。</p></div></body></html>
