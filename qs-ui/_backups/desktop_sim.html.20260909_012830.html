@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   模拟盘
+  </title>
+  <style id="theme-vars">
+   /* Quant Stock UI — Design Tokens */
+:root {
+  /* Primary hue: cool cyan-teal */
+  --qs-brand-50: #f0fdfa;
+  --qs-brand-100: #ccfbf1;
+  --qs-brand-200: #99f6e4;
+  --qs-brand-300: #5eead4;
+  --qs-brand-400: #2dd4bf;
+  --qs-brand-500: #14b8a6;
+  --qs-brand-600: #0d9488;
+  --qs-brand-700: #0f766e;
+  --qs-brand-800: #115e59;
+  --qs-brand-900: #134e4a;
+
+  /* Neutral */
+  --qs-neutral-0: #ffffff;
+  --qs-neutral-50: #f7f7f8;
+  --qs-neutral-100: #eeeef0;
+  --qs-neutral-200: #d9d9de;
+  --qs-neutral-300: #b7b7c0;
+  --qs-neutral-400: #9090a0;
+  --qs-neutral-500: #6e6e80;
+  --qs-neutral-600: #57576b;
+  --qs-neutral-700: #47475a;
+  --qs-neutral-800: #3c3c4d;
+  --qs-neutral-900: #343442;
+  --qs-neutral-950: #1e1e28;
+
+  /* State: finance up=red, down=green (Chinese convention) */
+  --qs-state-rise: #ef5350;
+  --qs-state-fall: #26c584;
+  --qs-state-success: #22c55e;
+  --qs-state-warning: #f59e0b;
+  --qs-state-error: #ef4444;
+  --qs-state-info: #3b82f6;
+
+  /* Light defaults */
+  --qs-background: var(--qs-neutral-50);
+  --qs-foreground: var(--qs-neutral-950);
+  --qs-card: var(--qs-neutral-0);
+  --qs-card-foreground: var(--qs-neutral-950);
+  --qs-popover: var(--qs-neutral-0);
+  --qs-popover-foreground: var(--qs-neutral-950);
+  --qs-muted: var(--qs-neutral-100);
+  --qs-muted-foreground: var(--qs-neutral-500);
+  --qs-border: var(--qs-neutral-200);
+  --qs-input: var(--qs-neutral-200);
+  --qs-ring: var(--qs-brand-400);
+  --qs-primary: var(--qs-brand-600);
+  --qs-primary-foreground: var(--qs-neutral-0);
+
+  --qs-surface: var(--qs-neutral-0);
+  --qs-surface-2: var(--qs-neutral-50);
+  --qs-ink: var(--qs-neutral-950);
+  --qs-ink-2: var(--qs-neutral-600);
+  --qs-ink-3: var(--qs-neutral-400);
+  --qs-line: var(--qs-neutral-200);
+
+  --qs-font-primary: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --qs-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --qs-radius-xs: 2px;
+  --qs-radius-sm: 4px;
+  --qs-radius-md: 8px;
+  --qs-radius-lg: 12px;
+  --qs-radius-xl: 16px;
+  --qs-radius-pill: 999px;
+
+  --qs-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.02);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.18);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.30);
+}
+
+.dark {
+  --qs-background: #0b0b0f;
+  --qs-foreground: #f2f2f5;
+  --qs-card: #141419;
+  --qs-card-foreground: #f2f2f5;
+  --qs-popover: #1a1a22;
+  --qs-popover-foreground: #f2f2f5;
+  --qs-muted: #1c1c24;
+  --qs-muted-foreground: #808094;
+  --qs-border: #2a2a36;
+  --qs-input: #2a2a36;
+  --qs-ring: #2dd4bf;
+  --qs-primary: #2dd4bf;
+  --qs-primary-foreground: #020617;
+
+  --qs-surface: #141419;
+  --qs-surface-2: #1c1c24;
+  --qs-ink: #f2f2f5;
+  --qs-ink-2: #a0a0b0;
+  --qs-ink-3: #6c6c80;
+  --qs-line: #2a2a36;
+
+  --qs-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.14);
+  --qs-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.40);
+  --qs-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* Typography helpers */
+.qs-display { font-size: clamp(40px, 6vw, 88px); line-height: 1.02; font-weight: 600; letter-spacing: -0.03em; }
+.qs-h1 { font-size: clamp(28px, 3.5vw, 48px); line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; }
+.qs-h2 { font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -0.015em; }
+.qs-h3 { font-size: 18px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.qs-body-l { font-size: 17px; line-height: 1.55; font-weight: 400; }
+.qs-body { font-size: 14px; line-height: 1.6; font-weight: 400; }
+.qs-caption { font-size: 12px; line-height: 1.5; font-weight: 400; letter-spacing: 0.005em; }
+.qs-mono { font-family: var(--qs-font-mono); font-variant-numeric: tabular-nums; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js">
+  </script>
+  <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js">
+  </script>
+  <style type="text/tailwindcss">
+   @theme inline {
+    --color-background: var(--qs-background);
+    --color-foreground: var(--qs-foreground);
+    --color-card: var(--qs-card);
+    --color-card-foreground: var(--qs-card-foreground);
+    --color-popover: var(--qs-popover);
+    --color-popover-foreground: var(--qs-popover-foreground);
+    --color-primary: var(--qs-primary);
+    --color-primary-foreground: var(--qs-primary-foreground);
+    --color-muted: var(--qs-muted);
+    --color-muted-foreground: var(--qs-muted-foreground);
+    --color-border: var(--qs-border);
+    --color-input: var(--qs-input);
+    --color-ring: var(--qs-ring);
+    --radius-sm: var(--qs-radius-sm);
+    --radius-md: var(--qs-radius-md);
+    --radius-lg: var(--qs-radius-lg);
+    --radius-xl: var(--qs-radius-xl);
+  }
+  @layer base {
+    body { background: var(--qs-background); color: var(--qs-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+  </style>
+  <style id="semantic-token-fallback">
+   .bg-background { background-color: var(--qs-background); }
+      .text-background { color: var(--qs-background); }
+      .border-background { border-color: var(--qs-background); }
+      .ring-background { --tw-ring-color: var(--qs-background); }
+      .bg-foreground { background-color: var(--qs-foreground); }
+      .text-foreground { color: var(--qs-foreground); }
+      .border-foreground { border-color: var(--qs-foreground); }
+      .ring-foreground { --tw-ring-color: var(--qs-foreground); }
+      .bg-card { background-color: var(--qs-card); }
+      .text-card { color: var(--qs-card); }
+      .border-card { border-color: var(--qs-card); }
+      .ring-card { --tw-ring-color: var(--qs-card); }
+      .bg-card-foreground { background-color: var(--qs-card-foreground); }
+      .text-card-foreground { color: var(--qs-card-foreground); }
+      .border-card-foreground { border-color: var(--qs-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--qs-card-foreground); }
+      .bg-popover { background-color: var(--qs-popover); }
+      .text-popover { color: var(--qs-popover); }
+      .border-popover { border-color: var(--qs-popover); }
+      .ring-popover { --tw-ring-color: var(--qs-popover); }
+      .bg-popover-foreground { background-color: var(--qs-popover-foreground); }
+      .text-popover-foreground { color: var(--qs-popover-foreground); }
+      .border-popover-foreground { border-color: var(--qs-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--qs-popover-foreground); }
+      .bg-primary { background-color: var(--qs-primary); }
+      .text-primary { color: var(--qs-primary); }
+      .border-primary { border-color: var(--qs-primary); }
+      .ring-primary { --tw-ring-color: var(--qs-primary); }
+      .bg-primary-foreground { background-color: var(--qs-primary-foreground); }
+      .text-primary-foreground { color: var(--qs-primary-foreground); }
+      .border-primary-foreground { border-color: var(--qs-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--qs-primary-foreground); }
+      .bg-muted { background-color: var(--qs-muted); }
+      .text-muted { color: var(--qs-muted); }
+      .border-muted { border-color: var(--qs-muted); }
+      .ring-muted { --tw-ring-color: var(--qs-muted); }
+      .bg-muted-foreground { background-color: var(--qs-muted-foreground); }
+      .text-muted-foreground { color: var(--qs-muted-foreground); }
+      .border-muted-foreground { border-color: var(--qs-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--qs-muted-foreground); }
+      .bg-border { background-color: var(--qs-border); }
+      .text-border { color: var(--qs-border); }
+      .border-border { border-color: var(--qs-border); }
+      .ring-border { --tw-ring-color: var(--qs-border); }
+      .bg-input { background-color: var(--qs-input); }
+      .text-input { color: var(--qs-input); }
+      .border-input { border-color: var(--qs-input); }
+      .ring-input { --tw-ring-color: var(--qs-input); }
+      .bg-ring { background-color: var(--qs-ring); }
+      .text-ring { color: var(--qs-ring); }
+      .border-ring { border-color: var(--qs-ring); }
+      .ring-ring { --tw-ring-color: var(--qs-ring); }
+  </style>
+  <style>
+   .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+  </style>
+ </head>
+ <body class="min-h-screen font-sans antialiased">
+  <!-- 顶部全局导航 -->
+  <header class="qs-topnav fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 border-b border-[var(--qs-border)]" data-region="top-navigation" style="background:var(--qs-surface);">
+   <div class="flex items-center gap-3 mr-8 shrink-0">
+    <div class="w-8 h-8 rounded-md flex items-center justify-center font-bold text-sm qs-mono" style="background:var(--qs-primary);color:var(--qs-primary-foreground);">
+     Q
+    </div>
+    <span class="font-semibold text-base" style="color:var(--qs-ink);">
+     量选终端
+    </span>
+   </div>
+   <nav class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+    <a class="qs-nav-link" data-dom-id="nav-dashboard" data-nav-key="dashboard" href="dashboard.html">
+     综合仪表盘
+    </a>
+    <a class="qs-nav-link" data-dom-id="nav-swing" data-nav-key="swing" href="swing.html">
+     波段选股
+    </a>
+    <a class="qs-nav-link" data-dom-id="nav-longterm" data-nav-key="longterm" href="longterm.html">
+     长线选股
+    </a>
+    <a class="qs-nav-link" data-dom-id="nav-etf" data-nav-key="etf" href="etf.html">
+     ETF策略
+    </a>
+    <a class="qs-nav-link active" data-dom-id="nav-sim" data-nav-key="sim" href="sim.html">
+     模拟盘
+    </a>
+   </nav>
+   <div class="ml-auto flex items-center gap-3 shrink-0 pl-4">
+    <div class="relative hidden sm:block">
+     <i class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" data-lucide="search" style="color:var(--qs-ink-3);">
+     </i>
+     <input class="h-9 w-48 rounded-md pl-9 pr-3 text-sm focus:outline-none" placeholder="搜索代码/名称/板块" style="background:var(--qs-muted);border:1px solid var(--qs-border);color:var(--qs-ink);" type="text"/>
+    </div>
+    <button class="w-9 h-9 rounded-md flex items-center justify-center transition-colors" data-dom-id="top-notify" style="color:var(--qs-ink-2);background:transparent;border:1px solid var(--qs-border);">
+     <i class="w-5 h-5" data-lucide="bell">
+     </i>
+    </button>
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style="background:var(--qs-primary);color:var(--qs-primary-foreground);">
+     DQ
+    </div>
+   </div>
+  </header>
+  <main class="qs-shell" data-viewport-mode="app-shell">
+   <!-- 左侧持仓列表 -->
+   <aside class="qs-sidebar" data-region="position-list" id="position-list">
+    <div class="qs-sidebar-head">
+     <span class="qs-sidebar-title">
+      持仓列表
+     </span>
+     <span class="qs-caption rounded px-1.5 py-0.5" style="background: var(--qs-muted); color: var(--qs-ink-3);">
+      7
+     </span>
+    </div>
+    <div class="qs-sidebar-scroll">
+     <a class="qs-sidebar-item active" data-code="600519" data-dom-id="sim-item-1" data-name="贵州茅台" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        贵州茅台
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        600519
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        200 股 · 趋势动量
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-rise);">
+        +3.95%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="300750" data-dom-id="sim-item-2" data-name="宁德时代" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        宁德时代
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        300750
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        500 股 · 成长回归
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-rise);">
+        +3.61%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="002594" data-dom-id="sim-item-3" data-name="比亚迪" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        比亚迪
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        002594
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        800 股 · 波段反转
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-fall);">
+        -2.94%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="000858" data-dom-id="sim-item-4" data-name="五粮液" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        五粮液
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        000858
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        1,200 股 · 价值防御
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-rise);">
+        +4.98%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="601318" data-dom-id="sim-item-5" data-name="中国平安" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        中国平安
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        601318
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        2,000 股 · 高股息
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-fall);">
+        -2.01%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="600036" data-dom-id="sim-item-6" data-name="招商银行" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        招商银行
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        600036
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        1,500 股 · 高股息
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-rise);">
+        +2.86%
+       </span>
+      </div>
+     </a>
+     <a class="qs-sidebar-item" data-code="000333" data-dom-id="sim-item-7" data-name="美的集团" href="javascript:void(0)">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-name">
+        美的集团
+       </span>
+       <span class="qs-sidebar-code qs-mono">
+        000333
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-caption" style="color: var(--qs-ink-3);">
+        900 股 · 质量因子
+       </span>
+       <span class="qs-sidebar-pnl qs-mono" style="color: var(--qs-state-rise);">
+        +1.72%
+       </span>
+      </div>
+     </a>
+    </div>
+   </aside>
+   <div class="qs-main flex-1 flex flex-col min-h-0">
+    <div class="qs-scroll flex-1 min-h-0 overflow-y-auto p-6" data-scroll-region="primary">
+     <!-- Detail header -->
+     <header class="qs-detail-header" data-region="detail-header">
+      <div class="qs-detail-title">
+       <div class="flex items-center gap-3">
+        <h1 class="qs-h2" id="detail-stock-name" style="color: var(--qs-ink);">
+         贵州茅台
+        </h1>
+        <span class="qs-mono qs-caption rounded px-2 py-0.5" id="detail-stock-code" style="background: var(--qs-muted); color: var(--qs-ink-2);">
+         600519
+        </span>
+        <span class="qs-caption rounded px-2 py-0.5 border" id="detail-strategy" style="border-color: var(--qs-line); color: var(--qs-primary);">
+         趋势动量
+        </span>
+       </div>
+       <div class="flex items-center gap-4 mt-2">
+        <div class="flex items-baseline gap-2">
+         <span class="qs-mono text-2xl font-semibold" id="detail-price" style="color: var(--qs-ink);">
+          1,642.50
+         </span>
+         <span class="qs-mono text-sm" id="detail-price-change" style="color: var(--qs-state-rise);">
+          +1.25%
+         </span>
+        </div>
+        <div class="h-4 w-px" style="background: var(--qs-line);">
+        </div>
+        <div class="flex items-baseline gap-2">
+         <span class="qs-caption" style="color: var(--qs-ink-3);">
+          持仓盈亏
+         </span>
+         <span class="qs-mono font-semibold" id="detail-pnl" style="color: var(--qs-state-rise);">
+          +12,500.00
+         </span>
+        </div>
+        <div class="h-4 w-px" style="background: var(--qs-line);">
+        </div>
+        <div class="flex items-baseline gap-2">
+         <span class="qs-caption" style="color: var(--qs-ink-3);">
+          仓位
+         </span>
+         <span class="qs-mono font-semibold" id="detail-size" style="color: var(--qs-ink);">
+          25.6%
+         </span>
+        </div>
+       </div>
+      </div>
+      <div class="flex items-center gap-2">
+       <button class="qs-btn qs-btn-primary text-xs" type="button">
+        买入
+       </button>
+       <button class="qs-btn qs-btn-outline text-xs" type="button">
+        卖出
+       </button>
+       <button aria-label="预警" class="qs-icon-btn" data-dom-id="detail-alert" type="button">
+        <i class="h-4 w-4" data-lucide="bell">
+        </i>
+       </button>
+      </div>
+     </header>
+     <!-- K-line chart (always visible) -->
+     <section class="qs-detail-card qs-kline-section" data-region="kline-chart">
+      <div class="qs-kline-header" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px;">
+       <div>
+        <div style="display:flex;align-items:baseline;gap:12px;">
+         <span class="qs-h1 qs-mono" id="klineCurrentPrice" style="color:var(--qs-ink);">
+          58.72
+         </span>
+         <span class="qs-h3 qs-mono" id="klineChange" style="color:var(--qs-state-rise);">
+          +5.28%
+         </span>
+        </div>
+        <div class="qs-caption" style="color:var(--qs-ink-3);margin-top:4px;">
+         涨跌额
+         <span class="qs-mono" id="klineChangeAmount">
+          +2.94
+         </span>
+        </div>
+       </div>
+       <div class="qs-kline-stats" style="display:flex;gap:16px;flex-wrap:wrap;text-align:right;">
+        <div>
+         <div class="qs-caption" style="color:var(--qs-ink-3);">
+          最高
+         </div>
+         <div class="qs-body qs-mono" id="klineHigh" style="color:var(--qs-ink);">
+          59.80
+         </div>
+        </div>
+        <div>
+         <div class="qs-caption" style="color:var(--qs-ink-3);">
+          最低
+         </div>
+         <div class="qs-body qs-mono" id="klineLow" style="color:var(--qs-ink);">
+          56.10
+         </div>
+        </div>
+        <div>
+         <div class="qs-caption" style="color:var(--qs-ink-3);">
+          开盘
+         </div>
+         <div class="qs-body qs-mono" id="klineOpen" style="color:var(--qs-ink);">
+          56.50
+         </div>
+        </div>
+        <div>
+         <div class="qs-caption" style="color:var(--qs-ink-3);">
+          昨收
+         </div>
+         <div class="qs-body qs-mono" id="klinePreClose" style="color:var(--qs-ink);">
+          55.78
+         </div>
+        </div>
+       </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+       <div class="qs-kline-timeframes" style="display:inline-flex;background:var(--qs-surface-2);border:1px solid var(--qs-line);border-radius:var(--qs-radius-md);overflow:hidden;">
+        <button class="qs-kline-time active" data-timeframe="intraday" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink);background:var(--qs-primary);border:none;cursor:pointer;" type="button">
+         分时
+        </button>
+        <button class="qs-kline-time" data-timeframe="day" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+         日K
+        </button>
+        <button class="qs-kline-time" data-timeframe="week" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+         周K
+        </button>
+        <button class="qs-kline-time" data-timeframe="month" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+         月K
+        </button>
+       </div>
+       <span class="qs-caption" style="color:var(--qs-ink-3);">
+        示例行情，仅作展示
+       </span>
+      </div>
+      <div class="qs-kline-chart-wrap" style="height:320px;width:100%;border-radius:var(--qs-radius-md);overflow:hidden;background:var(--qs-surface);border:1px solid var(--qs-line);">
+       <canvas id="kline-chart">
+       </canvas>
+      </div>
+     </section>
+     <div class="qs-detail-tabs" data-region="detail-tabs" role="tablist">
+      <button aria-selected="true" class="qs-detail-tab active" data-tab="fundamental" role="tab" type="button">
+       基本面
+      </button>
+      <button aria-selected="false" class="qs-detail-tab" data-tab="technical" role="tab" type="button">
+       技术面
+      </button>
+      <button aria-selected="false" class="qs-detail-tab" data-tab="capital" role="tab" type="button">
+       资金流向
+      </button>
+      <button aria-selected="false" class="qs-detail-tab" data-tab="signal" role="tab" type="button">
+       信号详情
+      </button>
+      <button aria-selected="false" class="qs-detail-tab" data-tab="order" role="tab" type="button">
+       订单
+      </button>
+     </div>
+     <!-- Detail tabs -->
+     <!-- Tab panels -->
+     <div class="qs-detail-panels">
+      <!-- 持仓详情 -->
+      <!-- 交易记录 -->
+      <!-- 基本面 -->
+      <!-- 技术面 -->
+      <!-- 订单 -->
+      <section class="qs-detail-panel active" data-panel="fundamental" data-region="fundamentals" id="panel-fundamental" role="tabpanel">
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          市盈率 (TTM)
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-pe" style="color: var(--qs-ink);">
+          28.45
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          市净率 (LF)
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-pb" style="color: var(--qs-ink);">
+          8.12
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          ROE (TTM)
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-roe" style="color: var(--qs-ink);">
+          32.8%
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          净利润同比
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-profit-yoy" style="color: var(--qs-state-rise);">
+          +19.5%
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          总市值
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-market-cap" style="color: var(--qs-ink);">
+          21,050 亿
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          流通市值
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-float-cap" style="color: var(--qs-ink);">
+          21,050 亿
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          毛利率
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-gross-margin" style="color: var(--qs-ink);">
+          91.6%
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          净利率
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-net-margin" style="color: var(--qs-ink);">
+          52.7%
+         </div>
+        </div>
+       </div>
+       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="qs-card">
+         <h3 class="text-xs font-medium mb-3 flex items-center gap-2" style="color: var(--qs-ink-2);">
+          <i class="w-4 h-4" data-lucide="bar-chart-3" style="color: var(--qs-primary)">
+          </i>
+          财务数据
+         </h3>
+         <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+          <table class="qs-table w-full">
+           <thead>
+            <tr>
+             <th>
+              项目
+             </th>
+             <th class="qs-num">
+              2021
+             </th>
+             <th class="qs-num">
+              2022
+             </th>
+             <th class="qs-num">
+              2023
+             </th>
+             <th class="qs-num">
+              2024E
+             </th>
+            </tr>
+           </thead>
+           <tbody id="detail-financials">
+            <tr>
+             <td>
+              营业收入
+             </td>
+             <td class="qs-mono qs-num">
+              1,061.7
+             </td>
+             <td class="qs-mono qs-num">
+              1,275.4
+             </td>
+             <td class="qs-mono qs-num">
+              1,505.6
+             </td>
+             <td class="qs-mono qs-num">
+              1,716.2
+             </td>
+            </tr>
+            <tr>
+             <td>
+              归母净利润
+             </td>
+             <td class="qs-mono qs-num">
+              524.6
+             </td>
+             <td class="qs-mono qs-num">
+              627.2
+             </td>
+             <td class="qs-mono qs-num">
+              747.3
+             </td>
+             <td class="qs-mono qs-num">
+              862.4
+             </td>
+            </tr>
+            <tr>
+             <td>
+              扣非净利润
+             </td>
+             <td class="qs-mono qs-num">
+              521.8
+             </td>
+             <td class="qs-mono qs-num">
+              623.5
+             </td>
+             <td class="qs-mono qs-num">
+              742.1
+             </td>
+             <td class="qs-mono qs-num">
+              855.6
+             </td>
+            </tr>
+            <tr>
+             <td>
+              经营现金流
+             </td>
+             <td class="qs-mono qs-num">
+              640.3
+             </td>
+             <td class="qs-mono qs-num">
+              366.0
+             </td>
+             <td class="qs-mono qs-num">
+              665.9
+             </td>
+             <td class="qs-mono qs-num">
+              780.5
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </div>
+        <div class="qs-card">
+         <h3 class="text-xs font-medium mb-3 flex items-center gap-2" style="color: var(--qs-ink-2);">
+          <i class="w-4 h-4" data-lucide="building-2" style="color: var(--qs-primary)">
+          </i>
+          机构持仓
+         </h3>
+         <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="qs-card" style="padding: 12px;">
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            基金持仓比例
+           </div>
+           <div class="qs-mono text-xl font-semibold" id="detail-fund-hold" style="color: var(--qs-ink);">
+            6.2%
+           </div>
+          </div>
+          <div class="qs-card" style="padding: 12px;">
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            北向资金持股比例
+           </div>
+           <div class="qs-mono text-xl font-semibold" id="detail-north-hold" style="color: var(--qs-ink);">
+            4.1%
+           </div>
+          </div>
+         </div>
+         <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+          <table class="qs-table w-full">
+           <thead>
+            <tr>
+             <th>
+              股东名称
+             </th>
+             <th class="qs-num">
+              持股数量
+             </th>
+             <th class="qs-num">
+              比例
+             </th>
+             <th class="qs-num">
+              变动
+             </th>
+            </tr>
+           </thead>
+           <tbody id="detail-top-holders">
+            <tr>
+             <td class="truncate max-w-[10rem]">
+              中国贵州茅台酒厂
+             </td>
+             <td class="qs-mono qs-num">
+              6.78 亿
+             </td>
+             <td class="qs-mono qs-num">
+              53.96%
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-ink-3)">
+              0.00%
+             </td>
+            </tr>
+            <tr>
+             <td class="truncate max-w-[10rem]">
+              香港中央结算有限公司
+             </td>
+             <td class="qs-mono qs-num">
+              0.92 亿
+             </td>
+             <td class="qs-mono qs-num">
+              7.30%
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              -0.12%
+             </td>
+            </tr>
+            <tr>
+             <td class="truncate max-w-[10rem]">
+              贵州省国有资本运营
+             </td>
+             <td class="qs-mono qs-num">
+              0.57 亿
+             </td>
+             <td class="qs-mono qs-num">
+              4.54%
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-ink-3)">
+              0.00%
+             </td>
+            </tr>
+            <tr>
+             <td class="truncate max-w-[10rem]">
+              中央汇金资产管理
+             </td>
+             <td class="qs-mono qs-num">
+              0.10 亿
+             </td>
+             <td class="qs-mono qs-num">
+              0.80%
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-ink-3)">
+              0.00%
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </div>
+       </div>
+       <div class="qs-card">
+        <h3 class="text-xs font-medium mb-2" style="color: var(--qs-ink-2);">
+         基本面摘要
+        </h3>
+        <p class="qs-body" id="detail-fundamental-summary" style="color: var(--qs-ink-2);">
+         贵州茅台为高端白酒绝对龙头，品牌护城河深厚，现金流稳健。当前估值处于近三年中枢偏上位置，盈利增速保持双位数，机构持仓结构稳定，适合作为核心底仓配置。策略上采用趋势动量跟踪，关注批价、动销及北向资金流向变化。
+        </p>
+       </div>
+      </section>
+      <section class="qs-detail-panel" data-panel="technical" data-region="technical" id="panel-technical" role="tabpanel">
+       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="qs-card lg:col-span-2">
+         <div class="mb-3 flex items-center justify-between">
+          <h3 class="text-xs font-medium" style="color: var(--qs-ink-2);">
+           价格走势
+          </h3>
+          <div class="flex items-center gap-2">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            60 日
+           </span>
+           <span class="qs-caption rounded px-1.5 py-0.5" style="background: var(--qs-muted); color: var(--qs-ink-2);">
+            MA20
+           </span>
+          </div>
+         </div>
+         <div class="relative h-72 w-full">
+          <canvas id="detailPriceChart">
+          </canvas>
+         </div>
+        </div>
+        <div class="qs-card">
+         <h3 class="text-xs font-medium mb-3" style="color: var(--qs-ink-2);">
+          技术指标
+         </h3>
+         <div class="space-y-3">
+          <div class="flex justify-between items-center py-2" style="border-bottom: 1px solid var(--qs-line);">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            MACD
+           </span>
+           <span class="qs-mono font-medium" style="color: var(--qs-state-rise);">
+            金叉
+           </span>
+          </div>
+          <div class="flex justify-between items-center py-2" style="border-bottom: 1px solid var(--qs-line);">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            RSI(14)
+           </span>
+           <span class="qs-mono font-medium" style="color: var(--qs-ink);">
+            58.4
+           </span>
+          </div>
+          <div class="flex justify-between items-center py-2" style="border-bottom: 1px solid var(--qs-line);">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            KDJ
+           </span>
+           <span class="qs-mono font-medium" style="color: var(--qs-state-rise);">
+            强势区
+           </span>
+          </div>
+          <div class="flex justify-between items-center py-2" style="border-bottom: 1px solid var(--qs-line);">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            布林带
+           </span>
+           <span class="qs-mono font-medium" style="color: var(--qs-ink);">
+            中轨上方
+           </span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+           <span class="qs-caption" style="color: var(--qs-ink-3);">
+            成交量
+           </span>
+           <span class="qs-mono font-medium" style="color: var(--qs-state-rise);">
+            放量
+           </span>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+      <div class="qs-detail-panel" data-panel="capital" id="panel-capital" role="tabpanel">
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="metric-card">
+         <span class="qs-caption text-[var(--qs-ink-3)]">
+          主力净流入
+         </span>
+         <div class="qs-h3 qs-mono text-[var(--qs-state-rise)] mt-1">
+          +1.85 亿
+         </div>
+        </div>
+        <div class="metric-card">
+         <span class="qs-caption text-[var(--qs-ink-3)]">
+          散户净流入
+         </span>
+         <div class="qs-h3 qs-mono text-[var(--qs-state-fall)] mt-1">
+          -0.62 亿
+         </div>
+        </div>
+        <div class="metric-card">
+         <span class="qs-caption text-[var(--qs-ink-3)]">
+          大单净比
+         </span>
+         <div class="qs-h3 qs-mono text-[var(--qs-state-rise)] mt-1">
+          +12.5%
+         </div>
+        </div>
+        <div class="metric-card">
+         <span class="qs-caption text-[var(--qs-ink-3)]">
+          换手率
+         </span>
+         <div class="qs-h3 qs-mono text-[var(--qs-ink)] mt-1">
+          2.4%
+         </div>
+        </div>
+       </div>
+       <div class="p-4 rounded-lg border border-[var(--qs-line)] bg-[var(--qs-surface-2)]">
+        <h3 class="qs-body font-semibold text-[var(--qs-ink)] mb-2">
+         资金解读
+        </h3>
+        <p class="qs-body text-[var(--qs-ink-2)] leading-relaxed">
+         主力资金今日呈净流入态势，大单买入占比提升；融资余额温和回升，北向资金小幅增持，整体资金面偏正面。
+        </p>
+       </div>
+      </div>
+      <section class="qs-detail-panel" data-panel="signal" data-region="position-table" id="panel-signal" role="tabpanel">
+       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+        <div class="qs-card lg:col-span-2">
+         <h3 class="text-xs font-medium mb-3" style="color: var(--qs-ink-2);">
+          持仓指标
+         </h3>
+         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            成本价
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-cost" style="color: var(--qs-ink);">
+            1,580.00
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            现价
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-current" style="color: var(--qs-ink);">
+            1,642.50
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            持仓数量
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-qty" style="color: var(--qs-ink);">
+            200
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            市值
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-market-value" style="color: var(--qs-ink);">
+            328,500.00
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            盈亏额
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-pnl-amount" style="color: var(--qs-state-rise);">
+            +12,500.00
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            盈亏比例
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-pnl-rate" style="color: var(--qs-state-rise);">
+            +3.95%
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            止损价
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-stop-loss" style="color: var(--qs-state-fall);">
+            1,501.00
+           </div>
+          </div>
+          <div>
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            止盈价
+           </div>
+           <div class="qs-mono text-base font-semibold" id="detail-profit-target" style="color: var(--qs-state-rise);">
+            1,756.00
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="qs-card">
+         <h3 class="text-xs font-medium mb-3" style="color: var(--qs-ink-2);">
+          风险概览
+         </h3>
+         <div class="space-y-3">
+          <div>
+           <div class="flex justify-between qs-caption mb-1" style="color: var(--qs-ink-3);">
+            <span>
+             持仓权重
+            </span>
+            <span class="qs-mono" id="detail-weight">
+             25.6%
+            </span>
+           </div>
+           <div class="h-1.5 rounded-full" style="background: var(--qs-muted);">
+            <div class="h-1.5 rounded-full" id="detail-weight-bar" style="width: 25.6%; background: var(--qs-primary);">
+            </div>
+           </div>
+          </div>
+          <div>
+           <div class="flex justify-between qs-caption mb-1" style="color: var(--qs-ink-3);">
+            <span>
+             距止损
+            </span>
+            <span class="qs-mono" id="detail-risk-distance">
+             -8.62%
+            </span>
+           </div>
+           <div class="h-1.5 rounded-full" style="background: var(--qs-muted);">
+            <div class="h-1.5 rounded-full" style="width: 62%; background: var(--qs-state-fall);">
+            </div>
+           </div>
+          </div>
+          <div>
+           <div class="flex justify-between qs-caption mb-1" style="color: var(--qs-ink-3);">
+            <span>
+             距止盈
+            </span>
+            <span class="qs-mono" id="detail-reward-distance">
+             +6.91%
+            </span>
+           </div>
+           <div class="h-1.5 rounded-full" style="background: var(--qs-muted);">
+            <div class="h-1.5 rounded-full" style="width: 45%; background: var(--qs-state-rise);">
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="qs-card">
+        <div class="mb-3 flex items-center justify-between">
+         <h3 class="text-xs font-medium" style="color: var(--qs-ink-2);">
+          持仓明细
+         </h3>
+         <div class="flex gap-2">
+          <button class="qs-btn qs-btn-primary text-xs" type="button">
+           买入
+          </button>
+          <button class="qs-btn qs-btn-outline text-xs" type="button">
+           卖出
+          </button>
+         </div>
+        </div>
+        <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+         <table class="qs-table w-full min-w-[900px]">
+          <thead>
+           <tr>
+            <th>
+             代码
+            </th>
+            <th>
+             名称
+            </th>
+            <th class="text-right">
+             持仓量
+            </th>
+            <th class="text-right">
+             可卖
+            </th>
+            <th class="text-right">
+             成本价
+            </th>
+            <th class="text-right">
+             现价
+            </th>
+            <th class="text-right">
+             盈亏额
+            </th>
+            <th class="text-right">
+             盈亏比例
+            </th>
+            <th class="text-right">
+             市值
+            </th>
+            <th class="text-center">
+             操作
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td class="qs-mono">
+             600519
+            </td>
+            <td>
+             贵州茅台
+            </td>
+            <td class="qs-mono text-right">
+             200
+            </td>
+            <td class="qs-mono text-right">
+             200
+            </td>
+            <td class="qs-mono text-right">
+             1,580.00
+            </td>
+            <td class="qs-mono text-right">
+             1,642.50
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +12,500.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +3.95%
+            </td>
+            <td class="qs-mono text-right">
+             328,500.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             300750
+            </td>
+            <td>
+             宁德时代
+            </td>
+            <td class="qs-mono text-right">
+             500
+            </td>
+            <td class="qs-mono text-right">
+             500
+            </td>
+            <td class="qs-mono text-right">
+             185.60
+            </td>
+            <td class="qs-mono text-right">
+             192.30
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +3,350.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +3.61%
+            </td>
+            <td class="qs-mono text-right">
+             96,150.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             002594
+            </td>
+            <td>
+             比亚迪
+            </td>
+            <td class="qs-mono text-right">
+             800
+            </td>
+            <td class="qs-mono text-right">
+             800
+            </td>
+            <td class="qs-mono text-right">
+             248.50
+            </td>
+            <td class="qs-mono text-right">
+             241.20
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-fall);">
+             -5,840.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-fall);">
+             -2.94%
+            </td>
+            <td class="qs-mono text-right">
+             192,960.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             000858
+            </td>
+            <td>
+             五粮液
+            </td>
+            <td class="qs-mono text-right">
+             1,200
+            </td>
+            <td class="qs-mono text-right">
+             1,200
+            </td>
+            <td class="qs-mono text-right">
+             128.40
+            </td>
+            <td class="qs-mono text-right">
+             134.80
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +7,680.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +4.98%
+            </td>
+            <td class="qs-mono text-right">
+             161,760.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             601318
+            </td>
+            <td>
+             中国平安
+            </td>
+            <td class="qs-mono text-right">
+             2,000
+            </td>
+            <td class="qs-mono text-right">
+             2,000
+            </td>
+            <td class="qs-mono text-right">
+             44.85
+            </td>
+            <td class="qs-mono text-right">
+             43.95
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-fall);">
+             -1,800.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-fall);">
+             -2.01%
+            </td>
+            <td class="qs-mono text-right">
+             87,900.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             600036
+            </td>
+            <td>
+             招商银行
+            </td>
+            <td class="qs-mono text-right">
+             1,500
+            </td>
+            <td class="qs-mono text-right">
+             1,500
+            </td>
+            <td class="qs-mono text-right">
+             33.20
+            </td>
+            <td class="qs-mono text-right">
+             34.15
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +1,425.00
+            </td>
+            <td class="qs-mono text-right" style="color: var(--qs-state-rise);">
+             +2.86%
+            </td>
+            <td class="qs-mono text-right">
+             51,225.00
+            </td>
+            <td class="text-center">
+             <div class="flex justify-center gap-2">
+              <button class="qs-action-link" style="color: var(--qs-state-rise);" type="button">
+               买入
+              </button>
+              <button class="qs-action-link" style="color: var(--qs-state-fall);" type="button">
+               卖出
+              </button>
+             </div>
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </section>
+      <section class="qs-detail-panel" data-panel="signal" data-region="trade-history" id="panel-signal" role="tabpanel">
+       <div class="qs-card">
+        <div class="mb-3 flex items-center justify-between">
+         <h3 class="text-xs font-medium" style="color: var(--qs-ink-2);">
+          历史成交
+         </h3>
+         <span class="qs-caption rounded px-1.5 py-0.5" style="background: var(--qs-muted); color: var(--qs-ink-3);">
+          近 30 天
+         </span>
+        </div>
+        <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+         <table class="qs-table w-full min-w-[700px]">
+          <thead>
+           <tr>
+            <th>
+             日期
+            </th>
+            <th>
+             时间
+            </th>
+            <th>
+             方向
+            </th>
+            <th class="text-right">
+             价格
+            </th>
+            <th class="text-right">
+             数量
+            </th>
+            <th class="text-right">
+             金额
+            </th>
+            <th>
+             状态
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td class="qs-mono">
+             2024-09-08
+            </td>
+            <td class="qs-mono">
+             14:31:05
+            </td>
+            <td>
+             <span class="qs-caption rounded px-1.5 py-0.5" style="background: rgba(239,83,80,0.12); color: var(--qs-state-rise);">
+              买入
+             </span>
+            </td>
+            <td class="qs-mono text-right">
+             1,640.00
+            </td>
+            <td class="qs-mono text-right">
+             100
+            </td>
+            <td class="qs-mono text-right">
+             164,000.00
+            </td>
+            <td class="qs-caption" style="color: var(--qs-ink-3);">
+             已报
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             2024-09-05
+            </td>
+            <td class="qs-mono">
+             10:22:18
+            </td>
+            <td>
+             <span class="qs-caption rounded px-1.5 py-0.5" style="background: rgba(38,197,132,0.12); color: var(--qs-state-fall);">
+              卖出
+             </span>
+            </td>
+            <td class="qs-mono text-right">
+             1,635.00
+            </td>
+            <td class="qs-mono text-right">
+             50
+            </td>
+            <td class="qs-mono text-right">
+             81,750.00
+            </td>
+            <td class="qs-caption" style="color: var(--qs-ink-3);">
+             已成
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             2024-09-02
+            </td>
+            <td class="qs-mono">
+             09:45:33
+            </td>
+            <td>
+             <span class="qs-caption rounded px-1.5 py-0.5" style="background: rgba(239,83,80,0.12); color: var(--qs-state-rise);">
+              买入
+             </span>
+            </td>
+            <td class="qs-mono text-right">
+             1,580.00
+            </td>
+            <td class="qs-mono text-right">
+             150
+            </td>
+            <td class="qs-mono text-right">
+             237,000.00
+            </td>
+            <td class="qs-caption" style="color: var(--qs-ink-3);">
+             已成
+            </td>
+           </tr>
+           <tr>
+            <td class="qs-mono">
+             2024-08-28
+            </td>
+            <td class="qs-mono">
+             14:05:12
+            </td>
+            <td>
+             <span class="qs-caption rounded px-1.5 py-0.5" style="background: rgba(239,83,80,0.12); color: var(--qs-state-rise);">
+              买入
+             </span>
+            </td>
+            <td class="qs-mono text-right">
+             1,595.00
+            </td>
+            <td class="qs-mono text-right">
+             50
+            </td>
+            <td class="qs-mono text-right">
+             79,750.00
+            </td>
+            <td class="qs-caption" style="color: var(--qs-ink-3);">
+             已成
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </section>
+      <section class="qs-detail-panel" data-panel="order" data-region="order" id="panel-order" role="tabpanel">
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          持仓成本
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-order-cost" style="color: var(--qs-ink);">
+          1,580.00
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          当前盈亏
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-order-pnl" style="color: var(--qs-state-rise);">
+          +12,500.00
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          可用仓位
+         </div>
+         <div class="qs-mono text-xl font-semibold" id="detail-available" style="color: var(--qs-ink);">
+          74.4%
+         </div>
+        </div>
+        <div class="qs-card">
+         <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+          最新成交
+         </div>
+         <div class="qs-mono text-lg font-semibold" id="detail-last-trade" style="color: var(--qs-ink);">
+          1,642.50 × 200
+         </div>
+        </div>
+       </div>
+       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="qs-card">
+         <h3 class="text-xs font-medium mb-3 flex items-center gap-2" style="color: var(--qs-ink-2);">
+          <i class="w-4 h-4" data-lucide="arrow-left-right" style="color: var(--qs-primary)">
+          </i>
+          买卖五档
+         </h3>
+         <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+          <table class="qs-table w-full">
+           <thead>
+            <tr>
+             <th>
+              档位
+             </th>
+             <th class="qs-num">
+              买价
+             </th>
+             <th class="qs-num">
+              买量
+             </th>
+             <th class="qs-num">
+              卖价
+             </th>
+             <th class="qs-num">
+              卖量
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td>
+              买五
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+              1,640.00
+             </td>
+             <td class="qs-mono qs-num">
+              18
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              1,645.00
+             </td>
+             <td class="qs-mono qs-num">
+              22
+             </td>
+            </tr>
+            <tr>
+             <td>
+              买四
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+              1,641.00
+             </td>
+             <td class="qs-mono qs-num">
+              26
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              1,644.00
+             </td>
+             <td class="qs-mono qs-num">
+              30
+             </td>
+            </tr>
+            <tr>
+             <td>
+              买三
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+              1,641.50
+             </td>
+             <td class="qs-mono qs-num">
+              34
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              1,643.50
+             </td>
+             <td class="qs-mono qs-num">
+              28
+             </td>
+            </tr>
+            <tr>
+             <td>
+              买二
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+              1,642.00
+             </td>
+             <td class="qs-mono qs-num">
+              42
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              1,643.00
+             </td>
+             <td class="qs-mono qs-num">
+              38
+             </td>
+            </tr>
+            <tr>
+             <td>
+              买一
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+              1,642.50
+             </td>
+             <td class="qs-mono qs-num">
+              56
+             </td>
+             <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+              1,642.50
+             </td>
+             <td class="qs-mono qs-num">
+              48
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="grid grid-cols-3 gap-2 mt-3">
+          <div class="qs-card" style="padding: 12px; text-align: center;">
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            买一至买五累计
+           </div>
+           <div class="qs-mono text-sm font-semibold" style="color: var(--qs-state-rise)">
+            176 手
+           </div>
+          </div>
+          <div class="qs-card" style="padding: 12px; text-align: center;">
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            卖一至卖五累计
+           </div>
+           <div class="qs-mono text-sm font-semibold" style="color: var(--qs-state-fall)">
+            166 手
+           </div>
+          </div>
+          <div class="qs-card" style="padding: 12px; text-align: center;">
+           <div class="qs-caption mb-1" style="color: var(--qs-ink-3);">
+            委比
+           </div>
+           <div class="qs-mono text-sm font-semibold" style="color: var(--qs-state-rise)">
+            +2.9%
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="space-y-4">
+         <div class="qs-card">
+          <h3 class="text-xs font-medium mb-3 flex items-center gap-2" style="color: var(--qs-ink-2);">
+           <i class="w-4 h-4" data-lucide="activity" style="color: var(--qs-primary)">
+           </i>
+           盘口异动
+          </h3>
+          <ul class="space-y-2">
+           <li class="qs-body flex justify-between items-center">
+            <span>
+             14:32 大单买入
+            </span>
+            <span class="qs-mono" style="color: var(--qs-state-rise)">
+             120 手 @ 1,642.50
+            </span>
+           </li>
+           <li class="qs-body flex justify-between items-center">
+            <span>
+             14:28 大单买入
+            </span>
+            <span class="qs-mono" style="color: var(--qs-state-rise)">
+             85 手 @ 1,641.00
+            </span>
+           </li>
+           <li class="qs-body flex justify-between items-center">
+            <span>
+             14:15 大单卖出
+            </span>
+            <span class="qs-mono" style="color: var(--qs-state-fall)">
+             72 手 @ 1,643.50
+            </span>
+           </li>
+           <li class="qs-body flex justify-between items-center">
+            <span>
+             14:06 大单买入
+            </span>
+            <span class="qs-mono" style="color: var(--qs-state-rise)">
+             96 手 @ 1,640.00
+            </span>
+           </li>
+          </ul>
+         </div>
+         <div class="qs-card">
+          <h3 class="text-xs font-medium mb-3 flex items-center gap-2" style="color: var(--qs-ink-2);">
+           <i class="w-4 h-4" data-lucide="clock" style="color: var(--qs-primary)">
+           </i>
+           分时成交
+          </h3>
+          <div class="overflow-x-auto" style="border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md);">
+           <table class="qs-table w-full">
+            <thead>
+             <tr>
+              <th>
+               时间
+              </th>
+              <th class="qs-num">
+               价格
+              </th>
+              <th class="qs-num">
+               成交量
+              </th>
+              <th class="qs-num">
+               方向
+              </th>
+             </tr>
+            </thead>
+            <tbody>
+             <tr>
+              <td class="qs-mono">
+               14:32:05
+              </td>
+              <td class="qs-mono qs-num">
+               1,642.50
+              </td>
+              <td class="qs-mono qs-num">
+               120
+              </td>
+              <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+               买入
+              </td>
+             </tr>
+             <tr>
+              <td class="qs-mono">
+               14:31:48
+              </td>
+              <td class="qs-mono qs-num">
+               1,642.00
+              </td>
+              <td class="qs-mono qs-num">
+               35
+              </td>
+              <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+               买入
+              </td>
+             </tr>
+             <tr>
+              <td class="qs-mono">
+               14:31:22
+              </td>
+              <td class="qs-mono qs-num">
+               1,641.50
+              </td>
+              <td class="qs-mono qs-num">
+               58
+              </td>
+              <td class="qs-mono qs-num" style="color: var(--qs-state-fall)">
+               卖出
+              </td>
+             </tr>
+             <tr>
+              <td class="qs-mono">
+               14:30:55
+              </td>
+              <td class="qs-mono qs-num">
+               1,641.00
+              </td>
+              <td class="qs-mono qs-num">
+               22
+              </td>
+              <td class="qs-mono qs-num" style="color: var(--qs-state-rise)">
+               买入
+              </td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+     <!-- Disclaimer -->
+     <div class="qs-disclaimer rounded-md px-4 py-3 text-xs mt-5" style="background: var(--qs-muted); color: var(--qs-ink-2);">
+      <div class="flex items-start gap-2">
+       <i class="mt-0.5 h-4 w-4 flex-shrink-0" data-lucide="info" style="color: var(--qs-ink-3);">
+       </i>
+       <p>
+        模拟盘仅用于策略验证，不接入实盘交易。所有行情、资金、成交数据均为模拟生成，不构成任何投资建议。
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <style>
+   .qs-topnav { height:56px; }
+        .qs-topnav .qs-nav-link {
+            display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: var(--qs-radius-md);
+            font-size: 14px; font-weight: 500; color: rgba(242,242,245,0.72); text-decoration: none; white-space: nowrap;
+            transition: background .15s, color .15s;
+        }
+        .qs-topnav .qs-nav-link:hover { background: rgba(255,255,255,0.06); color: var(--qs-ink); }
+        .qs-topnav .qs-nav-link.active { background: rgba(45,212,191,0.12); color: var(--qs-primary); }
+        .qs-shell { display:flex; width:100vw; height:100vh; overflow:hidden; padding-top:56px; }
+        .qs-main { flex:1; display:flex; flex-direction:column; min-width:0; }
+        .qs-scroll { flex:1; overflow-y:auto; min-height:0; }
+
+        /* Sidebar */
+        .qs-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--qs-border);
+            background: var(--qs-surface);
+        }
+        .qs-sidebar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--qs-line);
+        }
+        .qs-sidebar-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--qs-ink);
+        }
+        .qs-sidebar-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .qs-sidebar-item {
+            display: block;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: var(--qs-radius-md);
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+            transition: background .15s, border-color .15s;
+            cursor: pointer;
+        }
+        .qs-sidebar-item:hover {
+            background: var(--qs-muted);
+        }
+        .qs-sidebar-item.active {
+            background: var(--qs-surface-2);
+            border-color: var(--qs-line);
+            box-shadow: var(--qs-shadow-1);
+        }
+        .qs-sidebar-item.active .qs-sidebar-name {
+            color: var(--qs-primary);
+        }
+        .qs-sidebar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .qs-sidebar-row + .qs-sidebar-row {
+            margin-top: 6px;
+        }
+        .qs-sidebar-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--qs-ink);
+        }
+        .qs-sidebar-code {
+            font-size: 11px;
+            color: var(--qs-ink-3);
+        }
+        .qs-sidebar-pnl {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Detail header */
+        .qs-detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid var(--qs-line);
+            border-radius: var(--qs-radius-lg);
+            background: var(--qs-card);
+            box-shadow: var(--qs-shadow-1);
+        }
+        .qs-detail-title {
+            min-width: 0;
+        }
+
+        /* Detail tabs */
+        .qs-detail-tabs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-bottom: 1px solid var(--qs-line);
+            margin-bottom: 16px;
+        }
+        .qs-detail-tab {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            border-radius: var(--qs-radius-md) var(--qs-radius-md) 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--qs-ink-2);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: color .15s, background .15s;
+        }
+        .qs-detail-tab:hover {
+            color: var(--qs-ink);
+            background: var(--qs-muted);
+        }
+        .qs-detail-tab.active {
+            color: var(--qs-primary);
+            background: var(--qs-surface-2);
+            border-bottom-color: var(--qs-primary);
+        }
+
+        /* Detail panels */
+        .qs-detail-panels {
+            position: relative;
+        }
+        .qs-detail-panel {
+            display: none;
+        }
+        .qs-detail-panel.active {
+            display: block;
+            animation: qs-fade-in .2s ease;
+        }
+        @keyframes qs-fade-in {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Common components */
+        .qs-topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+        .qs-section { margin-bottom: 20px; }
+        .qs-kpi-card {
+            border: 1px solid var(--qs-line);
+            border-radius: var(--qs-radius-md);
+            background: var(--qs-card);
+            padding: 14px;
+            box-shadow: var(--qs-shadow-1);
+        }
+        .qs-card {
+            border: 1px solid var(--qs-line);
+            border-radius: var(--qs-radius-md);
+            background: var(--qs-card);
+            padding: 14px;
+            box-shadow: var(--qs-shadow-1);
+        }
+        .qs-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--qs-radius-md);
+            color: var(--qs-ink-2);
+            background: transparent;
+            border: 1px solid var(--qs-line);
+            cursor: pointer;
+        }
+        .qs-icon-btn:hover {
+            background: var(--qs-muted);
+            color: var(--qs-ink);
+        }
+        .qs-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: var(--qs-radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .qs-btn-primary {
+            background: var(--qs-primary);
+            color: var(--qs-primary-foreground);
+        }
+        .qs-btn-outline {
+            background: transparent;
+            color: var(--qs-ink);
+            border-color: var(--qs-line);
+        }
+        .qs-btn-outline:hover {
+            background: var(--qs-muted);
+        }
+        .qs-action-link {
+            font-size: 12px;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .qs-action-link:hover {
+            opacity: 0.8;
+        }
+        .qs-table {
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .qs-table thead tr {
+            background: var(--qs-surface-2);
+        }
+        .qs-table th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 500;
+            color: var(--qs-ink-2);
+            border-bottom: 1px solid var(--qs-line);
+        }
+        .qs-table td {
+            padding: 10px 12px;
+            color: var(--qs-ink);
+            border-bottom: 1px solid var(--qs-line);
+            white-space: nowrap;
+        }
+        .qs-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .qs-table tbody tr:hover {
+            background: var(--qs-muted);
+        }
+        @media (max-width: 1023px) {
+            .qs-detail-header { flex-direction: column; align-items: flex-start; }
+            .qs-sidebar { width: 200px; }
+        }
+        @media (max-width: 767px) {
+            .qs-shell { flex-direction: column; padding-top: 56px; height: auto; min-height: 100vh; }
+            .qs-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--qs-line); max-height: 260px; }
+            .qs-main { min-height: calc(100vh - 56px); }
+        }
+    
+        @media (max-width: 767px) { .qs-kline-chart-wrap { height: 240px !important; } }
+  </style>
+  <script>
+   (function() {
+            const positions = {
+                '600519': {
+                    name: '贵州茅台', code: '600519', strategy: '趋势动量', price: '1,642.50', priceChange: '+1.25%', pnl: '+12,500.00', size: '25.6%',
+                    cost: '1,580.00', qty: '200', marketValue: '328,500.00', pnlAmount: '+12,500.00', pnlRate: '+3.95%',
+                    stopLoss: '1,501.00', profitTarget: '1,756.00', weight: '25.6%', riskDistance: '-8.62%', rewardDistance: '+6.91%',
+                    pe: '28.45', pb: '8.12', dividend: '1.52%', roe: '32.8%', revenueYoy: '+16.2%', profitYoy: '+19.5%',
+                    grossMargin: '91.6%', netMargin: '52.7%',
+                    summary: '贵州茅台为高端白酒龙头，品牌护城河深厚，现金流稳健。当前估值处于近三年中枢偏上位置，盈利增速保持双位数，适合作为核心底仓配置。策略上采用趋势动量跟踪，关注批价及动销数据变化。',
+                    chart: [1580, 1595, 1578, 1605, 1622, 1610, 1635, 1628, 1645, 1642, 1655, 1640, 1638, 1642]
+                },
+                '300750': {
+                    name: '宁德时代', code: '300750', strategy: '成长回归', price: '192.30', priceChange: '+0.86%', pnl: '+3,350.00', size: '7.5%',
+                    cost: '185.60', qty: '500', marketValue: '96,150.00', pnlAmount: '+3,350.00', pnlRate: '+3.61%',
+                    stopLoss: '171.00', profitTarget: '212.00', weight: '7.5%', riskDistance: '-11.08%', rewardDistance: '+10.24%',
+                    pe: '22.30', pb: '5.40', dividend: '0.85%', roe: '18.5%', revenueYoy: '+9.8%', profitYoy: '+13.4%',
+                    grossMargin: '22.3%', netMargin: '10.2%',
+                    summary: '宁德时代是全球动力电池龙头，市占率稳居第一。短期受原材料价格波动及海外政策影响，但中长期受益于电动化渗透率提升。成长回归策略关注估值修复与订单改善信号。',
+                    chart: [186, 184, 188, 190, 189, 192, 195, 193, 191, 194, 192, 190, 189, 192]
+                },
+                '002594': {
+                    name: '比亚迪', code: '002594', strategy: '波段反转', price: '241.20', priceChange: '-0.42%', pnl: '-5,840.00', size: '15.0%',
+                    cost: '248.50', qty: '800', marketValue: '192,960.00', pnlAmount: '-5,840.00', pnlRate: '-2.94%',
+                    stopLoss: '228.00', profitTarget: '275.00', weight: '15.0%', riskDistance: '-5.47%', rewardDistance: '+14.01%',
+                    pe: '26.80', pb: '5.10', dividend: '0.65%', roe: '21.3%', revenueYoy: '+21.5%', profitYoy: '+29.4%',
+                    grossMargin: '21.9%', netMargin: '5.0%',
+                    summary: '比亚迪为国内新能源汽车龙头，垂直整合优势明显。波段反转策略基于短期超跌反弹，需关注月度销量、价格战及出海进展。',
+                    chart: [249, 247, 245, 243, 240, 238, 242, 244, 241, 239, 237, 240, 242, 241]
+                },
+                '000858': {
+                    name: '五粮液', code: '000858', strategy: '价值防御', price: '134.80', priceChange: '+1.12%', pnl: '+7,680.00', size: '12.6%',
+                    cost: '128.40', qty: '1,200', marketValue: '161,760.00', pnlAmount: '+7,680.00', pnlRate: '+4.98%',
+                    stopLoss: '120.00', profitTarget: '150.00', weight: '12.6%', riskDistance: '-10.98%', rewardDistance: '+11.28%',
+                    pe: '19.20', pb: '5.50', dividend: '2.10%', roe: '24.6%', revenueYoy: '+12.3%', profitYoy: '+14.8%',
+                    grossMargin: '75.8%', netMargin: '37.2%',
+                    summary: '五粮液为浓香型白酒龙头，千元价格带核心单品稳健。价值防御策略看重其高股息与估值安全边际，适合震荡市配置。',
+                    chart: [129, 130, 128, 131, 133, 132, 134, 135, 133, 134, 136, 135, 134, 135]
+                },
+                '601318': {
+                    name: '中国平安', code: '601318', strategy: '高股息', price: '43.95', priceChange: '-0.35%', pnl: '-1,800.00', size: '6.8%',
+                    cost: '44.85', qty: '2,000', marketValue: '87,900.00', pnlAmount: '-1,800.00', pnlRate: '-2.01%',
+                    stopLoss: '40.50', profitTarget: '50.00', weight: '6.8%', riskDistance: '-7.85%', rewardDistance: '+13.77%',
+                    pe: '8.60', pb: '0.85', dividend: '5.80%', roe: '16.2%', revenueYoy: '+3.2%', profitYoy: '+5.1%',
+                    grossMargin: '—', netMargin: '12.4%',
+                    summary: '中国平安为综合金融集团，寿险改革逐步见效，股息率具备吸引力。高股息策略关注其分红稳定性及负债端改善。',
+                    chart: [45, 44.8, 44.5, 44.2, 43.9, 43.6, 43.8, 44, 43.7, 43.5, 43.9, 44.1, 43.8, 44]
+                },
+                '600036': {
+                    name: '招商银行', code: '600036', strategy: '高股息', price: '34.15', priceChange: '+0.56%', pnl: '+1,425.00', size: '4.0%',
+                    cost: '33.20', qty: '1,500', marketValue: '51,225.00', pnlAmount: '+1,425.00', pnlRate: '+2.86%',
+                    stopLoss: '30.80', profitTarget: '38.00', weight: '4.0%', riskDistance: '-9.81%', rewardDistance: '+11.27%',
+                    pe: '6.20', pb: '0.92', dividend: '5.40%', roe: '15.8%', revenueYoy: '-1.5%', profitYoy: '+2.3%',
+                    grossMargin: '—', netMargin: '43.5%',
+                    summary: '招商银行零售银行标杆，资产质量稳健，分红率领先同业。高股息策略将其作为低波动防御仓位。',
+                    chart: [33.5, 33.2, 33.0, 33.4, 33.6, 33.8, 34.0, 33.9, 34.2, 34.1, 33.9, 34.0, 34.2, 34.2]
+                },
+                '000333': {
+                    name: '美的集团', code: '000333', strategy: '质量因子', price: '62.35', priceChange: '+0.28%', pnl: '+945.00', size: '3.9%',
+                    cost: '61.30', qty: '900', marketValue: '56,115.00', pnlAmount: '+945.00', pnlRate: '+1.72%',
+                    stopLoss: '56.00', profitTarget: '70.00', weight: '3.9%', riskDistance: '-10.18%', rewardDistance: '+12.27%',
+                    pe: '13.50', pb: '2.80', dividend: '3.90%', roe: '22.1%', revenueYoy: '+7.8%', profitYoy: '+12.0%',
+                    grossMargin: '26.5%', netMargin: '9.6%',
+                    summary: '美的集团为全球家电龙头，现金流充沛，ROE 稳定。质量因子策略看重其稳健的盈利能力和治理结构。',
+                    chart: [61.5, 61.2, 61.8, 62.0, 61.6, 62.2, 62.5, 62.1, 62.4, 62.0, 62.3, 62.6, 62.4, 62.4]
+                }
+            };
+
+            const fundamentalsData = {
+                '600519': {
+                    marketCap: '21,050 亿', floatCap: '21,050 亿',
+                    financials: {
+                        revenue: ['1,061.7', '1,275.4', '1,505.6', '1,716.2'],
+                        np: ['524.6', '627.2', '747.3', '862.4'],
+                        deduct: ['521.8', '623.5', '742.1', '855.6'],
+                        cf: ['640.3', '366.0', '665.9', '780.5']
+                    },
+                    fundHold: '6.2%', northHold: '4.1%',
+                    topHolders: [
+                        { name: '中国贵州茅台酒厂', qty: '6.78 亿', ratio: '53.96%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算有限公司', qty: '0.92 亿', ratio: '7.30%', change: '-0.12%', changeColor: 'var(--qs-state-fall)' },
+                        { name: '贵州省国有资本运营', qty: '0.57 亿', ratio: '4.54%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '中央汇金资产管理', qty: '0.10 亿', ratio: '0.80%', change: '0.00%', changeColor: 'var(--qs-ink-3)' }
+                    ]
+                },
+                '300750': {
+                    marketCap: '8,460 亿', floatCap: '7,120 亿',
+                    financials: {
+                        revenue: ['1,303.6', '3,285.9', '4,009.2', '4,580.0'],
+                        np: ['159.3', '307.3', '441.2', '510.5'],
+                        deduct: ['134.4', '282.1', '401.0', '465.0'],
+                        cf: ['429.1', '612.1', '928.3', '1,050.0']
+                    },
+                    fundHold: '8.5%', northHold: '6.2%',
+                    topHolders: [
+                        { name: '宁波梅山保税港区瑞庭投资', qty: '5.70 亿', ratio: '24.43%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算有限公司', qty: '3.42 亿', ratio: '14.67%', change: '+0.35%', changeColor: 'var(--qs-state-rise)' },
+                        { name: '李平', qty: '1.62 亿', ratio: '6.94%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '西藏鸿商资本投资', qty: '0.78 亿', ratio: '3.35%', change: '-0.10%', changeColor: 'var(--qs-state-fall)' }
+                    ]
+                },
+                '002594': {
+                    marketCap: '7,020 亿', floatCap: '3,860 亿',
+                    financials: {
+                        revenue: ['2,161.4', '4,240.6', '6,023.2', '7,200.0'],
+                        np: ['30.5', '166.2', '300.4', '380.0'],
+                        deduct: ['12.5', '156.4', '284.6', '360.0'],
+                        cf: ['654.7', '1,408.4', '1,697.3', '1,900.0']
+                    },
+                    fundHold: '5.8%', northHold: '3.5%',
+                    topHolders: [
+                        { name: '王传福', qty: '10.36 亿', ratio: '35.58%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '吕向阳', qty: '2.39 亿', ratio: '8.22%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '融捷投资控股', qty: '1.55 亿', ratio: '5.33%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算有限公司', qty: '1.12 亿', ratio: '3.85%', change: '+0.18%', changeColor: 'var(--qs-state-rise)' }
+                    ]
+                },
+                '000858': {
+                    marketCap: '5,230 亿', floatCap: '5,230 亿',
+                    financials: {
+                        revenue: ['662.1', '739.7', '832.7', '920.0'],
+                        np: ['233.8', '266.9', '302.1', '340.0'],
+                        deduct: ['233.3', '265.3', '300.7', '338.0'],
+                        cf: ['223.0', '244.3', '417.4', '480.0']
+                    },
+                    fundHold: '7.1%', northHold: '4.8%',
+                    topHolders: [
+                        { name: '宜宾发展控股集团有限公司', qty: '13.95 亿', ratio: '35.93%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '宜宾五粮液集团', qty: '7.62 亿', ratio: '19.63%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算有限公司', qty: '1.85 亿', ratio: '4.77%', change: '-0.08%', changeColor: 'var(--qs-state-fall)' },
+                        { name: '中国证券金融股份', qty: '0.92 亿', ratio: '2.38%', change: '0.00%', changeColor: 'var(--qs-ink-3)' }
+                    ]
+                },
+                '601318': {
+                    marketCap: '8,010 亿', floatCap: '5,470 亿',
+                    financials: {
+                        revenue: ['11,804.4', '11,105.7', '9,137.9', '9,200.0'],
+                        np: ['1,016.2', '837.7', '856.6', '900.0'],
+                        deduct: ['1,017.3', '841.6', '862.4', '910.0'],
+                        cf: ['1,510.4', '1,330.5', '1,160.2', '1,250.0']
+                    },
+                    fundHold: '4.2%', northHold: '2.8%',
+                    topHolders: [
+                        { name: '香港中央结算有限公司', qty: '4.62 亿', ratio: '25.31%', change: '+0.22%', changeColor: 'var(--qs-state-rise)' },
+                        { name: '深圳市投资控股', qty: '1.94 亿', ratio: '10.62%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算（代理人）', qty: '1.58 亿', ratio: '8.64%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '中国证券金融股份', qty: '0.55 亿', ratio: '3.01%', change: '0.00%', changeColor: 'var(--qs-ink-3)' }
+                    ]
+                },
+                '600036': {
+                    marketCap: '8,620 亿', floatCap: '7,050 亿',
+                    financials: {
+                        revenue: ['3,312.5', '3,447.8', '3,391.2', '3,450.0'],
+                        np: ['1,199.2', '1,380.1', '1,466.0', '1,520.0'],
+                        deduct: ['1,196.0', '1,375.5', '1,460.2', '1,510.0'],
+                        cf: ['2,105.3', '1,807.9', '1,920.4', '2,000.0']
+                    },
+                    fundHold: '3.8%', northHold: '5.1%',
+                    topHolders: [
+                        { name: '香港中央结算有限公司', qty: '4.18 亿', ratio: '16.58%', change: '+0.15%', changeColor: 'var(--qs-state-rise)' },
+                        { name: '招商局轮船', qty: '3.16 亿', ratio: '12.53%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '中国远洋海运集团', qty: '1.79 亿', ratio: '7.10%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算（代理人）', qty: '1.25 亿', ratio: '4.96%', change: '0.00%', changeColor: 'var(--qs-ink-3)' }
+                    ]
+                },
+                '000333': {
+                    marketCap: '4,360 亿', floatCap: '4,300 亿',
+                    financials: {
+                        revenue: ['3,433.6', '3,457.1', '3,720.4', '3,950.0'],
+                        np: ['285.7', '295.5', '337.2', '365.0'],
+                        deduct: ['259.3', '286.1', '329.7', '360.0'],
+                        cf: ['350.9', '346.6', '579.9', '620.0']
+                    },
+                    fundHold: '6.4%', northHold: '4.5%',
+                    topHolders: [
+                        { name: '美的控股有限公司', qty: '22.27 亿', ratio: '29.06%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '香港中央结算有限公司', qty: '12.05 亿', ratio: '15.73%', change: '+0.20%', changeColor: 'var(--qs-state-rise)' },
+                        { name: '中国证券金融股份', qty: '1.98 亿', ratio: '2.58%', change: '0.00%', changeColor: 'var(--qs-ink-3)' },
+                        { name: '方洪波', qty: '1.17 亿', ratio: '1.53%', change: '0.00%', changeColor: 'var(--qs-ink-3)' }
+                    ]
+                }
+            };
+
+            let priceChart = null;
+
+            function renderPriceChart(data) {
+                const ctx = document.getElementById('detailPriceChart');
+                if (!ctx) return;
+                const labels = Array.from({length: data.length}, (_, i) => `T-${data.length - 1 - i}`);
+                if (priceChart) {
+                    priceChart.data.labels = labels;
+                    priceChart.data.datasets[0].data = data;
+                    priceChart.update();
+                    return;
+                }
+                priceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '收盘价',
+                            data: data,
+                            borderColor: 'var(--qs-primary)',
+                            backgroundColor: 'rgba(45, 212, 191, 0.12)',
+                            fill: true,
+                            tension: 0.35,
+                            pointRadius: 3,
+                            pointBackgroundColor: 'var(--qs-primary)',
+                            pointBorderColor: 'var(--qs-card)',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'var(--qs-popover)',
+                                titleColor: 'var(--qs-ink)',
+                                bodyColor: 'var(--qs-ink-2)',
+                                borderColor: 'var(--qs-line)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'var(--qs-line)', drawBorder: false },
+                                ticks: { color: 'var(--qs-ink-3)', font: { size: 11 } }
+                            },
+                            y: {
+                                grid: { color: 'var(--qs-line)', drawBorder: false },
+                                ticks: {
+                                    color: 'var(--qs-ink-3)',
+                                    font: { size: 11 },
+                                    callback: function(value) { return value.toLocaleString(); }
+                                }
+                            }
+                        },
+                        interaction: { mode: 'nearest', axis: 'x', intersect: false }
+                    }
+                });
+            }
+
+            function setText(id, value) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            }
+
+            function setColorBySign(elId, value) {
+                const el = document.getElementById(elId);
+                if (!el) return;
+                const v = parseFloat(String(value).replace(/[+%$,]/g, ''));
+                if (value.indexOf('-') === 0 || v < 0) {
+                    el.style.color = 'var(--qs-state-fall)';
+                } else if (v > 0) {
+                    el.style.color = 'var(--qs-state-rise)';
+                } else {
+                    el.style.color = 'var(--qs-ink)';
+                }
+            }
+
+            function loadPosition(code) {
+                const p = positions[code];
+                if (!p) return;
+                setText('detail-stock-name', p.name);
+                setText('detail-stock-code', p.code);
+                setText('detail-strategy', p.strategy);
+                setText('detail-price', p.price);
+                setText('detail-price-change', p.priceChange);
+                setText('detail-pnl', p.pnl);
+                setText('detail-size', p.size);
+                setText('detail-cost', p.cost);
+                setText('detail-order-cost', p.cost);
+                setText('detail-current', p.price);
+                setText('detail-qty', p.qty);
+                setText('detail-market-value', p.marketValue);
+                setText('detail-pnl-amount', p.pnlAmount);
+                setText('detail-order-pnl', p.pnlAmount);
+                setText('detail-pnl-rate', p.pnlRate);
+                setText('detail-stop-loss', p.stopLoss);
+                setText('detail-profit-target', p.profitTarget);
+                setText('detail-weight', p.weight);
+                setText('detail-risk-distance', p.riskDistance);
+                setText('detail-reward-distance', p.rewardDistance);
+                setText('detail-pe', p.pe);
+                setText('detail-pb', p.pb);
+                setText('detail-dividend', p.dividend);
+                setText('detail-roe', p.roe);
+                setText('detail-revenue-yoy', p.revenueYoy);
+                setText('detail-profit-yoy', p.profitYoy);
+                setText('detail-gross-margin', p.grossMargin);
+                setText('detail-net-margin', p.netMargin);
+                setText('detail-fundamental-summary', p.summary);
+
+                setColorBySign('detail-price-change', p.priceChange);
+                setColorBySign('detail-pnl', p.pnl);
+                setColorBySign('detail-pnl-amount', p.pnlAmount);
+                setColorBySign('detail-order-pnl', p.pnlAmount);
+                setColorBySign('detail-pnl-rate', p.pnlRate);
+                setColorBySign('detail-revenue-yoy', p.revenueYoy);
+                setColorBySign('detail-profit-yoy', p.profitYoy);
+
+                const f = fundamentalsData[code];
+                if (f) {
+                    setText('detail-market-cap', f.marketCap);
+                    setText('detail-float-cap', f.floatCap);
+                    setText('detail-fund-hold', f.fundHold);
+                    setText('detail-north-hold', f.northHold);
+
+                    const finTbody = document.getElementById('detail-financials');
+                    if (finTbody) {
+                        finTbody.innerHTML = `
+                            <tr><td>营业收入</td>${f.financials.revenue.map(v => `<td class="qs-mono qs-num">${v}</td>`).join('')}</tr>
+                            <tr><td>归母净利润</td>${f.financials.np.map(v => `<td class="qs-mono qs-num">${v}</td>`).join('')}</tr>
+                            <tr><td>扣非净利润</td>${f.financials.deduct.map(v => `<td class="qs-mono qs-num">${v}</td>`).join('')}</tr>
+                            <tr><td>经营现金流</td>${f.financials.cf.map(v => `<td class="qs-mono qs-num">${v}</td>`).join('')}</tr>
+                        `;
+                    }
+
+                    const holdersTbody = document.getElementById('detail-top-holders');
+                    if (holdersTbody) {
+                        holdersTbody.innerHTML = f.topHolders.map(h => `
+                            <tr>
+                                <td class="truncate max-w-[10rem]">${h.name}</td>
+                                <td class="qs-mono qs-num">${h.qty}</td>
+                                <td class="qs-mono qs-num">${h.ratio}</td>
+                                <td class="qs-mono qs-num" style="color: ${h.changeColor}">${h.change}</td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+
+                const available = (100 - parseFloat(p.weight)).toFixed(1) + '%';
+                setText('detail-available', available);
+                setText('detail-last-trade', p.price + ' × ' + p.qty);
+
+                const bar = document.getElementById('detail-weight-bar');
+                if (bar) bar.style.width = p.weight;
+
+                renderPriceChart(p.chart);
+            }
+
+            // Sidebar selection
+            document.querySelectorAll('.qs-sidebar-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.qs-sidebar-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    loadPosition(this.dataset.code);
+                });
+            });
+
+            // Tab switching
+            document.querySelectorAll('.qs-detail-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.dataset.tab;
+                    document.querySelectorAll('.qs-detail-tab').forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
+                    document.querySelectorAll('.qs-detail-panel').forEach(p => {
+                        p.classList.toggle('active', p.dataset.panel === target);
+                    });
+                });
+            });
+
+            // Initialize first item
+            const first = document.querySelector('.qs-sidebar-item.active');
+            if (first) loadPosition(first.dataset.code);
+        })();
+    
+(function() {
+    let klineChart = null;
+    let currentTimeframe = 'day';
+
+    function readPrice() {
+        const el = document.getElementById('detail-price');
+        if (!el) return 58.72;
+        const v = parseFloat(el.textContent.replace(/,/g, ''));
+        return isNaN(v) ? 58.72 : v;
+    }
+
+    function readChangePct() {
+        const el = document.getElementById('detail-price-change');
+        if (!el) return 0;
+        const txt = el.textContent.replace('%', '').trim();
+        const v = parseFloat(txt);
+        return isNaN(v) ? 0 : v;
+    }
+
+    function genOHLC(basePrice, count, timeframe) {
+        const data = [];
+        let price = basePrice * 0.92;
+        const step = basePrice * (timeframe === 'month' ? 0.025 : timeframe === 'week' ? 0.015 : 0.008);
+        for (let i = 0; i < count; i++) {
+            const change = (Math.random() - 0.48) * step;
+            const open = price;
+            const close = price + change;
+            const high = Math.max(open, close) + Math.random() * step * 0.4;
+            const low = Math.min(open, close) - Math.random() * step * 0.4;
+            data.push({ x: i, o: open, h: high, l: low, c: close });
+            price = close;
+        }
+        if (data.length) data[data.length - 1].c = basePrice;
+        return data;
+    }
+
+    function renderKline(timeframe) {
+        const canvas = document.getElementById('kline-chart');
+        if (!canvas || typeof Chart === 'undefined') return;
+        const ctx = canvas.getContext('2d');
+        const basePrice = readPrice();
+        const count = timeframe === 'intraday' ? 48 : (timeframe === 'month' ? 30 : (timeframe === 'week' ? 60 : 90));
+        const ohlc = genOHLC(basePrice, count, timeframe);
+        const labels = ohlc.map((_, i) => i + 1);
+        const closes = ohlc.map(d => d.c);
+
+        if (klineChart) klineChart.destroy();
+
+        const rise = getComputedStyle(document.documentElement).getPropertyValue('--qs-state-rise').trim() || '#ef5350';
+        const fall = getComputedStyle(document.documentElement).getPropertyValue('--qs-state-fall').trim() || '#26c584';
+
+        klineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '收盘价',
+                    data: closes,
+                    borderColor: function(context) {
+                        const chart = context.chart;
+                        const {ctx, chartArea} = chart;
+                        if (!chartArea) return null;
+                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                        gradient.addColorStop(0, rise);
+                        gradient.addColorStop(1, fall);
+                        return gradient;
+                    },
+                    segment: {
+                        borderColor: function(ctx) {
+                            const idx = ctx.p0DataIndex;
+                            if (idx === 0) return 'var(--qs-primary)';
+                            const prev = ctx.chart.data.datasets[0].data[idx - 1];
+                            const cur = ctx.chart.data.datasets[0].data[idx];
+                            return cur >= prev ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+                        }
+                    },
+                    backgroundColor: 'rgba(45, 212, 191, 0.08)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'var(--qs-popover)',
+                        titleColor: 'var(--qs-ink)',
+                        bodyColor: 'var(--qs-ink-2)',
+                        borderColor: 'var(--qs-line)',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                const d = ohlc[context.dataIndex];
+                                return '开 ' + d.o.toFixed(2) + ' 高 ' + d.h.toFixed(2) + ' 低 ' + d.l.toFixed(2) + ' 收 ' + d.c.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { display: false },
+                    y: {
+                        position: 'right',
+                        grid: { color: 'var(--qs-line)', drawBorder: false },
+                        ticks: { color: 'var(--qs-ink-3)', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateKlineHeader() {
+        const price = readPrice();
+        const changePct = readChangePct();
+        const changeAmount = price * changePct / 100;
+        const changeColor = changePct >= 0 ? 'var(--qs-state-rise)' : 'var(--qs-state-fall)';
+        const sign = changePct >= 0 ? '+' : '';
+        const elPrice = document.getElementById('klineCurrentPrice');
+        const elChange = document.getElementById('klineChange');
+        const elHigh = document.getElementById('klineHigh');
+        const elLow = document.getElementById('klineLow');
+        const elOpen = document.getElementById('klineOpen');
+        const elPreClose = document.getElementById('klinePreClose');
+        const elChangeAmount = document.getElementById('klineChangeAmount');
+        if (elPrice) elPrice.textContent = price.toFixed(2);
+        if (elChange) { elChange.textContent = sign + changePct.toFixed(2) + '%'; elChange.style.color = changeColor; }
+        if (elChangeAmount) elChangeAmount.textContent = sign + changeAmount.toFixed(2);
+        if (elHigh) elHigh.textContent = (price * 1.018).toFixed(2);
+        if (elLow) elLow.textContent = (price * 0.982).toFixed(2);
+        if (elOpen) elOpen.textContent = (price * 0.995).toFixed(2);
+        if (elPreClose) elPreClose.textContent = (price / (1 + changePct/100)).toFixed(2);
+        const elNav = document.getElementById('klineNav');
+        const elPremium = document.getElementById('klinePremium');
+        if (elNav) elNav.textContent = price.toFixed(3);
+        if (elPremium) { elPremium.textContent = sign + (changePct * 0.1).toFixed(2) + '%'; elPremium.style.color = changeColor; }
+    }
+
+    document.querySelectorAll('.qs-kline-time').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.qs-kline-time').forEach(b => { b.classList.remove('active'); b.style.color = 'var(--qs-ink-2)'; b.style.background = 'transparent'; });
+            this.classList.add('active');
+            this.style.color = 'var(--qs-ink)';
+            this.style.background = 'var(--qs-primary)';
+            currentTimeframe = this.dataset.timeframe;
+            renderKline(currentTimeframe);
+        });
+    });
+
+    window.renderKlineForCurrent = function() {
+        updateKlineHeader();
+        renderKline(currentTimeframe);
+    };
+
+    setTimeout(() => { updateKlineHeader(); renderKline(currentTimeframe); }, 0);
+})();
+  </script>
+  <script>
+   lucide.createIcons();
+  </script>
+ </body>
+</html>

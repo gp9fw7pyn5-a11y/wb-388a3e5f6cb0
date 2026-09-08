@@ -98,64 +98,131 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
   </header>
 
   <main class="content">
-<!--QS_SIM_BEGIN--><div style="padding:20px 22px 40px;max-width:1080px;margin:0 auto;">
-<h1 style="font-size:20px;color:var(--qs-ink,#f2f2f5);margin:0 0 4px;">模拟盘 · 系统真实操作台账</h1>
-<div style="font-size:12px;color:var(--qs-ink-3,#6c6c80);margin-bottom:16px;">虚拟资金 10 万 · T+1 开盘成交 · 试运行≤1成 · 挂单/成交/对账全自动 · 数据时点 2026-09-07 收盘</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;">
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">总资产（虚拟）</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">¥100,000</div></div>
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">可用现金</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">¥95,978</div></div>
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">持仓市值</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">¥3,738</div></div>
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">仓位</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">3.7%</div></div>
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">累计手续费</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">¥19</div></div>
-<div style="padding:14px 16px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:10px;"><div style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">已结战绩</div><div class="qs-mono" style="font-size:18px;font-weight:600;color:var(--qs-ink,#f2f2f5);margin-top:4px;">1笔 · 0胜</div><div style="font-size:10px;color:var(--qs-ink-3,#6c6c80);margin-top:2px;">平均 -4.78%/笔</div></div>
-</div>
-<div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:12px;">
-<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;"><b style="color:var(--qs-ink,#f2f2f5);font-size:15px;">在途持仓</b><span style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">已成交未平仓 · 止损/目标为纪律线</span></div>
-<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:560px;">
-<thead><tr><th style="padding:8px;text-align:left;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">标的</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">成交价</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">现价</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">股数</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">市值</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">浮动盈亏</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">止损</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">目标</th></tr></thead><tbody><tr>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);"><b style="color:var(--qs-ink,#f2f2f5);">招商轮船</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">601872</span></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">19.018</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">18.69<br><span style="font-size:10px;color:var(--qs-ink-3,#6c6c80);">2026-09-07收</span></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">200</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">3,738</td>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;"><span style="color:var(--qs-state-fall, #26c584);">-1.72%</span></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;color:var(--qs-state-fall,#26c584);">17.53</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;color:var(--qs-state-rise,#ef5350);">22.34</td>
-</tr></tbody></table></div></div>
-<div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:12px;">
-<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;"><b style="color:var(--qs-ink,#f2f2f5);font-size:15px;">挂单等待</b><span style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">回到买点区才成交，涨离不追</span></div>
-<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:560px;">
-<thead><tr><th style="padding:8px;text-align:left;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">标的</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">买入区</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">股数</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">止损</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">目标</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">盈亏比</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">状态</th></tr></thead><tbody><tr>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);"><b style="color:var(--qs-ink,#f2f2f5);">爱科赛博</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">688719</span></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">49.58~50.58</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">100</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">49.04</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">60.7</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">6.57</td>
-<td class="qs-caption" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;color:var(--qs-state-warning,#f59e0b);">待成交 · 2026-09-08</td>
-</tr><tr>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);"><b style="color:var(--qs-ink,#f2f2f5);">兴瑞科技</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">002937</span></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">29.95~30.56</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">100</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">29.62</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">36.67</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">6.51</td>
-<td class="qs-caption" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;color:var(--qs-state-warning,#f59e0b);">待成交 · 2026-09-08</td>
-</tr></tbody></table></div></div>
-<div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface,#141419);border:1px solid var(--qs-line,#26262e);border-radius:12px;">
-<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;"><b style="color:var(--qs-ink,#f2f2f5);font-size:15px;">已结台账</b><span style="font-size:11px;color:var(--qs-ink-3,#6c6c80);">每笔平仓自动入账，胜率/盈亏比/期望三指标同屏（铁律74）</span></div>
-<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:560px;">
-<thead><tr><th style="padding:8px;text-align:left;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">标的</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">买入日</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">平仓日</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">收益</th><th style="padding:8px;text-align:right;color:var(--qs-ink-3,#6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line,#26262e);white-space:nowrap;">原因</th></tr></thead><tbody><tr>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);"><b style="color:var(--qs-ink,#f2f2f5);">沃森生物</b></td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">2026-08-31</td>
-<td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;">2026-09-02</td>
-<td style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;"><span style="color:var(--qs-state-fall, #26c584);">-4.78%</span></td>
-<td class="qs-caption" style="padding:10px 8px;border-bottom:1px solid var(--qs-line,#26262e);text-align:right;color:var(--qs-ink-2,#a0a0b0);">止损(盘中破位)</td>
-</tr></tbody></table></div></div>
-<div style="margin-top:16px;padding:12px 16px;background:var(--qs-surface-2,#1c1c24);border:1px solid var(--qs-line,#26262e);border-radius:10px;font-size:11px;color:var(--qs-ink-3,#6c6c80);line-height:1.8;">
-模拟盘用于策略验证，不接入实盘交易；虚拟10万、挂单次日开盘按T+1成交、滑点与手续费已计入。跑满验收期（波段40笔台账）达标前不构成任何实盘依据。不构成投资建议。价格以券商实盘为准。</div>
-</div><!--QS_SIM_END-->
-</main>
+    <!-- Account summary card -->
+    <section class="card" style="margin-bottom:10px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;">
+        <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">总资产 (CNY)</div>
+          <div class="qs-mono qs-h1" style="color:var(--qs-ink);margin-top:2px;" id="acc-total">1,000,000.00</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="qs-caption" style="color:var(--qs-ink-3);">今日盈亏</div>
+          <div class="qs-mono" id="acc-today" style="font-size:15px;font-weight:600;color:var(--qs-state-rise);">+3,250.00</div>
+          <div class="qs-mono qs-caption" id="acc-today-pct" style="color:var(--qs-state-rise);">+0.33%</div>
+        </div>
+      </div>
+      <div style="height:56px;margin-top:10px;">
+        <canvas id="acc-chart"></canvas>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--qs-line);">
+        <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">总盈亏</div>
+          <div class="qs-mono qs-body" id="acc-total-pnl" style="font-weight:600;color:var(--qs-state-rise);">+16,705.00</div>
+        </div>
+        <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">总盈亏率</div>
+          <div class="qs-mono qs-body" id="acc-total-pnl-pct" style="font-weight:600;color:var(--qs-state-rise);">+3.01%</div>
+        </div>
+        <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">可用资金</div>
+          <div class="qs-mono qs-body" id="acc-cash" style="font-weight:600;color:var(--qs-ink);">427,715.00</div>
+        </div>
+        <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">仓位占比</div>
+          <div class="qs-mono qs-body" id="acc-ratio" style="font-weight:600;color:var(--qs-ink);">57.2%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="mtab-bar" role="tablist">
+      <button class="mtab active" data-mtab="positions" role="tab">持仓</button>
+      <button class="mtab" data-mtab="orders" role="tab">委托</button>
+      <button class="mtab" data-mtab="trades" role="tab">成交</button>
+      <button class="mtab" data-mtab="funds" role="tab">资金</button>
+    </div>
+
+    <!-- Panel: 持仓 -->
+    <section class="mpanel active" data-mpanel="positions" id="panel-positions" role="tabpanel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span class="qs-caption" style="color:var(--qs-ink-3);">共 <span id="pos-count">4</span> 只持仓</span>
+        <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">市值 <span id="pos-mv" style="color:var(--qs-ink-2);">572,285.00</span></span>
+      </div>
+      <div id="position-list"></div>
+    </section>
+
+    <!-- Panel: 委托 -->
+    <section class="mpanel" data-mpanel="orders" id="panel-orders" role="tabpanel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span class="qs-caption" style="color:var(--qs-ink-3);">今日委托 <span id="ord-count">3</span> 笔</span>
+        <button id="cancel-all" style="font-size:11px;color:var(--qs-state-warning);background:transparent;border:none;cursor:pointer;">全部撤单</button>
+      </div>
+      <div id="order-list"></div>
+    </section>
+
+    <!-- Panel: 成交 -->
+    <section class="mpanel" data-mpanel="trades" id="panel-trades" role="tabpanel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span class="qs-caption" style="color:var(--qs-ink-3);">近 30 天成交</span>
+        <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">共 <span id="trade-count">6</span> 笔</span>
+      </div>
+      <div id="trade-list"></div>
+    </section>
+
+    <!-- Panel: 资金 -->
+    <section class="mpanel" data-mpanel="funds" id="panel-funds" role="tabpanel">
+      <div class="card" style="padding:4px 12px;">
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">总资产</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-ink);font-weight:600;" id="fund-total">1,000,000.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">持仓市值</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-ink);" id="fund-mv">572,285.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">可用资金</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-ink);" id="fund-cash">427,715.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">冻结资金</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-state-warning);" id="fund-frozen">12,800.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">总盈亏</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-state-rise);font-weight:600;" id="fund-pnl">+16,705.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">今日盈亏</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-state-rise);font-weight:600;" id="fund-today">+3,250.00</span>
+        </div>
+        <div class="fund-row">
+          <span class="qs-body" style="color:var(--qs-ink-2);">仓位占比</span>
+          <span class="qs-mono qs-body" style="color:var(--qs-ink);" id="fund-ratio">57.2%</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:600;color:var(--qs-ink-2);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+          <i data-lucide="pie-chart" style="width:14px;height:14px;color:var(--qs-primary);"></i>资产构成
+        </div>
+        <div style="height:8px;border-radius:4px;overflow:hidden;display:flex;margin-bottom:8px;">
+          <div id="bar-cash" style="background:var(--qs-primary);height:100%;"></div>
+          <div id="bar-pos" style="background:var(--qs-state-info);height:100%;"></div>
+          <div id="bar-frozen" style="background:var(--qs-state-warning);height:100%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;">
+          <span style="color:var(--qs-primary);">● 资金 42.8%</span>
+          <span style="color:var(--qs-state-info);">● 持仓 57.2%</span>
+          <span style="color:var(--qs-state-warning);">● 冻结 1.3%</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="disclaimer">
+      <i data-lucide="info" style="width:14px;height:14px;color:var(--qs-ink-3);flex-shrink:0;margin-top:1px;"></i>
+      <span>模拟盘仅用于策略验证，不接入实盘交易。所有行情、资金、成交数据均为模拟生成，不构成任何投资建议。</span>
+    </div>
+  </main>
 
   <!-- Bottom tab bar -->
   <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:375px;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;box-sizing:border-box;">
