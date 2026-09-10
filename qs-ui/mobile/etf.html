@@ -2,11 +2,11 @@
 <html class="dark" lang="zh-CN">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
+  <meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>ETF策略</title>
-  <script src="../assets/tailwind3.js"></script>
-  <script src="../assets/lucide.js"></script>
-  <script src="../assets/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@1.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     :root {
       --qs-primary: #2dd4bf;
@@ -40,8 +40,8 @@
     .qs-fall { color: var(--qs-state-fall); }
 
     /* App layout */
-    #app { width: 100vw; margin: 0 auto; min-height: 100vh; position: relative; background: var(--qs-background); }
-    .topbar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 48px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 50; }
+    #app { width: 375px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--qs-background); }
+    .topbar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 375px; height: 48px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 50; }
     .content { padding-top: 48px; padding-bottom: 56px; min-height: 100vh; }
     .scroll-area { padding: 12px; }
 
@@ -98,20 +98,6 @@
     /* Fund flow bar */
     .flow-bar { display: flex; height: 24px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
   </style>
-<style id="qs-density">
-html{color-scheme:dark}
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#2c2c36;border-radius:5px}
-::-webkit-scrollbar-thumb:hover{background:#3d3d4a}
-::-webkit-scrollbar-corner{background:transparent}
-*{scrollbar-width:thin;scrollbar-color:#2c2c36 transparent}
-.kpi-card{padding:8px 10px !important}
-.signal-card{padding:10px !important}
-.metric-card{padding:8px 10px !important}
-section{margin-bottom:10px !important}
-.scroll-area{padding:10px !important}
-</style>
 </head>
 <body>
   <div id="app">
@@ -136,8 +122,6 @@ section{margin-bottom:10px !important}
 
     <!-- Scrollable content -->
     <div class="content">
-<!--QS_PG_etf--><div style="padding:20px 22px 40px;max-width:1080px;margin:0 auto;"><h1 style="font-size:20px;color:var(--qs-ink, #f2f2f5);margin:0 0 4px;">ETF 策略 · 避险配置</h1><div style="font-size:12px;color:var(--qs-ink-3, #6c6c80);margin-bottom:16px;">数据时点 2026-09-09 18:05:27 · 腾讯实时口径</div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface, #141419);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:15px;">避险候选现价</b><span style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">减仓资金的避险去向</span></div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:480px;"><thead><tr><th style="padding:8px 10px;text-align:left;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">避险ETF</th><th style="padding:8px 10px;text-align:right;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">现价</th><th style="padding:8px 10px;text-align:right;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">涨跌幅</th></tr></thead><tbody><tr><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);"><b style="color:var(--qs-ink, #f2f2f5);">黄金ETF</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">518880</span></td><td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;color:var(--qs-ink, #f2f2f5);">9.041</td><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;"><span class="qs-mono" style="color:var(--qs-state-fall, #26c584);">-0.07%</span></td></tr><tr><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);"><b style="color:var(--qs-ink, #f2f2f5);">医药ETF</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">512010</span></td><td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;color:var(--qs-ink, #f2f2f5);">0.374</td><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;"><span class="qs-mono" style="color:var(--qs-state-fall, #26c584);">-1.32%</span></td></tr></tbody></table></div></div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface-2,#1c1c24);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:14px;">纪律（铁律70）</b><div style="font-size:12px;color:var(--qs-ink-2, #a0a0b0);line-height:2;margin-top:8px;">· 黄金ETF 518880 / 医药ETF 512010：回调至5日线附近才买，跌破20日线止损，各≤1成<br>· 3个交易日内未回调到位则放弃本次配置，资金留货基/国债逆回购，禁止追高买避险<br>· 避险仓位合计≤总仓位2成，不因避险变相满仓</div></div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface, #141419);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:14px;">为什么没有ETF轮动</b><div style="font-size:12px;color:var(--qs-ink-2, #a0a0b0);line-height:2;margin-top:8px;">板块级策略实测全灭（轮动-7.4%/年、板块回调低吸23%胜率）——鱼身只在个股。ETF位只保留避险功能，不做进攻轮动。</div></div><div style="margin-top:16px;font-size:11px;color:var(--qs-ink-3, #6c6c80);">不构成投资建议。价格以券商实盘为准。</div></div><!--QS_PG_etf-->
-
       <!-- List view -->
       <div id="listView" class="scroll-area">
         <div style="margin-bottom:12px;">
@@ -358,12 +342,12 @@ section{margin-bottom:10px !important}
     </div>
 
     <!-- Bottom tab bar (56px) -->
-    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width: 100vw;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:375px;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
       <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span style="font-size:10px;">仪表盘</span></a>
       <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span style="font-size:10px;">波段</span></a>
       <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span style="font-size:10px;">长线</span></a>
       <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="package" style="width:20px;height:20px;"></i><span style="font-size:10px;">ETF</span></a>
-      <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a><a href="../../daily_study.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="graduation-cap" style="width:20px;height:20px;"></i><span style="font-size:10px;">学习</span></a>
+      <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a>
     </nav>
   </div>
 

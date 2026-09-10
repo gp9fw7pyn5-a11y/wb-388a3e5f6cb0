@@ -2,7 +2,7 @@
 <html class="dark" lang="zh-CN">
  <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/><script>(function(){var m=window.innerWidth<900||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);var isMobile=location.pathname.indexOf("/mobile/")>=0;if(m!==isMobile){var target=location.pathname.replace(m?"/desktop/":"/mobile/",m?"/mobile/":"/desktop/");location.replace(target);}})();</script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
    ETF策略
   </title>
@@ -219,23 +219,7 @@
         background-color: currentColor;
       }
   </style>
- 
-<style id="qs-density">
-html{zoom:0.78}
-.qs-shell,.qs-shell main,.app-shell{min-height:calc(100vh / 0.78) !important}
-.qs-card{padding:8px 10px !important}
-.metric-card{padding:6px 8px !important}
-.qs-sidebar{width:220px !important}
-.qs-sidebar-item{padding:9px 10px !important}
-.qs-section{margin-bottom:10px !important}
-.qs-scroll{padding:10px 12px !important}
-.qs-detail-card{padding:12px 14px !important}
-[style*="height:56px"]{height:30px !important}
-[style*="height:384px"]{height:260px !important}
-[style*="height:600px"]{height:400px !important}
-#kpi-strip .grid{grid-template-columns:repeat(8,minmax(0,1fr)) !important}
-</style>
-</head>
+ </head>
  <body class="min-h-screen font-sans antialiased">
   <!-- 顶部全局导航 -->
   <header class="qs-topnav fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 border-b border-[var(--qs-border)]" data-region="top-navigation" style="background:var(--qs-surface);">
@@ -280,8 +264,1278 @@ html{zoom:0.78}
    </div>
   </header>
   <main class="qs-shell" data-viewport-mode="app-shell">
-<!--QS_PG_etf--><div style="padding:20px 22px 40px;max-width:1080px;margin:0 auto;"><h1 style="font-size:20px;color:var(--qs-ink, #f2f2f5);margin:0 0 4px;">ETF 策略 · 避险配置</h1><div style="font-size:12px;color:var(--qs-ink-3, #6c6c80);margin-bottom:16px;">数据时点 2026-09-09 18:05:27 · 腾讯实时口径</div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface, #141419);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:15px;">避险候选现价</b><span style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">减仓资金的避险去向</span></div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:480px;"><thead><tr><th style="padding:8px 10px;text-align:left;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">避险ETF</th><th style="padding:8px 10px;text-align:right;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">现价</th><th style="padding:8px 10px;text-align:right;color:var(--qs-ink-3, #6c6c80);font-size:11px;border-bottom:1px solid var(--qs-line, #26262e);white-space:nowrap;">涨跌幅</th></tr></thead><tbody><tr><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);"><b style="color:var(--qs-ink, #f2f2f5);">黄金ETF</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">518880</span></td><td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;color:var(--qs-ink, #f2f2f5);">9.041</td><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;"><span class="qs-mono" style="color:var(--qs-state-fall, #26c584);">-0.07%</span></td></tr><tr><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);"><b style="color:var(--qs-ink, #f2f2f5);">医药ETF</b><br><span class="qs-mono" style="font-size:11px;color:var(--qs-ink-3, #6c6c80);">512010</span></td><td class="qs-mono" style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;color:var(--qs-ink, #f2f2f5);">0.374</td><td style="padding:10px 8px;border-bottom:1px solid var(--qs-line, #26262e);text-align:right;"><span class="qs-mono" style="color:var(--qs-state-fall, #26c584);">-1.32%</span></td></tr></tbody></table></div></div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface-2,#1c1c24);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:14px;">纪律（铁律70）</b><div style="font-size:12px;color:var(--qs-ink-2, #a0a0b0);line-height:2;margin-top:8px;">· 黄金ETF 518880 / 医药ETF 512010：回调至5日线附近才买，跌破20日线止损，各≤1成<br>· 3个交易日内未回调到位则放弃本次配置，资金留货基/国债逆回购，禁止追高买避险<br>· 避险仓位合计≤总仓位2成，不因避险变相满仓</div></div><div style="margin-top:18px;padding:16px 18px;background:var(--qs-surface, #141419);border:1px solid var(--qs-line, #26262e);border-radius:12px;"><b style="color:var(--qs-ink, #f2f2f5);font-size:14px;">为什么没有ETF轮动</b><div style="font-size:12px;color:var(--qs-ink-2, #a0a0b0);line-height:2;margin-top:8px;">板块级策略实测全灭（轮动-7.4%/年、板块回调低吸23%胜率）——鱼身只在个股。ETF位只保留避险功能，不做进攻轮动。</div></div><div style="margin-top:16px;font-size:11px;color:var(--qs-ink-3, #6c6c80);">不构成投资建议。价格以券商实盘为准。</div></div><!--QS_PG_etf-->
-</main>
+   <!-- 左侧 ETF 选择栏 -->
+   <aside aria-label="ETF列表" class="qs-sidebar" data-region="etf-sidebar">
+    <div class="qs-sidebar-header">
+     ETF 列表
+    </div>
+    <div class="qs-sidebar-list" role="tablist">
+     <button class="qs-sidebar-item active" data-aum="42.5亿" data-change="+1.24" data-code="515050" data-dom-id="etf-item-1" data-expense="0.50" data-index="中证科技龙头指数" data-name="科技ETF" data-nav="1.284" data-tracking="0.12" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        515050
+       </span>
+       <span class="qs-sidebar-name">
+        科技ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        1.284
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +1.24%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证科技龙头指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="38.2亿" data-change="+2.18" data-code="512480" data-dom-id="etf-item-2" data-expense="0.50" data-index="中华半导体芯片行业指数" data-name="半导体ETF" data-nav="0.968" data-tracking="0.15" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        512480
+       </span>
+       <span class="qs-sidebar-name">
+        半导体ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        0.968
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +2.18%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中华半导体芯片行业指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="31.7亿" data-change="+1.85" data-code="512760" data-dom-id="etf-item-3" data-expense="0.50" data-index="国证芯片指数" data-name="芯片ETF" data-nav="1.052" data-tracking="0.13" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        512760
+       </span>
+       <span class="qs-sidebar-name">
+        芯片ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        1.052
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +1.85%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        国证芯片指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="24.6亿" data-change="+0.92" data-code="159819" data-dom-id="etf-item-4" data-expense="0.50" data-index="中证人工智能主题指数" data-name="人工智能ETF" data-nav="0.895" data-tracking="0.18" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        159819
+       </span>
+       <span class="qs-sidebar-name">
+        人工智能ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        0.895
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +0.92%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证人工智能主题指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="16.3亿" data-change="+0.65" data-code="516800" data-dom-id="etf-item-5" data-expense="0.50" data-index="中证云计算与大数据主题指数" data-name="云计算ETF" data-nav="0.742" data-premium="-0.33" data-tracking="0.21" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        516800
+       </span>
+       <span class="qs-sidebar-name">
+        云计算ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        0.742
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +0.65%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证云计算与大数据主题指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="19.8亿" data-change="+0.31" data-code="159998" data-dom-id="etf-item-6" data-expense="0.50" data-index="中证计算机指数" data-name="计算机ETF" data-nav="0.856" data-premium="+0.15" data-tracking="0.17" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        159998
+       </span>
+       <span class="qs-sidebar-name">
+        计算机ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        0.856
+       </span>
+       <span class="qs-sidebar-change qs-rise">
+        +0.31%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证计算机指数 · 科技
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="12.4亿" data-change="-0.18" data-code="515880" data-dom-id="etf-item-7" data-expense="0.50" data-index="中证全指通信设备指数" data-name="通信ETF" data-nav="1.120" data-premium="-0.09" data-tracking="0.14" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        515880
+       </span>
+       <span class="qs-sidebar-name">
+        通信ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        1.120
+       </span>
+       <span class="qs-sidebar-change qs-fall">
+        -0.18%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证全指通信设备指数 · 通信
+       </span>
+      </div>
+     </button>
+     <button class="qs-sidebar-item" data-aum="21.5亿" data-change="-0.74" data-code="159869" data-dom-id="etf-item-8" data-expense="0.50" data-index="中证动漫游戏指数" data-name="游戏ETF" data-nav="0.934" data-premium="+0.27" data-tracking="0.20" type="button">
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-code">
+        159869
+       </span>
+       <span class="qs-sidebar-name">
+        游戏ETF
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-nav">
+        0.934
+       </span>
+       <span class="qs-sidebar-change qs-fall">
+        -0.74%
+       </span>
+      </div>
+      <div class="qs-sidebar-row">
+       <span class="qs-sidebar-track">
+        中证动漫游戏指数 · 传媒
+       </span>
+      </div>
+     </button>
+    </div>
+   </aside>
+   <div class="qs-main flex-1 flex flex-col min-h-0">
+    <div class="qs-scroll flex-1 min-h-0 overflow-y-auto p-6" data-scroll-region="primary">
+     <header class="qs-topbar">
+      <div class="qs-topbar-title">
+       <h1>
+        ETF策略
+       </h1>
+       <span class="qs-topbar-sub">
+        行业轮动 / 主题筛选 / 相对强弱
+       </span>
+      </div>
+      <div class="qs-topbar-actions">
+       <button aria-label="通知" class="qs-icon-btn" id="top-notify">
+        <i data-lucide="bell">
+        </i>
+        <span class="qs-notify-dot">
+        </span>
+       </button>
+       <div class="qs-user-chip">
+        <div class="qs-avatar">
+         Q
+        </div>
+        <span>
+         Quant
+        </span>
+       </div>
+      </div>
+     </header>
+     <div class="qs-page-content">
+      <!-- 详情头部 -->
+      <section class="qs-section qs-detail-header" data-region="etf-detail-header">
+       <div class="qs-detail-identity">
+        <div class="qs-detail-title">
+         <h1 id="detailName">
+          科技ETF
+         </h1>
+         <span class="qs-mono qs-code" id="detailCode">
+          515050
+         </span>
+        </div>
+        <div class="qs-detail-index" id="detailIndex">
+         中证科技龙头指数
+        </div>
+       </div>
+       <div class="qs-detail-price">
+        <div class="qs-detail-nav qs-mono" id="detailNav">
+         1.284
+        </div>
+        <div class="qs-detail-change qs-rise" id="detailChange">
+         +1.24%
+        </div>
+       </div>
+      </section>
+      <!-- K-line chart (always visible) -->
+      <section class="qs-detail-card qs-kline-section" data-region="kline-chart">
+       <div class="qs-kline-header" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px;">
+        <div>
+         <div style="display:flex;align-items:baseline;gap:12px;">
+          <span class="qs-h1 qs-mono" id="klineCurrentPrice" style="color:var(--qs-ink);">
+           1.284
+          </span>
+          <span class="qs-h3 qs-mono" id="klineChange" style="color:var(--qs-state-rise);">
+           +1.24%
+          </span>
+         </div>
+         <div class="qs-caption" style="color:var(--qs-ink-3);margin-top:4px;">
+          净值
+          <span class="qs-mono" id="klineNav">
+           1.282
+          </span>
+          <span style="margin:0 8px;">
+           |
+          </span>
+          折溢价
+          <span class="qs-mono" id="klinePremium">
+           -0.12%
+          </span>
+         </div>
+        </div>
+        <div class="qs-kline-stats" style="display:flex;gap:16px;flex-wrap:wrap;text-align:right;">
+         <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">
+           最高
+          </div>
+          <div class="qs-body qs-mono" id="klineHigh" style="color:var(--qs-ink);">
+           1.292
+          </div>
+         </div>
+         <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">
+           最低
+          </div>
+          <div class="qs-body qs-mono" id="klineLow" style="color:var(--qs-ink);">
+           1.278
+          </div>
+         </div>
+         <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">
+           开盘
+          </div>
+          <div class="qs-body qs-mono" id="klineOpen" style="color:var(--qs-ink);">
+           1.280
+          </div>
+         </div>
+         <div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">
+           昨收
+          </div>
+          <div class="qs-body qs-mono" id="klinePreClose" style="color:var(--qs-ink);">
+           1.278
+          </div>
+         </div>
+        </div>
+       </div>
+       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+        <div class="qs-kline-timeframes" style="display:inline-flex;background:var(--qs-surface-2);border:1px solid var(--qs-line);border-radius:var(--qs-radius-md);overflow:hidden;">
+         <button class="qs-kline-time active" data-timeframe="intraday" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink);background:var(--qs-primary);border:none;cursor:pointer;" type="button">
+          分时
+         </button>
+         <button class="qs-kline-time" data-timeframe="day" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+          日K
+         </button>
+         <button class="qs-kline-time" data-timeframe="week" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+          周K
+         </button>
+         <button class="qs-kline-time" data-timeframe="month" style="padding:6px 14px;font-size:13px;font-weight:500;color:var(--qs-ink-2);background:transparent;border:none;border-left:1px solid var(--qs-line);cursor:pointer;" type="button">
+          月K
+         </button>
+        </div>
+        <span class="qs-caption" style="color:var(--qs-ink-3);">
+         示例行情，仅作展示
+        </span>
+       </div>
+       <div class="qs-kline-chart-wrap" style="height:320px;width:100%;border-radius:var(--qs-radius-md);overflow:hidden;background:var(--qs-surface);border:1px solid var(--qs-line);">
+        <canvas id="kline-chart">
+        </canvas>
+       </div>
+      </section>
+      <nav aria-label="ETF详情标签" class="qs-detail-tabs">
+       <button aria-selected="true" class="qs-detail-tab active" data-tab="fundamental" role="tab" type="button">
+        基本面
+       </button>
+       <button aria-selected="false" class="qs-detail-tab" data-tab="technical" role="tab" type="button">
+        技术面
+       </button>
+       <button aria-selected="false" class="qs-detail-tab" data-tab="capital" role="tab" type="button">
+        资金流向
+       </button>
+       <button aria-selected="false" class="qs-detail-tab" data-tab="signal" role="tab" type="button">
+        信号详情
+       </button>
+       <button aria-selected="false" class="qs-detail-tab" data-tab="order" role="tab" type="button">
+        订单
+       </button>
+      </nav>
+      <!-- 标签页 -->
+      <!-- 标签内容 -->
+      <div class="qs-detail-panels">
+       <div class="qs-detail-panel active" data-panel="fundamental" id="panel-fundamental" role="tabpanel">
+        <div class="qs-metric-grid">
+         <div class="qs-metric-card">
+          <div class="qs-metric-label">
+           资产规模 (AUM)
+          </div>
+          <div class="qs-metric-value qs-mono" id="detailAum">
+           42.5亿
+          </div>
+         </div>
+         <div class="qs-metric-card">
+          <div class="qs-metric-label">
+           管理费率
+          </div>
+          <div class="qs-metric-value qs-mono" id="detailExpense">
+           0.50%
+          </div>
+         </div>
+         <div class="qs-metric-card">
+          <div class="qs-metric-label">
+           跟踪误差
+          </div>
+          <div class="qs-metric-value qs-mono" id="detailTracking">
+           0.12%
+          </div>
+         </div>
+         <div class="qs-metric-card">
+          <div class="qs-metric-label">
+           折溢价率
+          </div>
+          <div class="qs-metric-value qs-mono" id="detailPremium">
+           -0.12%
+          </div>
+         </div>
+        </div>
+        <section class="qs-section">
+         <div class="qs-section-header">
+          <h2 class="qs-section-title">
+           前十大重仓股
+          </h2>
+          <span class="qs-section-meta">
+           按权重排序
+          </span>
+         </div>
+         <div class="qs-table-wrap">
+          <table class="qs-table" id="topHoldingsTable">
+           <thead>
+            <tr>
+             <th>
+              代码
+             </th>
+             <th>
+              名称
+             </th>
+             <th class="qs-num">
+              权重
+             </th>
+             <th class="qs-num">
+              最新价
+             </th>
+             <th class="qs-num">
+              涨跌幅
+             </th>
+             <th>
+              所属行业
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td class="qs-mono qs-code">
+              000725
+             </td>
+             <td class="qs-name">
+              <span>
+               京东方A
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              8.42%
+             </td>
+             <td class="qs-mono qs-num">
+              4.28
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +2.14%
+             </td>
+             <td>
+              电子
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              002371
+             </td>
+             <td class="qs-name">
+              <span>
+               北方华创
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              6.85%
+             </td>
+             <td class="qs-mono qs-num">
+              318.50
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +3.28%
+             </td>
+             <td>
+              半导体设备
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              603501
+             </td>
+             <td class="qs-name">
+              <span>
+               韦尔股份
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              5.70%
+             </td>
+             <td class="qs-mono qs-num">
+              102.35
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.55%
+             </td>
+             <td>
+              半导体设计
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              688981
+             </td>
+             <td class="qs-name">
+              <span>
+               中芯国际
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              5.22%
+             </td>
+             <td class="qs-mono qs-num">
+              52.18
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.02%
+             </td>
+             <td>
+              晶圆代工
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              300014
+             </td>
+             <td class="qs-name">
+              <span>
+               亿纬锂能
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              4.18%
+             </td>
+             <td class="qs-mono qs-num">
+              38.60
+             </td>
+             <td class="qs-mono qs-num qs-fall">
+              -0.82%
+             </td>
+             <td>
+              锂电池
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              002049
+             </td>
+             <td class="qs-name">
+              <span>
+               紫光国微
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.95%
+             </td>
+             <td class="qs-mono qs-num">
+              58.20
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.74%
+             </td>
+             <td>
+              集成电路
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              600570
+             </td>
+             <td class="qs-name">
+              <span>
+               恒生电子
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.60%
+             </td>
+             <td class="qs-mono qs-num">
+              22.45
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.45%
+             </td>
+             <td>
+              金融科技
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              300433
+             </td>
+             <td class="qs-name">
+              <span>
+               蓝思科技
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.35%
+             </td>
+             <td class="qs-mono qs-num">
+              17.88
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.20%
+             </td>
+             <td>
+              消费电子
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              002230
+             </td>
+             <td class="qs-name">
+              <span>
+               科大讯飞
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              2.98%
+             </td>
+             <td class="qs-mono qs-num">
+              43.65
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.92%
+             </td>
+             <td>
+              人工智能
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              600498
+             </td>
+             <td class="qs-name">
+              <span>
+               烽火通信
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              2.74%
+             </td>
+             <td class="qs-mono qs-num">
+              18.32
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.58%
+             </td>
+             <td>
+              通信设备
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </section>
+        <section class="qs-section">
+         <h3 class="qs-h3 mb-2">
+          基本面摘要
+         </h3>
+         <p class="qs-body text-[var(--qs-ink-2)] leading-relaxed">
+          科技ETF 跟踪中证科技龙头指数，规模适中、流动性良好，费率处于行业较低水平。当前折溢价率处于合理区间，重仓股集中于电子与半导体龙头，长期受益于国产替代与科技创新周期。
+         </p>
+        </section>
+       </div>
+       <div class="qs-detail-panel active" data-panel="fundamental" id="panel-fundamental" role="tabpanel">
+        <section class="qs-section">
+         <div class="qs-section-header">
+          <h2 class="qs-section-title">
+           前十大成分股
+          </h2>
+          <span class="qs-section-meta">
+           按权重排序
+          </span>
+         </div>
+         <div class="qs-table-wrap">
+          <table class="qs-table" id="constituentsTable">
+           <thead>
+            <tr>
+             <th>
+              代码
+             </th>
+             <th>
+              名称
+             </th>
+             <th class="qs-num">
+              权重
+             </th>
+             <th class="qs-num">
+              最新价
+             </th>
+             <th class="qs-num">
+              涨跌幅
+             </th>
+             <th>
+              所属行业
+             </th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr>
+             <td class="qs-mono qs-code">
+              000725
+             </td>
+             <td class="qs-name">
+              <span>
+               京东方A
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              8.42%
+             </td>
+             <td class="qs-mono qs-num">
+              4.28
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +2.14%
+             </td>
+             <td>
+              电子
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              002371
+             </td>
+             <td class="qs-name">
+              <span>
+               北方华创
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              6.85%
+             </td>
+             <td class="qs-mono qs-num">
+              318.50
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +3.28%
+             </td>
+             <td>
+              半导体设备
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              603501
+             </td>
+             <td class="qs-name">
+              <span>
+               韦尔股份
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              5.70%
+             </td>
+             <td class="qs-mono qs-num">
+              102.35
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.55%
+             </td>
+             <td>
+              半导体设计
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              688981
+             </td>
+             <td class="qs-name">
+              <span>
+               中芯国际
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              5.22%
+             </td>
+             <td class="qs-mono qs-num">
+              52.18
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.02%
+             </td>
+             <td>
+              晶圆代工
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              300014
+             </td>
+             <td class="qs-name">
+              <span>
+               亿纬锂能
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              4.18%
+             </td>
+             <td class="qs-mono qs-num">
+              38.60
+             </td>
+             <td class="qs-mono qs-num qs-fall">
+              -0.82%
+             </td>
+             <td>
+              锂电池
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              002049
+             </td>
+             <td class="qs-name">
+              <span>
+               紫光国微
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.95%
+             </td>
+             <td class="qs-mono qs-num">
+              58.20
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.74%
+             </td>
+             <td>
+              集成电路
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              600570
+             </td>
+             <td class="qs-name">
+              <span>
+               恒生电子
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.60%
+             </td>
+             <td class="qs-mono qs-num">
+              22.45
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +0.45%
+             </td>
+             <td>
+              金融科技
+             </td>
+            </tr>
+            <tr>
+             <td class="qs-mono qs-code">
+              300433
+             </td>
+             <td class="qs-name">
+              <span>
+               蓝思科技
+              </span>
+             </td>
+             <td class="qs-mono qs-num">
+              3.35%
+             </td>
+             <td class="qs-mono qs-num">
+              17.88
+             </td>
+             <td class="qs-mono qs-num qs-rise">
+              +1.20%
+             </td>
+             <td>
+              消费电子
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </section>
+       </div>
+       <div class="qs-detail-panel" data-panel="technical" id="panel-technical" role="tabpanel">
+        <section class="qs-section">
+         <div class="qs-section-header">
+          <h2 class="qs-section-title">
+           净值走势
+          </h2>
+          <span class="qs-section-meta">
+           近 60 个交易日
+          </span>
+         </div>
+         <div class="qs-chart-card">
+          <canvas id="detailNavChart">
+          </canvas>
+         </div>
+        </section>
+       </div>
+       <div class="qs-detail-panel" data-panel="technical" id="panel-technical" role="tabpanel">
+        <section class="qs-section">
+         <div class="qs-section-header">
+          <h2 class="qs-section-title">
+           相关性分析
+          </h2>
+          <span class="qs-section-meta">
+           与主要指数近 90 日相关系数
+          </span>
+         </div>
+         <div class="qs-chart-card">
+          <canvas id="correlationChart">
+          </canvas>
+         </div>
+        </section>
+       </div>
+       <div class="qs-detail-panel" data-panel="capital" id="panel-capital" role="tabpanel">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+         <div class="metric-card">
+          <span class="qs-caption text-[var(--qs-ink-3)]">
+           主力净流入
+          </span>
+          <div class="qs-h3 qs-mono text-[var(--qs-state-rise)] mt-1">
+           +1.85 亿
+          </div>
+         </div>
+         <div class="metric-card">
+          <span class="qs-caption text-[var(--qs-ink-3)]">
+           散户净流入
+          </span>
+          <div class="qs-h3 qs-mono text-[var(--qs-state-fall)] mt-1">
+           -0.62 亿
+          </div>
+         </div>
+         <div class="metric-card">
+          <span class="qs-caption text-[var(--qs-ink-3)]">
+           大单净比
+          </span>
+          <div class="qs-h3 qs-mono text-[var(--qs-state-rise)] mt-1">
+           +12.5%
+          </div>
+         </div>
+         <div class="metric-card">
+          <span class="qs-caption text-[var(--qs-ink-3)]">
+           换手率
+          </span>
+          <div class="qs-h3 qs-mono text-[var(--qs-ink)] mt-1">
+           2.4%
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-lg border border-[var(--qs-line)] bg-[var(--qs-surface-2)]">
+         <h3 class="qs-body font-semibold text-[var(--qs-ink)] mb-2">
+          资金解读
+         </h3>
+         <p class="qs-body text-[var(--qs-ink-2)] leading-relaxed">
+          主力资金今日呈净流入态势，大单买入占比提升；融资余额温和回升，北向资金小幅增持，整体资金面偏正面。
+         </p>
+        </div>
+       </div>
+       <div class="qs-detail-panel" data-panel="signal" id="panel-signal" role="tabpanel">
+        <div class="space-y-4">
+         <div class="p-4 rounded-lg border border-[var(--qs-line)] bg-[var(--qs-surface-2)]">
+          <h3 class="qs-body font-semibold text-[var(--qs-ink)] mb-2 flex items-center gap-2">
+           <i class="w-4 h-4 text-[var(--qs-primary)]" data-lucide="sparkles">
+           </i>
+           触发理由
+          </h3>
+          <p class="qs-body text-[var(--qs-ink-2)] leading-relaxed">
+           价格沿短期均线上行，成交量温和放大，MACD 红柱扩大，短期动能转强，适合趋势跟踪。
+          </p>
+         </div>
+         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="metric-card">
+           <span class="qs-caption text-[var(--qs-ink-3)]">
+            信号强度
+           </span>
+           <div class="qs-h3 text-[var(--qs-primary)] mt-1">
+            较强
+           </div>
+          </div>
+          <div class="metric-card">
+           <span class="qs-caption text-[var(--qs-ink-3)]">
+            建议周期
+           </span>
+           <div class="qs-h3 text-[var(--qs-ink)] mt-1">
+            5-10 交易日
+           </div>
+          </div>
+          <div class="metric-card">
+           <span class="qs-caption text-[var(--qs-ink-3)]">
+            目标价位
+           </span>
+           <div class="qs-h3 qs-mono text-[var(--qs-ink)] mt-1">
+            —
+           </div>
+          </div>
+          <div class="metric-card">
+           <span class="qs-caption text-[var(--qs-ink-3)]">
+            止损价位
+           </span>
+           <div class="qs-h3 qs-mono text-[var(--qs-state-fall)] mt-1">
+            —
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="qs-detail-panel" data-panel="order" id="panel-order" role="tabpanel">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+         <div class="qs-section">
+          <h3 class="qs-h3 mb-3 flex items-center gap-2">
+           <i class="w-4 h-4" data-lucide="arrow-left-right" style="color:var(--qs-primary)">
+           </i>
+           买卖五档
+          </h3>
+          <div class="qs-table-wrap">
+           <table class="qs-table">
+            <thead>
+             <tr>
+              <th>
+               档位
+              </th>
+              <th class="qs-num">
+               买价
+              </th>
+              <th class="qs-num">
+               买量
+              </th>
+              <th class="qs-num">
+               卖价
+              </th>
+              <th class="qs-num">
+               卖量
+              </th>
+             </tr>
+            </thead>
+            <tbody>
+             <tr>
+              <td>
+               买五
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+               1.282
+              </td>
+              <td class="qs-mono qs-num">
+               1,240
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+               1.286
+              </td>
+              <td class="qs-mono qs-num">
+               980
+              </td>
+             </tr>
+             <tr>
+              <td>
+               买四
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+               1.283
+              </td>
+              <td class="qs-mono qs-num">
+               1,560
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+               1.285
+              </td>
+              <td class="qs-mono qs-num">
+               1,120
+              </td>
+             </tr>
+             <tr>
+              <td>
+               买三
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+               1.283
+              </td>
+              <td class="qs-mono qs-num">
+               2,080
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+               1.285
+              </td>
+              <td class="qs-mono qs-num">
+               1,450
+              </td>
+             </tr>
+             <tr>
+              <td>
+               买二
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+               1.284
+              </td>
+              <td class="qs-mono qs-num">
+               2,640
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+               1.284
+              </td>
+              <td class="qs-mono qs-num">
+               1,890
+              </td>
+             </tr>
+             <tr>
+              <td>
+               买一
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+               1.284
+              </td>
+              <td class="qs-mono qs-num">
+               3,520
+              </td>
+              <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+               1.284
+              </td>
+              <td class="qs-mono qs-num">
+               2,340
+              </td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mt-3">
+           <div class="qs-metric-card" style="text-align:center">
+            <div class="qs-metric-label">
+             买一至买五累计
+            </div>
+            <div class="qs-metric-value qs-mono" style="color:var(--qs-state-rise)">
+             11,040 手
+            </div>
+           </div>
+           <div class="qs-metric-card" style="text-align:center">
+            <div class="qs-metric-label">
+             卖一至卖五累计
+            </div>
+            <div class="qs-metric-value qs-mono" style="color:var(--qs-state-fall)">
+             7,780 手
+            </div>
+           </div>
+           <div class="qs-metric-card" style="text-align:center">
+            <div class="qs-metric-label">
+             委比
+            </div>
+            <div class="qs-metric-value qs-mono" style="color:var(--qs-state-rise)">
+             +17.3%
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="space-y-4">
+          <div class="qs-section">
+           <h3 class="qs-h3 mb-3 flex items-center gap-2">
+            <i class="w-4 h-4" data-lucide="activity" style="color:var(--qs-primary)">
+            </i>
+            盘口异动
+           </h3>
+           <ul class="space-y-2">
+            <li class="qs-body flex justify-between items-center">
+             <span>
+              14:32 大单买入
+             </span>
+             <span class="qs-mono" style="color:var(--qs-state-rise)">
+              5,200 手 @ 1.284
+             </span>
+            </li>
+            <li class="qs-body flex justify-between items-center">
+             <span>
+              14:28 大单买入
+             </span>
+             <span class="qs-mono" style="color:var(--qs-state-rise)">
+              3,800 手 @ 1.283
+             </span>
+            </li>
+            <li class="qs-body flex justify-between items-center">
+             <span>
+              14:15 大单卖出
+             </span>
+             <span class="qs-mono" style="color:var(--qs-state-fall)">
+              2,600 手 @ 1.285
+             </span>
+            </li>
+            <li class="qs-body flex justify-between items-center">
+             <span>
+              14:06 大单买入
+             </span>
+             <span class="qs-mono" style="color:var(--qs-state-rise)">
+              4,100 手 @ 1.283
+             </span>
+            </li>
+           </ul>
+          </div>
+          <div class="qs-section">
+           <h3 class="qs-h3 mb-3 flex items-center gap-2">
+            <i class="w-4 h-4" data-lucide="clock" style="color:var(--qs-primary)">
+            </i>
+            分时成交
+           </h3>
+           <div class="qs-table-wrap">
+            <table class="qs-table">
+             <thead>
+              <tr>
+               <th>
+                时间
+               </th>
+               <th class="qs-num">
+                价格
+               </th>
+               <th class="qs-num">
+                成交量
+               </th>
+               <th class="qs-num">
+                方向
+               </th>
+              </tr>
+             </thead>
+             <tbody>
+              <tr>
+               <td class="qs-mono">
+                14:32:05
+               </td>
+               <td class="qs-mono qs-num">
+                1.284
+               </td>
+               <td class="qs-mono qs-num">
+                5,200
+               </td>
+               <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+                买入
+               </td>
+              </tr>
+              <tr>
+               <td class="qs-mono">
+                14:31:48
+               </td>
+               <td class="qs-mono qs-num">
+                1.283
+               </td>
+               <td class="qs-mono qs-num">
+                1,250
+               </td>
+               <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+                买入
+               </td>
+              </tr>
+              <tr>
+               <td class="qs-mono">
+                14:31:22
+               </td>
+               <td class="qs-mono qs-num">
+                1.283
+               </td>
+               <td class="qs-mono qs-num">
+                2,800
+               </td>
+               <td class="qs-mono qs-num" style="color:var(--qs-state-fall)">
+                卖出
+               </td>
+              </tr>
+              <tr>
+               <td class="qs-mono">
+                14:30:55
+               </td>
+               <td class="qs-mono qs-num">
+                1.282
+               </td>
+               <td class="qs-mono qs-num">
+                980
+               </td>
+               <td class="qs-mono qs-num" style="color:var(--qs-state-rise)">
+                买入
+               </td>
+              </tr>
+             </tbody>
+            </table>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
   <style>
    /* Top navigation */
         .qs-topnav { height:56px; }
