@@ -38,7 +38,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
 .card { background: var(--qs-surface); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-lg); padding: 12px; margin-bottom: 8px; }
 
 /* mobile shell centered to 375px */
-.app-shell { width: 375px; max-width: 100vw; margin: 0 auto; min-height: 100vh; background: var(--qs-background); position: relative; box-shadow: 0 0 0 1px var(--qs-line); }
+.app-shell { width: 100vw; max-width: 100vw; margin: 0 auto; min-height: 100vh; background: var(--qs-background); position: relative; box-shadow: 0 0 0 1px var(--qs-line); }
 .topbar { position: sticky; top: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); z-index: 50; }
 .content { padding: 12px 12px 72px 12px; }
 
@@ -74,7 +74,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
 .fund-row:last-child { border-bottom: none; }
 
 /* toast */
-.toast { position: fixed; left: 50%; transform: translateX(-50%) translateY(20px); bottom: 76px; width: 375px; max-width: 100vw; box-sizing: border-box; padding: 0 12px; z-index: 80; pointer-events: none; opacity: 0; transition: opacity .2s, transform .2s; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%) translateY(20px); bottom: 76px; width: 100vw; max-width: 100vw; box-sizing: border-box; padding: 0 12px; z-index: 80; pointer-events: none; opacity: 0; transition: opacity .2s, transform .2s; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast-inner { background: var(--qs-surface-2); border: 1px solid var(--qs-line); border-radius: var(--qs-radius-md); padding: 10px 14px; font-size: 13px; color: var(--qs-ink); box-shadow: 0 8px 24px -8px rgba(0,0,0,.6); display: flex; align-items: center; gap: 8px; }
 
@@ -225,12 +225,12 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
   </main>
 
   <!-- Bottom tab bar -->
-  <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:375px;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;box-sizing:border-box;">
+  <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width: 100vw;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;box-sizing:border-box;">
     <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span style="font-size:10px;">仪表盘</span></a>
     <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span style="font-size:10px;">波段</span></a>
     <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span style="font-size:10px;">长线</span></a>
     <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="package" style="width:20px;height:20px;"></i><span style="font-size:10px;">ETF</span></a>
-    <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a>
+    <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a><a href="../../daily_study.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="graduation-cap" style="width:20px;height:20px;"></i><span style="font-size:10px;">学习</span></a>
   </nav>
 </div>
 

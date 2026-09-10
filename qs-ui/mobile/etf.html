@@ -40,8 +40,8 @@
     .qs-fall { color: var(--qs-state-fall); }
 
     /* App layout */
-    #app { width: 375px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--qs-background); }
-    .topbar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 375px; height: 48px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 50; }
+    #app { width: 100vw; margin: 0 auto; min-height: 100vh; position: relative; background: var(--qs-background); }
+    .topbar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 48px; background: var(--qs-surface); border-bottom: 1px solid var(--qs-line); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 50; }
     .content { padding-top: 48px; padding-bottom: 56px; min-height: 100vh; }
     .scroll-area { padding: 12px; }
 
@@ -342,12 +342,12 @@
     </div>
 
     <!-- Bottom tab bar (56px) -->
-    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:375px;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width: 100vw;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
       <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i><span style="font-size:10px;">仪表盘</span></a>
       <a href="swing.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="zap" style="width:20px;height:20px;"></i><span style="font-size:10px;">波段</span></a>
       <a href="longterm.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="trending-up" style="width:20px;height:20px;"></i><span style="font-size:10px;">长线</span></a>
       <a href="etf.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);"><i data-lucide="package" style="width:20px;height:20px;"></i><span style="font-size:10px;">ETF</span></a>
-      <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a>
+      <a href="sim.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="wallet" style="width:20px;height:20px;"></i><span style="font-size:10px;">模拟盘</span></a><a href="../../daily_study.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-ink-3);"><i data-lucide="graduation-cap" style="width:20px;height:20px;"></i><span style="font-size:10px;">学习</span></a>
     </nav>
   </div>
 
