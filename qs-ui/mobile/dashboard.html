@@ -152,9 +152,9 @@
     <div style="display:flex; align-items:center; justify-content:space-between; padding:0 2px 8px;">
       <div>
         <div class="qs-h3" style="color:var(--qs-ink);">市场总览</div>
-        <div class="qs-caption" style="color:var(--qs-ink-3); margin-top:2px;">2026-09-08 · 周二</div>
+        <div class="qs-caption" style="color:var(--qs-ink-3); margin-top:2px;">2026-09-11 · 周五</div>
       </div>
-      <span class="status-pill"><span class="status-dot"></span>交易进行中</span>
+      <span class="status-pill"><span class="status-dot"></span>已收盘</span>
     </div>
 
     <!-- 1. KPI strip -->
@@ -162,43 +162,43 @@
       <div class="kpi-scroll no-scrollbar">
         <!-- 上证指数 -->
         <div class="kpi-card">
-          <div class="name">上证指数 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
-          <div class="price qs-mono" style="color:var(--qs-ink);">3,198.42</div>
-          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+18.65 (+0.59%)</div>
+          <div class="name">上证指数 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">3,888.11</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">-46.29 (-1.18%)</div>
           <div class="spark"><canvas id="spark-sh"></canvas></div>
-          <div class="vol">成交 3,847 亿</div>
+          <div class="vol">成交 9,582 亿</div>
         </div>
         <!-- 深证成指 -->
         <div class="kpi-card">
           <div class="name">深证成指 <i data-lucide="trending-down" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
-          <div class="price qs-mono" style="color:var(--qs-ink);">10,512.36</div>
-          <div class="chg qs-mono" style="color:var(--qs-state-fall);">-23.14 (-0.22%)</div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">13,471.26</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-fall);">-146.41 (-1.08%)</div>
           <div class="spark"><canvas id="spark-sz"></canvas></div>
-          <div class="vol">成交 4,521 亿</div>
+          <div class="vol">成交 10,137 亿</div>
         </div>
         <!-- 创业板指 -->
         <div class="kpi-card">
-          <div class="name">创业板指 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
-          <div class="price qs-mono" style="color:var(--qs-ink);">2,058.74</div>
-          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+7.12 (+0.35%)</div>
+          <div class="name">创业板指 <i data-lucide="trending-up" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">3,322.04</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">-16.38 (-0.49%)</div>
           <div class="spark"><canvas id="spark-cyb"></canvas></div>
-          <div class="vol">成交 1,892 亿</div>
+          <div class="vol">成交 4,577 亿</div>
         </div>
         <!-- 科创50 -->
         <div class="kpi-card">
-          <div class="name">科创50 <i data-lucide="rocket" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
-          <div class="price qs-mono" style="color:var(--qs-ink);">884.62</div>
-          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+9.43 (+1.08%)</div>
+          <div class="name">科创50 <i data-lucide="trending-down" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">1,553.39</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">-15.83 (-1.01%)</div>
           <div class="spark"><canvas id="spark-kc"></canvas></div>
-          <div class="vol">成交 642 亿</div>
+          <div class="vol">成交 779 亿</div>
         </div>
         <!-- 沪深300 -->
         <div class="kpi-card">
-          <div class="name">沪深300 <i data-lucide="bar-chart-2" style="width:14px;height:14px;color:var(--qs-state-rise);"></i></div>
-          <div class="price qs-mono" style="color:var(--qs-ink);">3,728.16</div>
-          <div class="chg qs-mono" style="color:var(--qs-state-rise);">+15.40 (+0.42%)</div>
+          <div class="name">沪深300 <i data-lucide="trending-down" style="width:14px;height:14px;color:var(--qs-state-fall);"></i></div>
+          <div class="price qs-mono" style="color:var(--qs-ink);">4,510.16</div>
+          <div class="chg qs-mono" style="color:var(--qs-state-rise);">-38.23 (-0.84%)</div>
           <div class="spark"><canvas id="spark-hs"></canvas></div>
-          <div class="vol">成交 2,104 亿</div>
+          <div class="vol">成交 5,222 亿</div>
         </div>
       </div>
     </section>
@@ -211,32 +211,32 @@
       <div class="breadth-grid">
         <div class="stat-tile">
           <div class="lbl">上涨家数</div>
-          <div class="val qs-mono" style="color:var(--qs-state-rise);">3,284</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">594</div>
           <div class="bar"><span style="width:65%;background:var(--qs-state-rise);"></span></div>
         </div>
         <div class="stat-tile">
           <div class="lbl">下跌家数</div>
-          <div class="val qs-mono" style="color:var(--qs-state-fall);">1,756</div>
+          <div class="val qs-mono" style="color:var(--qs-state-fall);">4,546</div>
           <div class="bar"><span style="width:35%;background:var(--qs-state-fall);"></span></div>
         </div>
         <div class="stat-tile">
           <div class="lbl">涨停</div>
-          <div class="val qs-mono" style="color:var(--qs-state-rise);">82</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">40</div>
           <div class="bar"><span style="width:24%;background:var(--qs-state-rise);"></span></div>
         </div>
         <div class="stat-tile">
           <div class="lbl">跌停</div>
-          <div class="val qs-mono" style="color:var(--qs-state-fall);">14</div>
+          <div class="val qs-mono" style="color:var(--qs-state-fall);">25</div>
           <div class="bar"><span style="width:6%;background:var(--qs-state-fall);"></span></div>
         </div>
         <div class="stat-tile">
           <div class="lbl">北向资金</div>
-          <div class="val qs-mono" style="color:var(--qs-primary);">+42.8 亿</div>
+          <div class="val qs-mono" style="color:var(--qs-primary);">【数据缺失】</div>
           <div class="bar"><span style="width:58%;background:var(--qs-primary);"></span></div>
         </div>
         <div class="stat-tile">
           <div class="lbl">成交额</div>
-          <div class="val qs-mono" style="color:var(--qs-ink);">8,932 亿</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">19,571 亿</div>
           <div class="bar"><span style="width:72%;background:var(--qs-ink-3);"></span></div>
         </div>
       </div>
@@ -252,20 +252,20 @@
         <button data-tab="down">领跌行业</button>
       </div>
       <ul class="sector-list" id="sectorUp">
-        <li><span class="sname">半导体</span><span class="smid"><span style="width:90%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+4.32%</span></li>
-        <li><span class="sname">证券</span><span class="smid"><span style="width:66%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+3.18%</span></li>
-        <li><span class="sname">通信设备</span><span class="smid"><span style="width:61%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.95%</span></li>
-        <li><span class="sname">消费电子</span><span class="smid"><span style="width:56%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.67%</span></li>
-        <li><span class="sname">白酒</span><span class="smid"><span style="width:43%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.05%</span></li>
-        <li><span class="sname">医疗器械</span><span class="smid"><span style="width:38%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+1.82%</span></li>
+        <li><span class="sname">玻璃</span><span class="smid"><span style="width:92%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">+2.31%</span></li>
+        <li><span class="sname">影视音像</span><span class="smid"><span style="width:6%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">-0.01%</span></li>
+        <li><span class="sname">水力发电</span><span class="smid"><span style="width:6%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">-0.01%</span></li>
+        <li><span class="sname">通信设备</span><span class="smid"><span style="width:6%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">-0.02%</span></li>
+        <li><span class="sname">电信运营</span><span class="smid"><span style="width:6%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">-0.12%</span></li>
+        <li><span class="sname">新型电力</span><span class="smid"><span style="width:10%;background:var(--qs-state-rise);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-rise);">-0.26%</span></li>
       </ul>
       <ul class="sector-list hidden-tab" id="sectorDown">
-        <li><span class="sname">煤炭</span><span class="smid"><span style="width:44%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-2.11%</span></li>
-        <li><span class="sname">银行</span><span class="smid"><span style="width:30%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-1.45%</span></li>
-        <li><span class="sname">电力</span><span class="smid"><span style="width:25%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-1.22%</span></li>
-        <li><span class="sname">石油</span><span class="smid"><span style="width:20%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.98%</span></li>
-        <li><span class="sname">航运</span><span class="smid"><span style="width:16%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.76%</span></li>
-        <li><span class="sname">房地产</span><span class="smid"><span style="width:12%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-0.58%</span></li>
+        <li><span class="sname">铅锌</span><span class="smid"><span style="width:92%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-5.11%</span></li>
+        <li><span class="sname">铜</span><span class="smid"><span style="width:87%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-4.81%</span></li>
+        <li><span class="sname">多元金融</span><span class="smid"><span style="width:83%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-4.64%</span></li>
+        <li><span class="sname">酒店餐饮</span><span class="smid"><span style="width:82%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-4.55%</span></li>
+        <li><span class="sname">超市连锁</span><span class="smid"><span style="width:81%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-4.51%</span></li>
+        <li><span class="sname">焦炭加工</span><span class="smid"><span style="width:77%;background:var(--qs-state-fall);"></span></span><span class="spct qs-mono" style="color:var(--qs-state-fall);">-4.31%</span></li>
       </ul>
     </section>
 
@@ -277,11 +277,10 @@
       <!-- Fear & Greed -->
       <div style="padding:2px 2px 12px;">
         <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;">
-          <span class="qs-caption" style="color:var(--qs-ink-3);">恐慌 / 贪婪指数</span>
-          <span class="qs-caption" style="color:var(--qs-primary);">贪婪</span>
+          <span class="qs-caption" style="color:var(--qs-ink-3);">恐慌 / 贪婪指数</span>恐慌<span class="qs-caption" style="color:var(--qs-primary);">恐慌</span>
         </div>
         <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:10px;">
-          <span class="qs-mono qs-h2" style="color:var(--qs-primary);">62</span>
+          <span class="qs-mono qs-h2" style="color:var(--qs-primary);">11</span>
           <span class="qs-caption" style="color:var(--qs-ink-3);">/ 100</span>
         </div>
         <div class="fg-wrap">
@@ -298,28 +297,28 @@
       <div class="sent-grid">
         <div class="stat-tile">
           <div class="lbl">市场温度</div>
-          <div class="val qs-mono" style="color:var(--qs-state-rise);">偏热</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">冰点</div>
           <div class="qs-caption" style="color:var(--qs-ink-3); margin-top:4px; display:flex; align-items:center; gap:3px;">
-            <i data-lucide="arrow-up-right" style="width:12px;height:12px;color:var(--qs-state-rise);"></i>较昨日升温
+            <i data-lucide="arrow-up-right" style="width:12px;height:12px;color:var(--qs-state-rise);"></i>—
           </div>
         </div>
         <div class="stat-tile">
           <div class="lbl">融资余额</div>
-          <div class="val qs-mono" style="color:var(--qs-ink);">15,247 亿</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">【数据缺失】</div>
           <div class="qs-caption" style="color:var(--qs-state-rise); margin-top:4px; display:flex; align-items:center; gap:3px;">
-            <i data-lucide="arrow-up-right" style="width:12px;height:12px;"></i>+0.30%
+            <i data-lucide="arrow-up-right" style="width:12px;height:12px;"></i>—
           </div>
         </div>
         <div class="stat-tile">
           <div class="lbl">波动率 (VIX)</div>
-          <div class="val qs-mono" style="color:var(--qs-ink);">14.80</div>
+          <div class="val qs-mono" style="color:var(--qs-ink);">【数据缺失】</div>
           <div class="qs-caption" style="color:var(--qs-state-fall); margin-top:4px; display:flex; align-items:center; gap:3px;">
-            <i data-lucide="arrow-down-right" style="width:12px;height:12px;"></i>-3.20%
+            <i data-lucide="arrow-down-right" style="width:12px;height:12px;"></i>—
           </div>
         </div>
         <div class="stat-tile">
           <div class="lbl">涨跌中位数</div>
-          <div class="val qs-mono" style="color:var(--qs-state-rise);">+0.85%</div>
+          <div class="val qs-mono" style="color:var(--qs-state-rise);">-2.18%</div>
           <div class="bar" style="margin-top:8px;"><span style="width:55%;background:var(--qs-state-rise);"></span></div>
         </div>
       </div>
@@ -334,112 +333,121 @@
       <ul class="news-list">
         <li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:42</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">16:37</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">工信部印发《新材料产业发展指南》，重点扶持半导体材料与高端装备</p>
-                <span class="chip chip-bull">利好</span>
+                <p class="ntitle">首个“太空算力关键技术与场景验证实验室”正式成立</p>
               </div>
               <div class="nmeta">
-                <span class="chip chip-src">国内政策</span>
-                <span class="chip chip-cat">半导体</span>
+                <span class="chip chip-src">快讯</span>
                 <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
-              <div class="ticker-row">
-                <div class="ticker"><div class="tn">中芯国际</div><div class="tc qs-mono">688981</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+18.5%</div></div>
-                <div class="ticker"><div class="tn">北方华创</div><div class="tc qs-mono">002371</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+16.2%</div></div>
-                <div class="ticker"><div class="tn">沪硅产业</div><div class="tc qs-mono">688126</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+12.8%</div></div>
-              </div>
+              
             </div>
           </div>
         </li>
-        <li class="news-item">
+<li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:28</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">16:46</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">宁德时代发布三季度业绩预告，储能业务同比增长超80%</p>
-                <span class="chip chip-bull">利好</span>
+                <p class="ntitle">新易盛：与客户NPO产品合作进展顺利 预计2027年有批量交付需求</p>
               </div>
               <div class="nmeta">
-                <span class="chip chip-src">国内新闻</span>
-                <span class="chip chip-cat">新能源</span>
-                <span class="qs-caption" style="color:var(--qs-ink-3);">证券时报</span>
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
-              <div class="ticker-row">
-                <div class="ticker"><div class="tn">宁德时代</div><div class="tc qs-mono">300750</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+15.2%</div></div>
-                <div class="ticker"><div class="tn">亿纬锂能</div><div class="tc qs-mono">300014</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+11.5%</div></div>
-                <div class="ticker"><div class="tn">阳光电源</div><div class="tc qs-mono">300274</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+9.8%</div></div>
-              </div>
+              
             </div>
           </div>
         </li>
-        <li class="news-item">
+<li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">09:15</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">16:49</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">Goldman Sachs 上调中国科技股评级至"超配"，看好 AI 与云计算龙头</p>
-                <span class="chip chip-bull">利好</span>
+                <p class="ntitle">到2030年 全国新型储能规模将达3亿千瓦</p>
               </div>
               <div class="nmeta">
-                <span class="chip" style="background:rgba(245,158,11,.14);color:var(--qs-state-warning);">八大投行</span>
-                <span class="chip chip-cat">科技股</span>
-                <span class="qs-caption" style="color:var(--qs-ink-3);">Goldman Sachs</span>
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
-              <div class="ticker-row">
-                <div class="ticker"><div class="tn">腾讯控股</div><div class="tc qs-mono">00700</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+12.0%</div></div>
-                <div class="ticker"><div class="tn">阿里巴巴</div><div class="tc qs-mono">09988</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+10.5%</div></div>
-                <div class="ticker"><div class="tn">中芯国际</div><div class="tc qs-mono">688981</div><div class="tp qs-mono" style="color:var(--qs-state-rise);">+18.5%</div></div>
-              </div>
+              
             </div>
           </div>
         </li>
-        <li class="news-item">
+<li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">08:56</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">16:52</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">中信证券：中央政治局会议明确"稳增长"基调，建议超配消费与高端制造</p>
-                <span class="chip chip-bull">利好</span>
+                <p class="ntitle">港股IPO市场火热 今年以来募资超3600亿港元</p>
               </div>
               <div class="nmeta">
-                <span class="chip" style="background:rgba(59,130,246,.16);color:var(--qs-state-info);">国内顶级投行</span>
-                <span class="chip chip-cat">国家级会议</span>
-                <span class="qs-caption" style="color:var(--qs-ink-3);">中信证券</span>
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
+              
             </div>
           </div>
         </li>
-        <li class="news-item">
+<li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">07:48</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">16:55</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">JPMorgan 下调部分欧洲银行评级，警告商业地产风险外溢</p>
-                <span class="chip chip-bear">利空</span>
+                <p class="ntitle">【电报解读】国常会要求加强算力资源监测调度和骨干光纤网络建设，机构称随着英伟达Vera Rubin等机架级系统中铜缆全面</p>
               </div>
               <div class="nmeta">
-                <span class="chip" style="background:rgba(245,158,11,.14);color:var(--qs-state-warning);">八大投行</span>
-                <span class="chip chip-cat">银行</span>
-                <span class="qs-caption" style="color:var(--qs-ink-3);">JPMorgan</span>
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
+              
             </div>
           </div>
         </li>
-        <li class="news-item">
+<li class="news-item">
           <div class="nhead">
-            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">07:30</span></div>
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">17:16</span></div>
             <div class="nbody">
               <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
-                <p class="ntitle">国家统计局：8月制造业PMI为49.6%，景气水平继续改善</p>
-                <span class="chip chip-neutral">中性</span>
+                <p class="ntitle">银河通用：网传公司及管理团队相关内容均属不实信息 已报案</p>
               </div>
               <div class="nmeta">
-                <span class="chip chip-src">国内新闻</span>
-                <span class="chip chip-cat">宏观</span>
-                <span class="qs-caption" style="color:var(--qs-ink-3);">新华社</span>
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
               </div>
+              
+            </div>
+          </div>
+        </li>
+<li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">17:22</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">上海市概念验证平台联盟发布</p>
+              </div>
+              <div class="nmeta">
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
+              </div>
+              
+            </div>
+          </div>
+        </li>
+<li class="news-item">
+          <div class="nhead">
+            <div class="ntime"><i data-lucide="clock" style="width:12px;height:12px;color:var(--qs-ink-3);"></i><span class="t qs-mono">17:40</span></div>
+            <div class="nbody">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:6px;">
+                <p class="ntitle">参会国数量创28年来新高 2026中国国际矿业大会闭幕</p>
+              </div>
+              <div class="nmeta">
+                <span class="chip chip-src">快讯</span>
+                <span class="qs-caption" style="color:var(--qs-ink-3);">财联社</span>
+              </div>
+              
             </div>
           </div>
         </li>
@@ -449,7 +457,10 @@
   </main>
 
   <!-- Bottom tab bar -->
-  <nav style="position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
+  <!-- QS_REVIEW --><section class="card" style="padding:12px;margin:10px 12px"><div style="font-weight:700;font-size:14px;margin-bottom:6px">🧭 大盘复盘 · 五层叙事（真实接口）</div><div style="font-size:12px;line-height:1.9">📊 今日盘面（2026-09-12 20:17:34） <b>指数</b>：上证指数 3888.11(-1.18%)｜深证成指 13471.26(-1.08%)｜创业板指 3322.04(-0.49%)｜科创50 1553.39(-1.01%) 量能：两市成交额 <b>19,571亿</b>（较上一交易日 19,345亿 <b>+1.2%</b>平量） <b>涨跌</b>：涨股比 <b class="dn">11.48%</b>（上涨594.0/下跌4546.0/平盘36.0）｜涨停40/跌停25｜炸板率31.03% <b>情绪→仓位</b>：冰点（≤2成） → <b>仓位目标 ≤2成</b> <b>一句话</b>：市场偏弱，冰点/修复待确认期，只减不加 <b style="color:#999">数据时点：2026-09-12 19:46｜结论以持仓页执行单为准。不构成投资建议。</b> 
+ 🧭 主线与资金（为什么这么走） 🎯 主线认定（满足≥2条才算主线 · 2026-09-12 20:17:34） <b>三标准</b>：①板块涨停≥10家且居全市场前3 ②板块主力净流入连续2日且单日≥10亿 ③龙头2连板及以上。 <b>①今日实测</b>：涨停分布TOP3＝元件9家、电力4家、地面兵装3家 → <b>❌不满足</b> <b>②今日实测</b>：板块资金流接口【数据缺失】 → <b>❌不满足</b> <b>③今日实测</b>：连板梯队最高4板1家、3板2家、2板4家、1板33家，且无主线板块 → 不成立 → <b>❌不满足</b> <b>判定</b>：今日<b>无正式主线</b>（满足0/3条）。生命周期：无主线阶段，进攻侧不开新仓。 <b>结论</b>：无主线 ⇒ 无主线龙头可打 ⇒ <b>进攻侧不开新仓</b>。 <b style="color:#999">数据时点：涨停池/连板 2026-09-12 19:31｜行业资金流取自新闻卡（news_research 实时接口）。不构成投资建议。</b> 题材生命周期：<b>发酵期（涨停家数稳定在40家以上）</b>（今日涨停50家｜炸板率31.03%｜晋级率【数据缺失】%） 💵 资金面信号池（2026-09-12 19:31 · 全库5212只） 吸筹 <b class="up">1397只</b>（主力5日累计净流入且当日超大单>0）／派发 <b class="dn">3016只</b>／中性 799只（全库5212只） <b>持仓派发警告</b>：【数据缺失】 <b>含义</b>：等“吸筹数>派发数”且科技板块主力转净流入（连续2日且单日≥10亿，铁律51），才是资金面反转信号；在此之前减科技、配避险的方向不变。 <b style="color:#999">口径：本地全库5210只主力资金流信号（新浪口径，时点2026-09-12 19:31），与东财/同花顺不同，仅方向参考（铁律52）。不构成投资建议。</b> 
+ 🎯 今日决策（明天怎么办） 🔀 攻守转换判定（收益最大化 vs 风险控制的开关 · 2026-09-12 20:17:34） 防守→进攻3条件（须同时满足+确认1天） 今日收盘实测 判定 ① 情绪连续2日涨股比>60%且不创新低 涨股比11.48%（连续超60日数0日，需连续2日且不创新低） <b class="dn">❌</b> ② 大盘站上MA5 上证3888.11 vs MA5 3929.45（差1.1%） <b class="dn">❌</b> ③ 主线出现连板龙头 最高4板，但无正式主线 <b class="dn">❌</b> <b>三条件未全过（0/3）⇒ 维持防守，进攻策略池【未启用】。</b>还差：①情绪连续2日>60%、②上证站上MA5、③主线连板龙头。进攻→防守：情绪当日降级／上证跌破MA10／主线龙头断板，任一满足当日执行降仓（铁律64）。 <b style="color:#999">数据时点：上证/连板 2026-09-12 19:31｜情绪计数 data/emotion_state.json。不构成投资建议。</b> 明日预案：<b>涨</b>=站上MA5(3929)且放量→只做主线龙头；<b>跌</b>=跌破MA20(3935)且放量→强制空仓；<b>横盘</b>=维持仓位目标≤2成，候选只挂单不追。（今收3888.11） 📋 回溯验证（昨天的预判对了几条 · 2026-09-12 20:17:34） <b>2026-09-11预判 vs 2026-09-11实际（共6条，逐条✅/❌/⚠明细见对账台账）</b> 宝钢股份(600019) 回到买点区5.78~5.89才限价挂单（止损5.71/目标7.07），涨离不追；京能置业(600791) 回到买点区7.46~7.61才限价挂单（止损7.37/目标9.13），涨离不追；正泰电器(601877) 回到买点区25.3~25.81才限价挂单（止损24.97/目标30.98），涨离不追；华光环能(600475) 回到买点区15.09~15.4才限价挂单（止损14.77/目标18.48），涨离不追；茂硕电源(002660) 回到买点区7.87~8.03才限价挂单（止损7.53/目标9.63），涨离不追；情绪=冰点（≤2成）：未到修复确认不开新仓，只挂单不追价 <b style="color:#999">胜负按T+2以上结算（铁律42）；盘前预判收盘后逐条标✅兑现/❌证伪/⚠偏差（铁律50/75）。历史对账表（8/20-8/21等）已归档折叠区【历史·仅供参考】。 不构成投资建议。</b> 🃏 <b>本系统炒什么</b>：短线=题材龙头（1-3天，只在情绪修复确认+有主线时打）｜中线=波段低吸+小市值多因子+ETF轮动（1-3月）｜长线=防御价值（半年+）。流程：全市场选标的→挂单→按纪律止盈止损→对账进化。今天该做什么，看短线/中线/长线三个页面。</div></section><!-- /QS_REVIEW -->
+<nav style="position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--qs-surface);border-top:1px solid var(--qs-line);display:flex;align-items:center;justify-content:space-around;z-index:50;">
     <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--qs-primary);">
       <i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i>
       <span style="font-size:10px;">仪表盘</span>
@@ -516,7 +527,7 @@
         { id: 'spark-sh',  c: rise, d: [3150, 3148, 3155, 3152, 3160, 3158, 3165, 3170, 3168, 3175, 3172, 3180, 3185, 3192, 3198.42] },
         { id: 'spark-sz',  c: fall, d: [10560, 10555, 10548, 10552, 10540, 10535, 10542, 10530, 10525, 10520, 10528, 10515, 10510, 10518, 10512.36] },
         { id: 'spark-cyb', c: rise, d: [2040, 2042, 2038, 2045, 2048, 2044, 2050, 2048, 2052, 2055, 2050, 2055, 2052, 2056, 2058.74] },
-        { id: 'spark-kc',  c: rise, d: [870, 872, 868, 875, 872, 878, 875, 880, 878, 882, 880, 884, 881, 883, 884.62] },
+        { id: 'spark-kc',  c: rise, d: [870, 872, 868, 875, 872, 878, 875, 880, 878, 882, 880, 884, 881, 883, 1,553.39] },
         { id: 'spark-hs',  c: rise, d: [3690, 3695, 3692, 3700, 3698, 3705, 3702, 3708, 3710, 3705, 3712, 3710, 3715, 3712, 3728.16] }
       ];
       cards.forEach(function (s) { spark(s.id, s.c, s.d); });
