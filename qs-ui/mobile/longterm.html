@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html class="dark" lang="zh-CN">
+<!DOCTYPE html>【数据缺失】<html class="dark" lang="zh-CN">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>长线选股</title>
+  <title>长线选股 · 数据时点 2026-09-11</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
   <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
@@ -367,7 +366,7 @@
             </div>\
             <div class="stock-metrics">\
               <span class="stock-metric">PE <span class="metric-val">' + stock.pe + '</span></span>\
-              <span class="stock-metric">PB <span class="metric-val">' + stock.pb + '</span></span>\
+              <span class="stock-metric">PB <span class="metric-val">【数据缺失】</span></span>\
               <span class="stock-metric">ROE <span class="metric-val">' + stock.roe + '%</span></span>\
               <span class="stock-metric">股息 <span class="metric-val">' + stock.dividendYield + '%</span></span>\
             </div>\
@@ -431,8 +430,7 @@
             <span class="sector-tag">' + stock.sector + '</span>\
           </div>\
           <div class="detail-score">\
-            <span class="score-label">综合评分</span>\
-            <span class="score-num">' + stock.score + '</span>\
+            <span class="score-label">综合评分</span>【数据缺失】<span class="score-num">' + stock.score + '</span>\
           </div>\
         </div>\
         \
@@ -442,10 +440,10 @@
             <span class="kline-change" id="change-' + id + '" style="color:' + changeColor + '">' + changeSign + stock.changePct.toFixed(2) + '%</span>\
           </div>\
           <div class="kline-stats">\
-            <div class="kline-stat"><span class="stat-label">最高</span><span class="stat-val" id="high-' + id + '">—</span></div>\
-            <div class="kline-stat"><span class="stat-label">最低</span><span class="stat-val" id="low-' + id + '">—</span></div>\
-            <div class="kline-stat"><span class="stat-label">开盘</span><span class="stat-val" id="open-' + id + '">—</span></div>\
-            <div class="kline-stat"><span class="stat-label">昨收</span><span class="stat-val" id="preclose-' + id + '">—</span></div>\
+            <div class="kline-stat"><span class="stat-label">最高</span><span class="stat-val" id="high-' + id + '">1286.15</span></div>\
+            <div class="kline-stat"><span class="stat-label">最低</span><span class="stat-val" id="low-' + id + '">1263.01</span></div>\
+            <div class="kline-stat"><span class="stat-label">开盘</span><span class="stat-val" id="open-' + id + '">1285.15</span></div>\
+            <div class="kline-stat"><span class="stat-label">昨收</span><span class="stat-val" id="preclose-' + id + '">1285.13</span></div>\
           </div>\
           <div style="margin-top:10px;">\
             <div class="timeframe-group" id="tf-' + id + '">\
