@@ -102,12 +102,11 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
     <section class="card" style="margin-bottom:10px;">
       <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;">
         <div>
-          <div class="qs-caption" style="color:var(--qs-ink-3);">总资产 (CNY)</div>
-          <div class="qs-mono qs-h1" style="color:var(--qs-ink);margin-top:2px;" id="acc-total">1,000,000.00</div>
+          <div class="qs-caption" style="color:var(--qs-ink-3);">总资产 (CNY)</div>95,978.03<div class="qs-mono qs-h1" style="color:var(--qs-ink);margin-top:2px;" id="acc-total">95,978.03</div>
         </div>
         <div style="text-align:right;">
           <div class="qs-caption" style="color:var(--qs-ink-3);">今日盈亏</div>
-          <div class="qs-mono" id="acc-today" style="font-size:15px;font-weight:600;color:var(--qs-state-rise);">+3,250.00</div>
+          <div class="qs-mono" id="acc-today" style="font-size:15px;font-weight:600;color:var(--qs-state-rise);">+0.00</div>
           <div class="qs-mono qs-caption" id="acc-today-pct" style="color:var(--qs-state-rise);">+0.33%</div>
         </div>
       </div>
@@ -117,19 +116,19 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--qs-line);">
         <div>
           <div class="qs-caption" style="color:var(--qs-ink-3);">总盈亏</div>
-          <div class="qs-mono qs-body" id="acc-total-pnl" style="font-weight:600;color:var(--qs-state-rise);">+16,705.00</div>
+          <div class="qs-mono qs-body" id="acc-total-pnl" style="font-weight:600;color:var(--qs-state-rise);">-4,021.97</div>
         </div>
         <div>
           <div class="qs-caption" style="color:var(--qs-ink-3);">总盈亏率</div>
-          <div class="qs-mono qs-body" id="acc-total-pnl-pct" style="font-weight:600;color:var(--qs-state-rise);">+3.01%</div>
+          <div class="qs-mono qs-body" id="acc-total-pnl-pct" style="font-weight:600;color:var(--qs-state-rise);">-4.02%</div>
         </div>
         <div>
           <div class="qs-caption" style="color:var(--qs-ink-3);">可用资金</div>
-          <div class="qs-mono qs-body" id="acc-cash" style="font-weight:600;color:var(--qs-ink);">427,715.00</div>
+          <div class="qs-mono qs-body" id="acc-cash" style="font-weight:600;color:var(--qs-ink);">95,978.03</div>
         </div>
         <div>
           <div class="qs-caption" style="color:var(--qs-ink-3);">仓位占比</div>
-          <div class="qs-mono qs-body" id="acc-ratio" style="font-weight:600;color:var(--qs-ink);">57.2%</div>
+          <div class="qs-mono qs-body" id="acc-ratio" style="font-weight:600;color:var(--qs-ink);">0.0%</div>
         </div>
       </div>
     </section>
@@ -145,7 +144,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
     <!-- Panel: 持仓 -->
     <section class="mpanel active" data-mpanel="positions" id="panel-positions" role="tabpanel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <span class="qs-caption" style="color:var(--qs-ink-3);">共 <span id="pos-count">4</span> 只持仓</span>
+        <span class="qs-caption" style="color:var(--qs-ink-3);">共 <span id="pos-count">0</span> 只持仓</span>
         <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">市值 <span id="pos-mv" style="color:var(--qs-ink-2);">572,285.00</span></span>
       </div>
       <div id="position-list"></div>
@@ -154,7 +153,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
     <!-- Panel: 委托 -->
     <section class="mpanel" data-mpanel="orders" id="panel-orders" role="tabpanel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <span class="qs-caption" style="color:var(--qs-ink-3);">今日委托 <span id="ord-count">3</span> 笔</span>
+        <span class="qs-caption" style="color:var(--qs-ink-3);">今日委托 <span id="ord-count">8</span> 笔</span>
         <button id="cancel-all" style="font-size:11px;color:var(--qs-state-warning);background:transparent;border:none;cursor:pointer;">全部撤单</button>
       </div>
       <div id="order-list"></div>
@@ -163,7 +162,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
     <!-- Panel: 成交 -->
     <section class="mpanel" data-mpanel="trades" id="panel-trades" role="tabpanel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <span class="qs-caption" style="color:var(--qs-ink-3);">近 30 天成交</span>
+        <span class="qs-caption" style="color:var(--qs-ink-3);">近 30 天成交 · 数据时点 2026-09-11 收盘</span>
         <span class="qs-caption qs-mono" style="color:var(--qs-ink-3);">共 <span id="trade-count">6</span> 笔</span>
       </div>
       <div id="trade-list"></div>
@@ -185,8 +184,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
           <span class="qs-mono qs-body" style="color:var(--qs-ink);" id="fund-cash">427,715.00</span>
         </div>
         <div class="fund-row">
-          <span class="qs-body" style="color:var(--qs-ink-2);">冻结资金</span>
-          <span class="qs-mono qs-body" style="color:var(--qs-state-warning);" id="fund-frozen">12,800.00</span>
+          <span class="qs-body" style="color:var(--qs-ink-2);">冻结资金</span>25,130.00<span class="qs-mono qs-body" style="color:var(--qs-state-warning);" id="fund-frozen">12,800.00</span>
         </div>
         <div class="fund-row">
           <span class="qs-body" style="color:var(--qs-ink-2);">总盈亏</span>
@@ -240,26 +238,23 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
 (function(){
   /* ---------- data ---------- */
   const positions = [
-    { name:'贵州茅台', code:'600519', strategy:'趋势动量', cost:1580.00, price:1642.50, qty:50, change:'+1.25%', pnlAmount:'+3,125.00', pnlRate:'+3.95%', marketValue:'82,125.00' },
-    { name:'宁德时代', code:'300750', strategy:'成长回归', cost:185.60, price:192.30, qty:800, change:'+0.86%', pnlAmount:'+5,360.00', pnlRate:'+3.61%', marketValue:'153,840.00' },
-    { name:'比亚迪', code:'002594', strategy:'波段反转', cost:248.50, price:241.20, qty:600, change:'-0.42%', pnlAmount:'-4,380.00', pnlRate:'-2.94%', marketValue:'144,720.00' },
-    { name:'中芯国际', code:'688981', strategy:'质量因子', cost:89.50, price:95.80, qty:2000, change:'+1.18%', pnlAmount:'+12,600.00', pnlRate:'+7.04%', marketValue:'191,600.00' }
-  ];
+  
+];
 
   let trades = [
-    { side:'buy',  name:'中芯国际', code:'688981', price:95.80,  qty:200, amount:'19,160.00', date:'2024-09-08', time:'14:31:05', status:'已成' },
-    { side:'sell', name:'比亚迪',   code:'002594', price:242.00, qty:100, amount:'24,200.00', date:'2024-09-07', time:'10:22:18', status:'已成' },
-    { side:'buy',  name:'贵州茅台', code:'600519', price:1640.00, qty:50,  amount:'82,000.00', date:'2024-09-05', time:'09:45:33', status:'已成' },
-    { side:'buy',  name:'宁德时代', code:'300750', price:190.50, qty:300, amount:'57,150.00', date:'2024-09-04', time:'14:05:12', status:'已成' },
-    { side:'sell', name:'中芯国际', code:'688981', price:92.30,  qty:500, amount:'46,150.00', date:'2024-09-03', time:'11:12:48', status:'已成' },
-    { side:'buy',  name:'比亚迪',   code:'002594', price:248.50, qty:300, amount:'74,550.00', date:'2024-09-02', time:'14:50:21', status:'已成' }
-  ];
+  { side:'sell', name:'沃森生物', code:'', price:—, qty:—, amount:'—', date:'—', time:'—', status:'已成' }
+];
 
   let orders = [
-    { side:'buy',  name:'贵州茅台', code:'600519', price:1640.00, qty:100, amount:'164,000.00', time:'09:30:12', status:'已报' },
-    { side:'sell', name:'宁德时代', code:'300750', price:195.00, qty:200, amount:'39,000.00', time:'09:35:44', status:'已报' },
-    { side:'buy',  name:'中芯国际', code:'688981', price:95.50,  qty:500, amount:'47,750.00', time:'10:02:08', status:'部成' }
-  ];
+  { side:'buy', name:'宝钢股份', code:'600019', price:5.89, qty:800, amount:'4,712.00', time:'—', status:'待成交' },
+  { side:'buy', name:'京能置业', code:'600791', price:7.61, qty:600, amount:'4,566.00', time:'—', status:'待成交' },
+  { side:'buy', name:'正泰电器', code:'601877', price:25.81, qty:100, amount:'2,581.00', time:'—', status:'待成交' },
+  { side:'buy', name:'方大炭素', code:'600516', price:5.27, qty:900, amount:'4,743.00', time:'—', status:'待成交' },
+  { side:'buy', name:'金固股份', code:'002488', price:7.40, qty:600, amount:'4,440.00', time:'—', status:'待成交' },
+  { side:'buy', name:'新华百货', code:'600785', price:10.22, qty:400, amount:'4,088.00', time:'—', status:'待成交' },
+  { side:'buy', name:'招商轮船', code:'601872', price:18.61, qty:268, amount:'4,987.48', time:'—', status:'已成交' },
+  { side:'buy', name:'沃森生物', code:'300142', price:14.43, qty:346, amount:'4,992.78', time:'—', status:'已平仓' }
+];
 
   const account = {
     total:'1,000,000.00',
@@ -299,7 +294,7 @@ body { font-family: var(--qs-font-primary); background: #000; color: var(--qs-in
         </div>
         <div class="pos-grid">
           <div><div class="pos-k">持仓 / 成本</div><div class="pos-v qs-mono">${p.qty.toLocaleString()} 股 · ${fmtNum(p.cost)}</div></div>
-          <div style="text-align:right;"><div class="pos-k">持仓市值</div><div class="pos-v qs-mono">${p.marketValue}</div></div>
+          <div style="text-align:right;"><div class="pos-k">持仓市值</div><div class="pos-v qs-mono">0.00</div></div>
         </div>
         <div class="pos-foot">
           <span class="qs-caption" style="color:var(--qs-ink-3);">持仓盈亏</span>
